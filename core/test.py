@@ -65,3 +65,22 @@ class TestCore(unittest.TestCase):
         juego.__board__.quitar_ficha(2,1,"B")
         self.assertEqual(juego.__board__.__contenedor_fichas__,resultado_fichas)
         self.assertEqual(juego.__board__.__contenedor_color__,resultado_color)
+
+    def test_numero_en_rango_correcto(self):
+        juego = BackgammonGame()
+        for _ in range(100): 
+            numero = juego.__dice_1__.tirar_dado()
+            self.assertGreaterEqual(numero, 1)
+            self.assertLessEqual(numero, 6)
+            self.assertIsInstance(numero, int)
+    
+    def test_todos_los_valores_posibles(self):
+        juego = BackgammonGame()
+        
+        valores_obtenidos = set()
+        for _ in range(1000):  
+            numero = juego.__dice_1__.tirar_dado()
+            valores_obtenidos.add(numero)
+        
+       
+        self.assertEqual(valores_obtenidos, {1, 2, 3, 4, 5, 6})
