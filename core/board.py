@@ -13,7 +13,7 @@ class Board:
         Funcionalidad: Quita una ficha en una posición especifica de un cuadrante, restádole 1 a la posición y definiendo el color
     '''
     def quitar_ficha(self, cuad, pos, turno):
-        self.__contenedor_fichas__[cuad][pos] = self.__contenedor_fichas__[cuad][pos] -1
+        self.__contenedor_fichas__[cuad][pos] -= 1
         if self.__contenedor_fichas__[cuad][pos] == 0:
             self.__contenedor_color__[cuad][pos] = ""
         else:
@@ -24,5 +24,5 @@ class Board:
     '''
     
     def poner_ficha(self, cuad, pos, turno):
-        self.__contenedor_fichas__[cuad][pos] =+ 1
+        self.__contenedor_fichas__[cuad][pos] += 1
         self.__contenedor_color__[cuad][pos] = turno

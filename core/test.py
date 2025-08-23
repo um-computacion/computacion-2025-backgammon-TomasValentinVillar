@@ -35,13 +35,14 @@ class TestCore(unittest.TestCase):
         ]
         resultado_fichas = [
             [0,0,0,0,0,0],[0,0,0,0,0,0],
-            [0,0,0,0,0,0],[0,1,0,0,0,0]]
+            [0,0,0,0,0,0],[0,2,0,0,0,0]]
         
         resultado_color = [
             ["","","","","",""],["","","","","",""],
             ["","","","","",""],["","B","","","",""]
         ]
         juego.__board__.poner_ficha(3,1,"B")
+        juego.__board__.poner_ficha(3,1,"B") #se ponen dos fichas en la misma posición
         self.assertEqual(juego.__board__.__contenedor_fichas__,resultado_fichas)
         self.assertEqual(juego.__board__.__contenedor_color__,resultado_color)
     def test_quitar_ficha(self):

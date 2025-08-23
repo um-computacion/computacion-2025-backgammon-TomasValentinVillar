@@ -1,9 +1,11 @@
 from core.board import Board
+from core.dice import Dice
 class BackgammonGame:
     def __init__(self):
         self.__turno__ = "B"
         self.__board__ = Board()
-
+        self.__dice_1__ = Dice()
+        self.__dice_2__ = Dice()
     '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
 
         Funcionalidad: Utiliza las funciones quitar_ficha y poner_ficha para hacer el movimiento de la ficha de una casilla a otra
