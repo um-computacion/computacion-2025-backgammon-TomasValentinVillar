@@ -17,3 +17,18 @@ class BackgammonGame:
             self.__turno__ = 'N'
         else:
             self.__turno__ = 'N'
+    '''
+
+        Funcionalidad: Llama a la función tirar dado para asignarle un numero a los atributos de __dice_1__ y __dice_2__
+        '''
+    def tirar_dados(self):
+        self.__dice_1__.tirar_dado()
+        self.__dice_2__.tirar_dado()
+    
+    def verificar_movimientos_posibles():
+        #tiene que ser un que recorra a la tabla, segun la tirada de dados, debebe verficar en que 
+        # cuadrantes se pueden hacer los movimietos y despues que posición está disponible, 
+        # se debe verificar segun las fichas del tablero correspondiestes al color del turno que 
+        # halla tirado los dados.
+        pass
+        

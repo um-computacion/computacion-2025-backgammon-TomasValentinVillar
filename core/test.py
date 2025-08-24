@@ -69,7 +69,8 @@ class TestCore(unittest.TestCase):
     def test_numero_en_rango_correcto(self):
         juego = BackgammonGame()
         for _ in range(100): 
-            numero = juego.__dice_1__.tirar_dado()
+            juego.__dice_1__.tirar_dado()
+            numero = juego.__dice_1__.obtener_numero()
             self.assertGreaterEqual(numero, 1)
             self.assertLessEqual(numero, 6)
             self.assertIsInstance(numero, int)
@@ -79,7 +80,8 @@ class TestCore(unittest.TestCase):
         
         valores_obtenidos = set()
         for _ in range(1000):  
-            numero = juego.__dice_1__.tirar_dado()
+            juego.__dice_1__.tirar_dado()
+            numero = juego.__dice_1__.obtener_numero()
             valores_obtenidos.add(numero)
         
        
