@@ -1,5 +1,5 @@
 import unittest
-from core.backgammongame import BackgammonGame
+from core.backgammongame import BackgammonGame,PosNoDisponible
 from core.board import Board
 
 class TestCore(unittest.TestCase):
@@ -86,3 +86,35 @@ class TestCore(unittest.TestCase):
         
        
         self.assertEqual(valores_obtenidos, {1, 2, 3, 4, 5, 6})
+    
+    def test_verificar_posicion_disp(self):
+        juego = BackgammonGame()
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [0,0,0,0,0,0],[0,4,0,0,0,0],
+            [0,1,0,0,0,0],[0,0,0,0,0,0]]
+        juego.__board__.__contenedor_color__ = [
+            ["","","","","",""],["","B","","","",""],
+            ["","B","","","",""],["","","","","",""]
+        ]
+        
+        
+        self.assertTrue(juego.verificar_posicion_disponible(2,1))
+        self.assertTrue(juego.verificar_posicion_disponible(1,1))
+        self.assertTrue(juego.verificar_posicion_disponible(0,0))
+    
+    def test_verificar_no_posicion_disp(self):
+        juego = BackgammonGame()
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [0,0,0,0,0,0],[0,4,0,0,0,0],
+            [0,1,0,0,0,0],[0,0,0,0,0,0]]
+        juego.__board__.__contenedor_color__ = [
+            ["","","","","",""],["","N","","","",""],
+            ["","N","","","",""],["","","","","",""]
+        ]
+        with self.assertRaises(PosNoDisponible):
+            self.assertTrue(juego.verificar_posicion_disponible(2,1))
+        with self.assertRaises(PosNoDisponible):
+           self.assertTrue(juego.verificar_posicion_disponible(1,1))
+

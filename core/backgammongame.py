@@ -1,5 +1,7 @@
 from core.board import Board
 from core.dice import Dice
+class PosNoDisponible(Exception):
+    pass
 class BackgammonGame:
     def __init__(self):
         self.__turno__ = "B"
@@ -24,11 +26,21 @@ class BackgammonGame:
     def tirar_dados(self):
         self.__dice_1__.tirar_dado()
         self.__dice_2__.tirar_dado()
+    '''
+    def calcular_posiciones_de_dados(self):
+        if self.__turno__ == "B":
+            d1 = self.__dice_1__ - 1
+            d2 = self.__dice_1__ -1
+    '''    
     
-    def verificar_movimientos_posibles():
-        #tiene que ser un que recorra a la tabla, segun la tirada de dados, debebe verficar en que 
-        # cuadrantes se pueden hacer los movimietos y despues que posición está disponible, 
-        # se debe verificar segun las fichas del tablero correspondiestes al color del turno que 
-        # halla tirado los dados.
-        pass
+    def verificar_posicion_disponible(self,cuadrante,posicion):
+
+        board = self.__board__.__contenedor_fichas__
+        if (posicion >= 1 and self.__board__.__contenedor_color__[cuadrante][posicion]== self.__turno__) or board[cuadrante][posicion] == 0:
+                    return True
+        raise PosNoDisponible('Posicion no disponible')
+            
+        
+    
+
         
