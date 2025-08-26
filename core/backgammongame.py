@@ -39,8 +39,30 @@ class BackgammonGame:
         if (posicion >= 1 and self.__board__.__contenedor_color__[cuadrante][posicion]== self.__turno__) or board[cuadrante][posicion] == 0:
                     return True
         raise PosNoDisponible('Posicion no disponible')
-            
-        
     
-
-        
+    def verifificar_movimiento_posible_blanco(self):
+         '''
+         [  [0,0,0,0,0,0],[0,0,0,0,0,0],
+         [0,0,0,0,0,0],[0,0,0,0,0,0]]
+         cuad 1 = board[1]
+         cuad 2 = board[0]
+         cuad 3 = board[2]
+         cuad 4 = board[3]
+         '''
+         board = self.__board__.__contenedor_fichas__
+         for i in range(0,4):      #esta funcion hará que se recorra la tabla segun el orden del juego
+                                    # en lugar de recorrerla en el orden lietaral de la lista
+            if i == 0:
+                cuad = board[1]
+            elif i== 1:
+                 cuad = board[0]
+            for pos in reversed(cuad):
+                j = 5
+                if pos != 0 and self.__board__.__contenedor_color__ == "B":
+                    
+                     pass
+                j -= 1
+            else:
+                cuad = board[i]
+                   
+                   
