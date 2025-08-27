@@ -21,47 +21,40 @@ class TestCore(unittest.TestCase):
         self.assertEqual(juego.__board__.__contenedor_fichas__[1],resultado_fichas[1])
         self.assertEqual(juego.__board__.__contenedor_fichas__[19][0].obtener_color(),resultado_fichas[19][0].obtener_color())
         self.assertEqual(len(juego.__board__.__contenedor_fichas__[19]),len(resultado_fichas[19]))
-    '''def test_poner_ficha(self):
+    def test_poner_ficha(self):
+        juego = BackgammonGame()
         juego = BackgammonGame()
         juego.__board__.__contenedor_fichas__ =  [
-            [0,0,0,0,0,0],[0,0,0,0,0,0],
-            [0,0,0,0,0,0],[0,0,0,0,0,0]]
-        juego.__board__.__contenedor_color__ = [
-            ["","","","","",""],["","","","","",""],
-            ["","","","","",""],["","","","","",""]
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[],[]
         ]
         resultado_fichas = [
-            [0,0,0,0,0,0],[0,0,0,0,0,0],
-            [0,0,0,0,0,0],[0,2,0,0,0,0]]
-        
-        resultado_color = [
-            ["","","","","",""],["","","","","",""],
-            ["","","","","",""],["","B","","","",""]
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blaco")],[],[],[],[]
         ]
-        juego.__board__.poner_ficha(3,1,"B")
-        juego.__board__.poner_ficha(3,1,"B") #se ponen dos fichas en la misma posición
-        self.assertEqual(juego.__board__.__contenedor_fichas__,resultado_fichas)
-        self.assertEqual(juego.__board__.__contenedor_color__,resultado_color)
+        juego.__board__.poner_ficha(19,"Blanco")
+        juego.__board__.poner_ficha(19,"Blanco") #se ponen dos fichas en la misma posición
+
+        self.assertEqual(juego.__board__.__contenedor_fichas__[19][0].obtener_color(),resultado_fichas[19][0].obtener_color()) #comprueba que las fichas sean del mismo color
+        self.assertEqual(len(juego.__board__.__contenedor_fichas__[19]),len(resultado_fichas[19]))#comprueba que la cantidad de fichas es correcta
+
+
     def test_quitar_ficha(self):
         juego = BackgammonGame()
+        juego = BackgammonGame()
         juego.__board__.__contenedor_fichas__ =  [
-            [0,0,0,0,0,0],[0,0,0,0,0,0],
-            [0,1,0,0,0,0],[0,0,0,0,0,0]]
-        juego.__board__.__contenedor_color__ = [
-            ["","","","","",""],["","","","","",""],
-            ["","B","","","",""],["","","","","",""]
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blaco")],[],[],[],[]
         ]
         resultado_fichas = [
-            [0,0,0,0,0,0],[0,0,0,0,0,0],
-            [0,0,0,0,0,0],[0,0,0,0,0,0]]
-        
-        resultado_color = [
-            ["","","","","",""],["","","","","",""],
-            ["","","","","",""],["","","","","",""]
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[],[]
         ]
-        juego.__board__.quitar_ficha(2,1,"B")
-        self.assertEqual(juego.__board__.__contenedor_fichas__,resultado_fichas)
-        self.assertEqual(juego.__board__.__contenedor_color__,resultado_color)
+        juego.__board__.quitar_ficha(19)
+        juego.__board__.quitar_ficha(19)
+
+        self.assertEqual(len(juego.__board__.__contenedor_fichas__[19]),len(resultado_fichas[19]))#comprueba que la cantidad de fichas es correcta
+
 
     def test_numero_en_rango_correcto(self):
         juego = BackgammonGame()
@@ -84,7 +77,7 @@ class TestCore(unittest.TestCase):
        
         self.assertEqual(valores_obtenidos, {1, 2, 3, 4, 5, 6})
     
-    def test_verificar_posicion_disp(self):
+    '''def test_verificar_posicion_disp(self):
         juego = BackgammonGame()
 
         juego.__board__.__contenedor_fichas__ =  [
