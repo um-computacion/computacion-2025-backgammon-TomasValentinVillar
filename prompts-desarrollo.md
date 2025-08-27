@@ -32,3 +32,4 @@ La opción más común y directa es `random.randint(1, 6)`, que es perfecta para
 . La respuesta fue usada con modificaciones, importé la libreria random y ulitelecé la función random.randint(1,6) para tirar un dado
 
 . Referencia: core/dice.py
+

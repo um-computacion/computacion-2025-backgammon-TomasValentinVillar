@@ -2,9 +2,11 @@ from core.board import Board
 from core.dice import Dice
 class PosNoDisponible(Exception):
     pass
+class NoHayMovimientosPosibles(Exception):
+    pass
 class BackgammonGame:
     def __init__(self):
-        self.__turno__ = "B"
+        self.__turno__ = "Blanco"
         self.__board__ = Board()
         self.__dice_1__ = Dice()
         self.__dice_2__ = Dice()
@@ -12,13 +14,13 @@ class BackgammonGame:
 
         Funcionalidad: Utiliza las funciones quitar_ficha y poner_ficha para hacer el movimiento de la ficha de una casilla a otra
     '''
-    def ocupar_casilla(self,cuand_inic, pos_inic,cuad_fin,pos_fin):
-        self.__board__.quitar_ficha(cuand_inic,pos_inic,self.__turno__)
-        self.__board__.poner_ficha(cuad_fin,pos_fin,self.__turno__)
-        if self.__turno__ == 'B':
-            self.__turno__ = 'N'
+    def ocupar_casilla(self,pos_inic,pos_fin):
+        self.__board__.quitar_ficha(pos_inic)
+        self.__board__.poner_ficha(pos_fin,self.__turno__)
+        if self.__turno__ == 'Blanco':
+            self.__turno__ = 'Negro'
         else:
-            self.__turno__ = 'N'
+            self.__turno__ = 'Negro'
     '''
 
         Funcionalidad: Llama a la función tirar dado para asignarle un numero a los atributos de __dice_1__ y __dice_2__
@@ -26,43 +28,23 @@ class BackgammonGame:
     def tirar_dados(self):
         self.__dice_1__.tirar_dado()
         self.__dice_2__.tirar_dado()
-    '''
-    def calcular_posiciones_de_dados(self):
-        if self.__turno__ == "B":
-            d1 = self.__dice_1__ - 1
-            d2 = self.__dice_1__ -1
-    '''    
     
-    def verificar_posicion_disponible(self,cuadrante,posicion):
+
+    def verificar_posicion_disponible(self,posicion):
 
         board = self.__board__.__contenedor_fichas__
-        if (posicion >= 1 and self.__board__.__contenedor_color__[cuadrante][posicion]== self.__turno__) or board[cuadrante][posicion] == 0:
+        if (len(board[posicion]) >= 1 and board[posicion][0].obtener_color()== self.__turno__) or len(board[posicion]) == 0:
                     return True
         raise PosNoDisponible('Posicion no disponible')
     
-    def verifificar_movimiento_posible_blanco(self):
-         '''
-         [  [0,0,0,0,0,0],[0,0,0,0,0,0],
-         [0,0,0,0,0,0],[0,0,0,0,0,0]]
-         cuad 1 = board[1]
-         cuad 2 = board[0]
-         cuad 3 = board[2]
-         cuad 4 = board[3]
-         '''
+    '''def verifificar_movimientos_posibles(self):
          board = self.__board__.__contenedor_fichas__
-         for i in range(0,4):      #esta funcion hará que se recorra la tabla segun el orden del juego
-                                    # en lugar de recorrerla en el orden lietaral de la lista
-            if i == 0:
-                cuad = board[1]
-            elif i== 1:
-                 cuad = board[0]
-            for pos in reversed(cuad):
-                j = 5
-                if pos != 0 and self.__board__.__contenedor_color__ == "B":
-                    
-                     pass
-                j -= 1
-            else:
-                cuad = board[i]
-                   
-                   
+         d1 = self.__dice_1__
+         d2 = self.__dice_2__
+         
+         
+         for i in range(0,24):
+              if board[i] != []:
+                    self.verificar_posicion_disponible(i+d1)
+                    self.verificar_posicion_disponible(i+d2)
+                    self.verificar_posicion_disponible(i+d1+d2)'''
