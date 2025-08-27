@@ -77,33 +77,27 @@ class TestCore(unittest.TestCase):
        
         self.assertEqual(valores_obtenidos, {1, 2, 3, 4, 5, 6})
     
-    '''def test_verificar_posicion_disp(self):
+    def test_verificar_posicion_disp(self):
         juego = BackgammonGame()
 
         juego.__board__.__contenedor_fichas__ =  [
-            [0,0,0,0,0,0],[0,4,0,0,0,0],
-            [0,1,0,0,0,0],[0,0,0,0,0,0]]
-        juego.__board__.__contenedor_color__ = [
-            ["","","","","",""],["","B","","","",""],
-            ["","B","","","",""],["","","","","",""]
+            [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blaco"),Checker("Blanco"),Checker("Blaco")],[],[],[],[],
+            [],[Checker("Blanco")],[],[],[],[], [],[],[],[],[],[]
         ]
         
-        
-        self.assertTrue(juego.verificar_posicion_disponible(2,1))
-        self.assertTrue(juego.verificar_posicion_disponible(1,1))
-        self.assertTrue(juego.verificar_posicion_disponible(0,0))
+        self.assertTrue(juego.verificar_posicion_disponible(7))
+        self.assertTrue(juego.verificar_posicion_disponible(13))
+        self.assertTrue(juego.verificar_posicion_disponible(0))
     
     def test_verificar_no_posicion_disp(self):
         juego = BackgammonGame()
 
         juego.__board__.__contenedor_fichas__ =  [
-            [0,0,0,0,0,0],[0,4,0,0,0,0],
-            [0,1,0,0,0,0],[0,0,0,0,0,0]]
-        juego.__board__.__contenedor_color__ = [
-            ["","","","","",""],["","N","","","",""],
-            ["","N","","","",""],["","","","","",""]
+            [],[],[],[],[],[], [],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
+            [],[Checker("Negro")],[],[],[],[], [],[],[],[],[],[]
         ]
+
         with self.assertRaises(PosNoDisponible):
-            self.assertTrue(juego.verificar_posicion_disponible(2,1))
+            self.assertTrue(juego.verificar_posicion_disponible(7))
         with self.assertRaises(PosNoDisponible):
-           self.assertTrue(juego.verificar_posicion_disponible(1,1))'''
+           self.assertTrue(juego.verificar_posicion_disponible(13))

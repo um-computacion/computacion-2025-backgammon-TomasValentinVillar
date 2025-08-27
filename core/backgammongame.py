@@ -2,6 +2,8 @@ from core.board import Board
 from core.dice import Dice
 class PosNoDisponible(Exception):
     pass
+class NoHayMovimientosPosibles(Exception):
+    pass
 class BackgammonGame:
     def __init__(self):
         self.__turno__ = "Blanco"
@@ -26,29 +28,23 @@ class BackgammonGame:
     def tirar_dados(self):
         self.__dice_1__.tirar_dado()
         self.__dice_2__.tirar_dado()
-    '''
-    def verificar_posicion_disponible(self,cuadrante,posicion):
+    
+
+    def verificar_posicion_disponible(self,posicion):
 
         board = self.__board__.__contenedor_fichas__
-        if (posicion >= 1 and self.__board__.__contenedor_color__[cuadrante][posicion]== self.__turno__) or board[cuadrante][posicion] == 0:
+        if (len(board[posicion]) >= 1 and board[posicion][0].obtener_color()== self.__turno__) or len(board[posicion]) == 0:
                     return True
         raise PosNoDisponible('Posicion no disponible')
     
-    def verifificar_movimiento_posible_blanco(self):
-        
+    '''def verifificar_movimientos_posibles(self):
          board = self.__board__.__contenedor_fichas__
-         for i in range(0,4):      #esta funcion hará que se recorra la tabla segun el orden del juego
-                                    # en lugar de recorrerla en el orden lietaral de la lista
-            if i == 0:
-                cuad = board[1]
-            elif i== 1:
-                 cuad = board[0]
-            for pos in reversed(cuad):
-                j = 5
-                if pos != 0 and self.__board__.__contenedor_color__ == "B":
-                    
-                     pass
-                j -= 1
-            else:
-                cuad = board[i]
-    '''
+         d1 = self.__dice_1__
+         d2 = self.__dice_2__
+         
+         
+         for i in range(0,24):
+              if board[i] != []:
+                    self.verificar_posicion_disponible(i+d1)
+                    self.verificar_posicion_disponible(i+d2)
+                    self.verificar_posicion_disponible(i+d1+d2)'''
