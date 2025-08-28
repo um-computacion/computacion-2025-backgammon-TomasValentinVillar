@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2025-8-27 (23:16hs)
+
+### Added
+  - Función verificar_moviemitos_posibles de la Clase BackgammonGame (los test no pasan, se debe corregir)
+  - test de la funcion verificar_moviemitos_posibles
+
 ## 2025-8-27
 
 ### Added

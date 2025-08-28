@@ -1,5 +1,5 @@
 import unittest
-from core.backgammongame import BackgammonGame,PosNoDisponible
+from core.backgammongame import BackgammonGame,PosNoDisponible,NoHayMovimientosPosibles
 from core.board import Board
 from core.checker import Checker
 class TestCore(unittest.TestCase):
@@ -101,3 +101,33 @@ class TestCore(unittest.TestCase):
             self.assertTrue(juego.verificar_posicion_disponible(7))
         with self.assertRaises(PosNoDisponible):
            self.assertTrue(juego.verificar_posicion_disponible(13))
+    
+    def test_verificar_movimientos_posibles(self):
+    
+        juego = BackgammonGame()
+        juego.__dice_1__ = 3
+        juego.__dice_2__ = 2
+        
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[], [],[Checker("Blanco")],[],[],[],[],
+            [Checker("Blanco")],[],[],[],[],[], [],[],[],[],[],[]
+        ]
+
+        
+        self.assertTrue(juego.verifificar_movimientos_posibles())
+
+    def test_verificar_movimientos_posibles_no_hay(self):
+    
+        juego = BackgammonGame()
+        juego.__dice_1__ = 3
+        juego.__dice_2__ = 2
+        
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[], [],[Checker("Blanco")],[],[Checker("Negro")],[Checker("Negro")],[],
+            [Checker("Negro")],[],[],[],[],[], [],[],[],[],[],[]
+        ]
+
+        
+        with self.assertRaises(NoHayMovimientosPosibles):
+            juego.verifificar_movimientos_posibles()
+        
