@@ -1,5 +1,19 @@
 # ChangeLog
 
+## 2025-8-28
+
+### Changed
+  - Función verificar_moviemitos_posibles de la Clase BackgammonGame 
+  - test de la funcion verificar_moviemitos_posibles
+  - Función verificar_posicion_disponible de la Clase BackgammonGame 
+  - test de la funcion verificar_posicion_disponible
+
+## 2025-8-27
+
+### Added
+  - Información al Archivo CHANGELOG.md
+  - La Clase Checker
+
 ## 2025-8-27 (23:16hs)
 
 ### Added

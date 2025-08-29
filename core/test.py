@@ -94,13 +94,12 @@ class TestCore(unittest.TestCase):
 
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
-            [],[Checker("Negro")],[],[],[],[], [],[],[],[],[],[]
+            [],[Checker("Negro"),Checker("Negro")],[],[],[],[], [],[],[],[],[],[]
         ]
 
-        with self.assertRaises(PosNoDisponible):
-            self.assertTrue(juego.verificar_posicion_disponible(7))
-        with self.assertRaises(PosNoDisponible):
-           self.assertTrue(juego.verificar_posicion_disponible(13))
+        
+        self.assertFalse(juego.verificar_posicion_disponible(7))
+        self.assertFalse(juego.verificar_posicion_disponible(13))
     
     def test_verificar_movimientos_posibles(self):
     
@@ -123,8 +122,8 @@ class TestCore(unittest.TestCase):
         juego.__dice_2__ = 2
         
         juego.__board__.__contenedor_fichas__ =  [
-            [],[],[],[],[],[], [],[Checker("Blanco")],[],[Checker("Negro")],[Checker("Negro")],[],
-            [Checker("Negro")],[],[],[],[],[], [],[],[],[],[],[]
+            [],[],[],[],[],[], [],[Checker("Blanco")],[],[Checker("Negro"),Checker("Negro")],[Checker("Negro"),Checker("Negro")],[],
+            [Checker("Negro"),Checker("Negro")],[],[],[],[],[], [],[],[],[],[],[]
         ]
 
         
