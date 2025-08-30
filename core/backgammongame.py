@@ -4,6 +4,8 @@ class PosNoDisponible(Exception): #esta exepción se va a usar cuando verificar_
     pass
 class NoHayMovimientosPosibles(Exception):
     pass
+class MovimientoInvalido(Exception):
+    pass
 class BackgammonGame:
     def __init__(self):
         self.__turno__ = "Blanco"
@@ -42,7 +44,17 @@ class BackgammonGame:
         else:
             return False
 
-    
+    def verificar_sacar_ficha(self,posicion,board):
+
+        if posicion < 23:
+            return True
+
+        for pos in range(18):
+            if len(board[pos]) > 0:
+                if board[pos][0].obtener_color() == self.__turno__:
+                    raise MovimientoInvalido("No se puede realizar ese movimiento")
+        
+        return True
     
     def verifificar_movimientos_posibles(self):
         '''
