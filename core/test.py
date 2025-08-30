@@ -132,8 +132,6 @@ class TestCore(unittest.TestCase):
 
     def test_sacar_ficha(self):
         juego = BackgammonGame()
-        juego.__dice_1__ = 3
-        juego.__dice_2__ = 2
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[],[],[],[],[],
@@ -143,15 +141,12 @@ class TestCore(unittest.TestCase):
         self.assertTrue(juego.verificar_sacar_ficha(21,juego.__board__.__contenedor_fichas__))
         self.assertTrue(juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__))
     
-    def test_sacar_ficha(self):
+    def test_sacar_ficha_error(self):
         juego = BackgammonGame()
-        juego.__dice_1__ = 3
-        juego.__dice_2__ = 2
-        
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[],[],[],[],[],
             [],[],[],[Checker("Blanco")],[],[], [],[],[],[],[],[Checker("Blanco")]
             ]
 
         with self.assertRaises(MovimientoInvalido):    
-            self.assertTrue(juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__))
+            juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__)
