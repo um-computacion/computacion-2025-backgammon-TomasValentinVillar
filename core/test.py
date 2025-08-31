@@ -150,3 +150,21 @@ class TestCore(unittest.TestCase):
 
         with self.assertRaises(MovimientoInvalido):    
             juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__)
+    
+    def test_comer_ficha(self):
+        juego = BackgammonGame()
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[Checker("Blanco")],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[Checker("Negro")],[],[],[],[]
+        ]
+
+        resultado_fichas = [
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[Checker("Blanco")],[],[],[],[]
+        ]
+        
+        
+        juego.ocupar_casilla(1,19)
+        self.assertEqual(juego.__board__.__contenedor_fichas__[1],resultado_fichas[1])
+        self.assertEqual(juego.__board__.__contenedor_fichas__[19][0].obtener_color(),resultado_fichas[19][0].obtener_color())
+        self.assertEqual(len(juego.__board__.__contenedor_fichas__[19]),len(resultado_fichas[19]))

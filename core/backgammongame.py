@@ -12,12 +12,20 @@ class BackgammonGame:
         self.__board__ = Board()
         self.__dice_1__ = Dice()
         self.__dice_2__ = Dice()
-    '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
+
+    def ocupar_casilla(self,pos_inic,pos_fin):
+        '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
 
         Funcionalidad: Utiliza las funciones quitar_ficha y poner_ficha para hacer el movimiento de la ficha de una casilla a otra
-    '''
-    def ocupar_casilla(self,pos_inic,pos_fin):
+        '''
+
+        board = self.__board__.__contenedor_fichas__
+
         self.__board__.quitar_ficha(pos_inic)
+        if len(board[pos_fin]) == 1: #Ahora tambien se puede comer ficha
+            if board[pos_fin][0].obtener_color() != self.__turno__:
+                board[pos_fin].pop()
+
         self.__board__.poner_ficha(pos_fin,self.__turno__)
         if self.__turno__ == 'Blanco':
             self.__turno__ = 'Negro'

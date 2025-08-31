@@ -1,5 +1,19 @@
 # ChangeLog
 
+## 2025-8-30
+
+### Changed
+  - Función ocupar_casilla de la Clase BackgammonGame 
+
+### Added
+  - test comer_ficha en test
+
+## 2025-8-29
+
+### Added
+  - Función verificar_sacar_ficha de la clase BackgammonGame
+  - test de la función verificar_sacar_ficha 
+
 ## 2025-8-28
 
 ### Changed
