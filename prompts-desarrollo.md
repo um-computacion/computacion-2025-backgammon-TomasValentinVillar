@@ -188,4 +188,16 @@ elif len(board[posicion]) == 1 and board[posicion][0].obtener_color() != self.__
 
 . La respuesta fue usada casi sin modificaciones, adapté el código de verficar_posicion_disponible y usé el codigo de verificar movimietos disponibles sin modificaciones
 
-Referencias: core/backgammongame.py
+. Referencias: core/backgammongame.py
+
+. Modelo: Claude Sonnet 4
+
+. la función verificar_movimientos_posibles segun lo que entiendo solo verifica cuendo es el turno de las fichas blancas, pero si el turno de las fichas es negro, entonces para que verifique los movimientos posibles, se podría hacer un if que sii el turno es blanco ejecute estas partes del codigo como está:
+
+for i in range(24): if es_movimiento_valido(i, d1) or es_movimiento_valido(i, d2): return True # Verificar movimiento combinado (solo si no son dobles) if d1 != d2: for i in range(24): if es_movimiento_valido(i, d1 + d2): return True
+
+y si es negro, tanto d1 como d2 como d1+d2 serán negativas? es una buena solución o tiene incovenientes?
+
+. El codigo se ha usado sin modificacioes
+
+. Referencia: core/backgammon.py

@@ -3,6 +3,15 @@
 ## 2025-8-30
 
 ### Changed
+  - Función verificar_movimientos_posibles de la Clase BackgammonGame 
+
+### Added
+  - test test_verificar_movimientos_posibles_no_hay_negro en test
+  - test test_verificar_movimientos_posibles_no_hay_negro en test
+
+## 2025-8-30
+
+### Changed
   - Función ocupar_casilla de la Clase BackgammonGame 
 
 ### Added

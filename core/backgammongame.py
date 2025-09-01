@@ -77,9 +77,15 @@ class BackgammonGame:
 
         # Función auxiliar para verificar si un movimiento es válido
         def es_movimiento_valido(pos_origen, pasos):
-            # Verificar límites del tablero
-            pos_destino = pos_origen + pasos
-            if pos_destino >= 24:
+            
+                # Calcular destino según el color
+            if self.__turno__ == "Blanco":
+                pos_destino = pos_origen + pasos  # Blancas van hacia arriba (0->23)
+            else:  # Negro
+                pos_destino = pos_origen - pasos  # Negras van hacia abajo (23->0)
+    
+            # Verificar límites
+            if pos_destino < 0 or pos_destino >= 24:
                 return False
         
             # Verificar que hay fichas del jugador actual en la posición origen

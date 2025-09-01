@@ -125,11 +125,35 @@ class TestCore(unittest.TestCase):
             [],[],[],[],[],[], [],[Checker("Blanco")],[],[Checker("Negro"),Checker("Negro")],[Checker("Negro"),Checker("Negro")],[],
             [Checker("Negro"),Checker("Negro")],[],[],[],[],[], [],[],[],[],[],[]
         ]
-
-        
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
+    def test_verificar_movimientos_posibles_negro(self):
+    
+        juego = BackgammonGame()
 
+        juego.__turno__ = "Negro"
+        juego.__dice_1__ = 3
+        juego.__dice_2__ = 2
+        
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[], [],[Checker("Negro")],[],[],[],[],
+            [Checker("Negro")],[],[],[],[],[], [],[],[],[],[],[]
+        ]        
+        self.assertTrue(juego.verifificar_movimientos_posibles())
+    
+    def test_verificar_movimientos_posibles_no_hay_negro(self):
+    
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+        juego.__dice_1__ = 3
+        juego.__dice_2__ = 2
+        
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[],
+            [Checker("Negro")],[],[],[],[],[], [],[],[],[],[],[]
+        ]
+        with self.assertRaises(NoHayMovimientosPosibles):
+            juego.verifificar_movimientos_posibles()
     def test_sacar_ficha(self):
         juego = BackgammonGame()
         
