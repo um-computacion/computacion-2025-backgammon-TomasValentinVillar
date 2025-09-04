@@ -1,6 +1,12 @@
 # ChangeLog
 
-## 2025-8-30
+## 2025-9-4
+
+### Added
+  - test test_tirar_dados_diferentes en test
+  - test test_tirar_dados_iguales en test
+
+## 2025-8-31
 
 ### Changed
   - Función verificar_movimientos_posibles de la Clase BackgammonGame 

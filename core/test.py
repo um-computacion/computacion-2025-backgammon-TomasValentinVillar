@@ -2,6 +2,7 @@ import unittest
 from core.backgammongame import BackgammonGame,PosNoDisponible,NoHayMovimientosPosibles, MovimientoInvalido
 from core.board import Board
 from core.checker import Checker
+from unittest.mock import patch
 class TestCore(unittest.TestCase):
 
     def test_ocupar_casilla(self):
@@ -192,3 +193,27 @@ class TestCore(unittest.TestCase):
         self.assertEqual(juego.__board__.__contenedor_fichas__[1],resultado_fichas[1])
         self.assertEqual(juego.__board__.__contenedor_fichas__[19][0].obtener_color(),resultado_fichas[19][0].obtener_color())
         self.assertEqual(len(juego.__board__.__contenedor_fichas__[19]),len(resultado_fichas[19]))
+
+        
+    @patch('random.randint', side_effect=[3, 5])
+    def test_tirar_dados_diferentes(self, mock_randint):
+        game = BackgammonGame()
+        game.tirar_dados()
+        
+        # Verificamos que se llamó randint dos veces
+        self.assertEqual(mock_randint.call_count, 2)
+        mock_randint.assert_any_call(1, 6)
+        
+        # Verificamos los valores de los dados
+        self.assertEqual(game.__dice_1__.obtener_numero(), 3)
+        self.assertEqual(game.__dice_2__.obtener_numero(), 5)
+    
+    @patch('random.randint', return_value=4)
+    def test_tirar_dados_iguales(self, mock_randint):
+        game = BackgammonGame()
+        game.tirar_dados()
+        
+        # Ambos dados deberían tener el mismo valor
+        self.assertEqual(game.__dice_1__.obtener_numero(), 4)
+        self.assertEqual(game.__dice_2__.obtener_numero(), 4)
+        self.assertEqual(mock_randint.call_count, 2)

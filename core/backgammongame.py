@@ -111,6 +111,10 @@ class BackgammonGame:
     
         # Si no hay movimientos posibles, lanzar excepción
         raise NoHayMovimientosPosibles("No hay movimientos posibles")
+    
+
+    #funcion realizar moviemto, se puede hacer una funcion aparte o agregar funcionalidad a funcion, acá cuando se haga un moviemmiton 
+    # se fijará si se puede hacer el movimiento segun el dado y sabrá sobre la cantidad de movimientos posibles
          
         
 
