@@ -3,6 +3,15 @@
 ## 2025-9-8
 
 ### Changed
+  - Función tirar_dados de la Clase BackgammonGame
+
+### Added
+  - test test_cantidad_mov_iguales en test
+  - test test_cantidad_mov en test
+
+## 2025-9-8
+
+### Changed
   - Función verificar_sacar_ficha de la Clase BackgammonGame
 
 ### Added

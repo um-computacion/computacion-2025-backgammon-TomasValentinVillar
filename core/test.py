@@ -2,6 +2,7 @@ import unittest
 from core.backgammongame import BackgammonGame,PosNoDisponible,NoHayMovimientosPosibles, MovimientoInvalido
 from core.board import Board
 from core.checker import Checker
+from core.dice import Dice
 from unittest.mock import patch
 class TestCore(unittest.TestCase):
 
@@ -241,3 +242,18 @@ class TestCore(unittest.TestCase):
         self.assertEqual(game.__dice_1__.obtener_numero(), 4)
         self.assertEqual(game.__dice_2__.obtener_numero(), 4)
         self.assertEqual(mock_randint.call_count, 2)
+    
+    @patch('random.randint', side_effect=[3, 5])
+    def test_cantidad_mov(self, mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+
+        self.assertEqual(juego.__cantidad_mov__, 2)
+    
+    @patch('random.randint', return_value = 1)
+    def test_cantidad_mov_iguales(self, randit_patched):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+
+
+        self.assertEqual(juego.__cantidad_mov__, 4)

@@ -12,6 +12,7 @@ class BackgammonGame:
         self.__board__ = Board()
         self.__dice_1__ = Dice()
         self.__dice_2__ = Dice()
+        self.__cantidad_mov__ = 0
 
     def ocupar_casilla(self,pos_inic,pos_fin):
         '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
@@ -27,7 +28,7 @@ class BackgammonGame:
                 board[pos_fin].pop()
 
         self.__board__.poner_ficha(pos_fin,self.__turno__)
-        if self.__turno__ == 'Blanco':
+        if self.__turno__ == 'Blanco': #corregir, debe cambiar de turno despues d que no queden movimientos
             self.__turno__ = 'Negro'
         else:
             self.__turno__ = 'Negro'
@@ -38,7 +39,12 @@ class BackgammonGame:
     def tirar_dados(self):
         self.__dice_1__.tirar_dado()
         self.__dice_2__.tirar_dado()
-    
+
+        if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
+            self.__cantidad_mov__ = 4
+        else:
+            self.__cantidad_mov__ = 2
+        
 
     def verificar_posicion_disponible(self,posicion):
 
@@ -47,7 +53,7 @@ class BackgammonGame:
              return True
         elif board[posicion][0].obtener_color()== self.__turno__:
              return True
-        elif len(board[posicion]) == 1:
+        elif len(board[posicion]) == 1: #comer ficha
              return True 
         else:
             return False
@@ -122,10 +128,13 @@ class BackgammonGame:
         # Si no hay movimientos posibles, lanzar excepción
         raise NoHayMovimientosPosibles("No hay movimientos posibles")
     
+    
+
+    
 
     #funcion realizar moviemto, se puede hacer una funcion aparte o agregar funcionalidad a funcion, acá cuando se haga un moviemmiton 
     # se fijará si se puede hacer el movimiento segun el dado y sabrá sobre la cantidad de movimientos posibles
          
-        
+    #función que verifica ganador    
 
-        
+    
