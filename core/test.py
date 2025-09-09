@@ -176,6 +176,30 @@ class TestCore(unittest.TestCase):
         with self.assertRaises(MovimientoInvalido):    
             juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__)
     
+    def test_sacar_ficha_negro(self):
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Negro")],[Checker("Negro")],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[],[]
+            ]
+            
+        self.assertTrue(juego.verificar_sacar_ficha(6,juego.__board__.__contenedor_fichas__))
+        self.assertTrue(juego.verificar_sacar_ficha(-1,juego.__board__.__contenedor_fichas__)) #quitar ficha de tablero
+    
+    def test_sacar_ficha_error_negro(self):
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Negro")],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[Checker("Negro")],[],[], [],[],[],[],[],[]
+            ]
+
+        with self.assertRaises(MovimientoInvalido):    
+            juego.verificar_sacar_ficha(-1,juego.__board__.__contenedor_fichas__)# se intenta quitar ficha de tablero
+    
+
     def test_comer_ficha(self):
         juego = BackgammonGame()
         juego.__board__.__contenedor_fichas__ =  [

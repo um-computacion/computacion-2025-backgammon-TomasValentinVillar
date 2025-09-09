@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 2025-9-8
+
+### Changed
+  - Función verificar_sacar_ficha de la Clase BackgammonGame
+
+### Added
+  - test test_sacar_ficha_error_negro en test
+  - test test_sacar_ficha_negro en test
+
 ## 2025-9-4
 
 ### Added

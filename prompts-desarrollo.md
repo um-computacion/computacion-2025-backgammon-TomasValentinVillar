@@ -201,3 +201,58 @@ y si es negro, tanto d1 como d2 como d1+d2 serán negativas? es una buena soluci
 . El codigo se ha usado sin modificacioes
 
 . Referencia: core/backgammon.py
+
+. Modelo: Claude Sonnet 4
+
+. hola claude, estoy haciendo una función que verifica si un jugador de backgammon puede quitar una ficha del tablero, para sacar las 15 y ganar, lo que hace es verificar si el moviemiento es mayor a la cantidad de indices para sacar la ficha del tablero y verifica si todas las ficahs del turno estan en el unltimo cuadrante, el problema es que solo funciona para turno blanco, como puedo hacer para que tambien funcione para turno negro?
+
+def verificar_sacar_ficha(self,posicion,board):
+ if posicion < 23:
+return True
+for pos in range(18):
+if len(board[pos]) > 0:
+if board[pos][0].obtener_color() == self.turno:
+raise MovimientoInvalido("No se puede realizar ese movimiento")
+return True
+
+. 
+
+. Hola! Veo el problema. Tu función solo funciona para fichas blancas porque está hardcodeada para verificar el "home board" de las blancas (posiciones 18-23).
+
+En backgammon:
+- **Fichas blancas**: home board en posiciones 18-23 (salen hacia posición 24+)
+- **Fichas negras**: home board en posiciones 0-5 (salen hacia posición -1)
+
+## Solución:
+
+Necesitas adaptar la lógica según el turno:
+
+```python
+def verificar_sacar_ficha(self, posicion, board):
+    if self.__turno__ == "Blanco":
+        # Blancas: verificar si está en home board (18-23)
+        if posicion < 18:
+            return True
+        # Verificar que no hay fichas blancas fuera del home board (0-17)
+        for pos in range(18):
+            if len(board[pos]) > 0:
+                if board[pos][0].obtener_color() == self.__turno__:
+                    raise MovimientoInvalido("No se puede realizar ese movimiento")
+    else:  # Turno negro
+        # Negras: verificar si está en home board (0-5)  
+        if posicion > 5:
+            return True
+        # Verificar que no hay fichas negras fuera del home board (6-23)
+        for pos in range(6, 24):
+            if len(board[pos]) > 0:
+                if board[pos][0].obtener_color() == self.__turno__:
+                    raise MovimientoInvalido("No se puede realizar ese movimiento")
+    
+    return True
+```
+
+¿Te queda claro cómo adapté la lógica para ambos colores?
+
+. la respuesta fue usada sin modificaciones
+
+. Referencias: core/backgammongame.py
