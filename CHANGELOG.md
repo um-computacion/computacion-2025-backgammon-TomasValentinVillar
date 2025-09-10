@@ -1,9 +1,15 @@
 # ChangeLog
 
+## 2025-9-8 (21:18)
+
+### Added
+  - funcion verificar_moviemientos_y_dados en Clase BackgammonGame
+
 ## 2025-9-8
 
 ### Changed
   - Función tirar_dados de la Clase BackgammonGame
+  - __init__ de clase Bakgammon
 
 ### Added
   - test test_cantidad_mov_iguales en test

@@ -128,6 +128,32 @@ class BackgammonGame:
         # Si no hay movimientos posibles, lanzar excepción
         raise NoHayMovimientosPosibles("No hay movimientos posibles")
     
+    def verificar_movimientos_y_dados(self, pos_inic,pos_fin):
+        d1 = self.__dice_1__ 
+        d2 = self.__dice_2__
+        
+
+        if self.__turno__ == "Blanco":
+            if (pos_fin - pos_inic) == d1:
+                self.__cantidad_mov__ -= 1
+                return True
+            if (pos_fin - pos_inic) == d2:
+                self.__cantidad_mov__ -= 1
+                return True
+            if (pos_fin - pos_inic) == d1 + d2:
+                self.__cantidad_mov__ -= 2
+                return True
+            
+        if self.__turno__ == "Negro":
+            if (pos_inic - pos_fin) == d1:
+                self.__cantidad_mov__ -= 1
+                return True
+            if (pos_inic - pos_fin) == d2:
+                self.__cantidad_mov__ -= 1
+                return True
+            if (pos_inic - pos_fin) == d1 + d2:
+                self.__cantidad_mov__ -= 2
+                return True
     
 
     
