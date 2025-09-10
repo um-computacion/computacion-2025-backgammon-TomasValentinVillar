@@ -257,3 +257,59 @@ class TestCore(unittest.TestCase):
 
 
         self.assertEqual(juego.__cantidad_mov__, 4)
+
+    def test_verificar_movimientos_y_dados_blanco(self):
+        juego = BackgammonGame()
+
+        juego.__dice_1__ = 2
+        juego.__dice_2__ = 5
+        juego.__cantidad_mov__ = 2
+
+        self.assertTrue(juego.verificar_movimientos_y_dados(10,15))
+        self.assertEqual(juego.__cantidad_mov__, 1)
+    
+    def test_verificar_movimientos_y_dados_blanco_doble(self):
+        juego = BackgammonGame()
+
+        juego.__dice_1__ = 5
+        juego.__dice_2__ = 5
+        juego.__cantidad_mov__ = 4
+
+        self.assertTrue(juego.verificar_movimientos_y_dados(10,20))
+        self.assertEqual(juego.__cantidad_mov__, 2)
+    
+    def test_verificar_movimientos_y_dados_negro(self):
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+
+        juego.__dice_1__ = 2
+        juego.__dice_2__ = 5
+        juego.__cantidad_mov__ = 2
+
+        self.assertTrue(juego.verificar_movimientos_y_dados(15, 10))
+        self.assertEqual(juego.__cantidad_mov__, 1)
+
+    def test_verificar_movimientos_y_dados_negro_doble(self):
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+
+
+        juego.__dice_1__ = 5
+        juego.__dice_2__ = 5
+        juego.__cantidad_mov__ = 4
+
+        self.assertTrue(juego.verificar_movimientos_y_dados(20,10))
+        self.assertEqual(juego.__cantidad_mov__, 2)
+    
+    def test_verificar_movimientos_y_dados_error(self):
+        juego = BackgammonGame()
+
+        juego.__dice_1__ = 5
+        juego.__dice_2__ = 2
+        juego.__cantidad_mov__ = 2
+        with self.assertRaises(MovimientoInvalido):
+            juego.verificar_movimientos_y_dados(5,9)
+        with self.assertRaises(MovimientoInvalido):
+            juego.__turno__ = "Negro"
+            juego.verificar_movimientos_y_dados(15,11)   
+        

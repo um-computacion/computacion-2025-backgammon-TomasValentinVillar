@@ -1,11 +1,24 @@
 # ChangeLog
 
-## 2025-9-8 (21:18)
+## 2025-9-9 (23:06)
+
+### Changed
+  - Función verificar_movimientos_y_dados de la Clase BackgammonGame
+  -
+
+### Added
+  - test verificar_movimientos_y_dados_blanco en test
+  - test verificar_movimientos_y_dados_blanco_doble en test
+  - test verificar_movimientos_y_dados_negro en test
+  - test verificar_movimientos_y_dados_negro_doble en test
+  - test verificar_movimientos_y_dados_error en test
+
+## 2025-9-9 (21:18)
 
 ### Added
   - funcion verificar_moviemientos_y_dados en Clase BackgammonGame
 
-## 2025-9-8
+## 2025-9-9
 
 ### Changed
   - Función tirar_dados de la Clase BackgammonGame

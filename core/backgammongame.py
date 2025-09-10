@@ -6,6 +6,7 @@ class NoHayMovimientosPosibles(Exception):
     pass
 class MovimientoInvalido(Exception):
     pass
+
 class BackgammonGame:
     def __init__(self):
         self.__turno__ = "Blanco"
@@ -143,8 +144,10 @@ class BackgammonGame:
             if (pos_fin - pos_inic) == d1 + d2:
                 self.__cantidad_mov__ -= 2
                 return True
+            else:
+                raise MovimientoInvalido("El moviemiento no coincide con el dado")
             
-        if self.__turno__ == "Negro":
+        elif self.__turno__ == "Negro":
             if (pos_inic - pos_fin) == d1:
                 self.__cantidad_mov__ -= 1
                 return True
@@ -154,6 +157,8 @@ class BackgammonGame:
             if (pos_inic - pos_fin) == d1 + d2:
                 self.__cantidad_mov__ -= 2
                 return True
+            else:
+                raise MovimientoInvalido("El moviemiento no coincide con el dado")
     
 
     
