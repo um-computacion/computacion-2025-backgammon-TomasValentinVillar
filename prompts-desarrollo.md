@@ -256,3 +256,90 @@ def verificar_sacar_ficha(self, posicion, board):
 . la respuesta fue usada sin modificaciones
 
 . Referencias: core/backgammongame.py
+
+. tengo esta funcion que verifica si se quiere hacer un moviemiento, que este tenga sentido con los dados ya tirados anterior mente, pero descubrí un error, y es que se puede utilizar dos veces el valor de un dado aunque sean distintos
+
+def verificar_movimientos_y_dados(self, pos_inic,pos_fin):
+ d1 = self.dice_1
+d2 = self.dice_2
+if self.turno == "Blanco":
+if (pos_fin - pos_inic) == d1:
+self.cantidad_mov -= 1
+return True
+if (pos_fin - pos_inic) == d2:
+self.cantidad_mov -= 1
+return True
+
+if (pos_fin - pos_inic) == d1 + d2:
+self.cantidad_mov -= 2
+return True
+else:
+raise MovimientoInvalido("El moviemiento no coincide con el dado")
+elif self.turno == "Negro":
+if (pos_inic - pos_fin) == d1:
+self.cantidad_mov -= 1
+return True
+if (pos_inic - pos_fin) == d2:
+self.cantidad_mov -= 1
+return True
+if (pos_inic - pos_fin) == d1 + d2:
+self.cantidad_mov -= 2
+return True
+else:
+raise MovimientoInvalido("El moviemiento no coincide con el dado")
+
+esta es la funcion tirar dados donde se define la cantidad de movimientos
+
+def tirar_dados(self):
+ self.dice_1.tirar_dado()
+self.dice_2.tirar_dado()
+if self.dice_1.obtener_numero() == self.dice_2.obtener_numero():
+self.cantidad_mov = 4
+else:
+self.cantidad_mov = 2
+
+y esta es la contructora para que puedas ver los atributos de la clase
+
+class BackgammonGame:
+ def init(self):
+self.turno = "Blanco"
+self.board = Board()
+self.dice_1 = Dice()
+self.dice_2 = Dice()
+self.cantidad_mov = 0
+
+.
+
+. Respuesta: ¡Exacto! Has identificado un problema muy importante. Tu función permite usar el mismo dado múltiples veces porque no lleva registro de cuáles dados ya se han usado.
+
+**El problema**:
+- Si tienes dados 3 y 5, puedes hacer un movimiento de 3 pasos y luego otro movimiento de 3 pasos usando el mismo dado nuevamente.
+
+**Soluciones posibles**:
+
+**Opción 1**: Agregar atributos para rastrear dados usados:
+```python
+# En el constructor
+self.__dado_1_usado__ = False
+self.__dado_2_usado__ = False
+```
+
+**Opción 2** (más simple): Usar una lista de dados disponibles:
+```python
+# En tirar_dados(), después de tirar:
+if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
+    # Dobles: 4 movimientos del mismo valor
+    self.__dados_disponibles__ = [self.__dice_1__.obtener_numero()] * 4
+else:
+    # Dados diferentes: 1 movimiento de cada valor
+    self.__dados_disponibles__ = [self.__dice_1__.obtener_numero(), self.__dice_2__.obtener_numero()]
+```
+
+Luego en `verificar_movimientos_y_dados`, remover el dado usado de la lista.
+
+**¿Cuál prefieres?** La Opción 2 es más elegante y maneja automáticamente tanto dados diferentes como dobles. ¿Te parece bien esa aproximación o prefieres otra?
+
+- la respuesta fue usada para corregir a verificar_movimientos_y_dados y que fuenciones correctamente la logica de la opcion fue utilizada
+
+- Referencia: core/backgammongame.py
+

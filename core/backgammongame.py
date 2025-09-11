@@ -13,7 +13,7 @@ class BackgammonGame:
         self.__board__ = Board()
         self.__dice_1__ = Dice()
         self.__dice_2__ = Dice()
-        self.__cantidad_mov__ = 0
+        self.__dados_disponibles__ = []
 
     def ocupar_casilla(self,pos_inic,pos_fin):
         '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
@@ -42,9 +42,9 @@ class BackgammonGame:
         self.__dice_2__.tirar_dado()
 
         if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
-            self.__cantidad_mov__ = 4
+            self.__dados_disponibles__ = [self.__dice_1__,self.__dice_2__,self.__dice_1__,self.__dice_2__]
         else:
-            self.__cantidad_mov__ = 2
+            self.__dados_disponibles__ = [self.__dice_1__,self.__dice_2__]
         
 
     def verificar_posicion_disponible(self,posicion):
@@ -130,32 +130,34 @@ class BackgammonGame:
         raise NoHayMovimientosPosibles("No hay movimientos posibles")
     
     def verificar_movimientos_y_dados(self, pos_inic,pos_fin):
-        d1 = self.__dice_1__ 
+        d1 = self.__dice_1__
         d2 = self.__dice_2__
         
 
         if self.__turno__ == "Blanco":
-            if (pos_fin - pos_inic) == d1:
-                self.__cantidad_mov__ -= 1
+            if (pos_fin - pos_inic) == d1.obtener_numero():
+                self.__dados_disponibles__.remove(d1)
                 return True
-            if (pos_fin - pos_inic) == d2:
-                self.__cantidad_mov__ -= 1
+            if (pos_fin - pos_inic) == d2.obtener_numero():
+                self.__dados_disponibles__.remove(d2)
                 return True
-            if (pos_fin - pos_inic) == d1 + d2:
-                self.__cantidad_mov__ -= 2
+            if (pos_fin - pos_inic) == d1.obtener_numero() + d2.obtener_numero():
+                self.__dados_disponibles__.remove(d1)
+                self.__dados_disponibles__.remove(d2)
                 return True
             else:
                 raise MovimientoInvalido("El moviemiento no coincide con el dado")
             
         elif self.__turno__ == "Negro":
-            if (pos_inic - pos_fin) == d1:
-                self.__cantidad_mov__ -= 1
+            if (pos_inic - pos_fin) == d1.obtener_numero():
+                self.__dados_disponibles__.remove(d1)
                 return True
-            if (pos_inic - pos_fin) == d2:
-                self.__cantidad_mov__ -= 1
+            if (pos_inic - pos_fin) == d2.obtener_numero():
+                self.__dados_disponibles__.remove(d2)
                 return True
-            if (pos_inic - pos_fin) == d1 + d2:
-                self.__cantidad_mov__ -= 2
+            if (pos_inic - pos_fin) == d1.obtener_numero() + d2.obtener_numero():
+                self.__dados_disponibles__.remove(d1)
+                self.__dados_disponibles__.remove(d2)
                 return True
             else:
                 raise MovimientoInvalido("El moviemiento no coincide con el dado")

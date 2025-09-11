@@ -248,65 +248,69 @@ class TestCore(unittest.TestCase):
         juego = BackgammonGame()
         juego.tirar_dados()
 
-        self.assertEqual(juego.__cantidad_mov__, 2)
-    
+        self.assertEqual(len(juego.__dados_disponibles__),2)
+        self.assertEqual((juego.__dados_disponibles__[0].obtener_numero()), 3)
+        self.assertEqual((juego.__dados_disponibles__[1].obtener_numero()), 5)
+
     @patch('random.randint', return_value = 1)
     def test_cantidad_mov_iguales(self, randit_patched):
         juego = BackgammonGame()
         juego.tirar_dados()
 
 
-        self.assertEqual(juego.__cantidad_mov__, 4)
+        self.assertEqual(len(juego.__dados_disponibles__),4)
+        self.assertEqual((juego.__dados_disponibles__[0].obtener_numero()),1)
+        self.assertEqual((juego.__dados_disponibles__[1].obtener_numero()), 1)
+        self.assertEqual((juego.__dados_disponibles__[2].obtener_numero()), 1)
+        self.assertEqual((juego.__dados_disponibles__[3].obtener_numero()), 1)
 
-    def test_verificar_movimientos_y_dados_blanco(self):
+    @patch('random.randint', side_effect=[2, 5])
+    def test_verificar_movimientos_y_dados_blanco(self,mock_randint):
         juego = BackgammonGame()
-
-        juego.__dice_1__ = 2
-        juego.__dice_2__ = 5
-        juego.__cantidad_mov__ = 2
+        juego.tirar_dados()
 
         self.assertTrue(juego.verificar_movimientos_y_dados(10,15))
-        self.assertEqual(juego.__cantidad_mov__, 1)
+        self.assertEqual(len(juego.__dados_disponibles__), 1)
+        self.assertEqual(juego.__dados_disponibles__[0].obtener_numero(), 2)
     
-    def test_verificar_movimientos_y_dados_blanco_doble(self):
+    @patch('random.randint', side_effect=[5, 5])
+    def test_verificar_movimientos_y_dados_blanco_doble(self,mock_randint):
         juego = BackgammonGame()
+        juego.tirar_dados()
 
-        juego.__dice_1__ = 5
-        juego.__dice_2__ = 5
-        juego.__cantidad_mov__ = 4
 
         self.assertTrue(juego.verificar_movimientos_y_dados(10,20))
-        self.assertEqual(juego.__cantidad_mov__, 2)
+        self.assertEqual(len(juego.__dados_disponibles__), 2)
+        self.assertEqual(juego.__dados_disponibles__[0].obtener_numero(), 5)
+        self.assertEqual(juego.__dados_disponibles__[0].obtener_numero(), 5)
     
-    def test_verificar_movimientos_y_dados_negro(self):
+    @patch('random.randint', side_effect=[2, 5])
+    def test_verificar_movimientos_y_dados_negro(self,mock_randint):
         juego = BackgammonGame()
         juego.__turno__ = "Negro"
-
-        juego.__dice_1__ = 2
-        juego.__dice_2__ = 5
-        juego.__cantidad_mov__ = 2
+        juego.tirar_dados()
 
         self.assertTrue(juego.verificar_movimientos_y_dados(15, 10))
-        self.assertEqual(juego.__cantidad_mov__, 1)
-
-    def test_verificar_movimientos_y_dados_negro_doble(self):
+        self.assertEqual(len(juego.__dados_disponibles__), 1)
+        self.assertEqual(juego.__dados_disponibles__[0].obtener_numero(), 2)
+    
+    @patch('random.randint', side_effect=[5, 5])
+    def test_verificar_movimientos_y_dados_negro_doble(self,mock_randint):
         juego = BackgammonGame()
         juego.__turno__ = "Negro"
+        juego.tirar_dados()
 
-
-        juego.__dice_1__ = 5
-        juego.__dice_2__ = 5
-        juego.__cantidad_mov__ = 4
 
         self.assertTrue(juego.verificar_movimientos_y_dados(20,10))
-        self.assertEqual(juego.__cantidad_mov__, 2)
-    
-    def test_verificar_movimientos_y_dados_error(self):
-        juego = BackgammonGame()
+        self.assertEqual(len(juego.__dados_disponibles__), 2)
+        self.assertEqual(juego.__dados_disponibles__[0].obtener_numero(), 5)
+        self.assertEqual(juego.__dados_disponibles__[0].obtener_numero(), 5)
 
-        juego.__dice_1__ = 5
-        juego.__dice_2__ = 2
-        juego.__cantidad_mov__ = 2
+    @patch('random.randint', side_effect=[5, 2])
+    def test_verificar_movimientos_y_dados_error(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+
         with self.assertRaises(MovimientoInvalido):
             juego.verificar_movimientos_y_dados(5,9)
         with self.assertRaises(MovimientoInvalido):
