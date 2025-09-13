@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 2025-9-13
+
+### Changed
+  - Función verificar_movimientos_posibles de la Clase BackgammonGame
+  - test verificar_movimientos_posibles en test
+  - test verificar_movimientos_posibles_no_hay en test
+  - test verificar_movimientos_posibles_negro en test
+  - test verificar_movimientos_posibles_negro_no_hay en test
+
 ## 2025-9-10
 
 ### Changed

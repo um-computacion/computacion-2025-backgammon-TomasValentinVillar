@@ -117,13 +117,13 @@ class BackgammonGame:
     
             # Verificar movimientos posibles con cada dado individualmente
         for i in range(24):
-                if es_movimiento_valido(i, d1) or es_movimiento_valido(i, d2):
+                if es_movimiento_valido(i, d1.obtener_numero()) or es_movimiento_valido(i, d2.obtener_numero()):
                     return True
     
         # Verificar movimiento combinado (solo si no son dobles)
-        if d1 != d2:
+        if d1.obtener_numero() != d2.obtener_numero():
             for i in range(24):
-                if es_movimiento_valido(i, d1 + d2):
+                if es_movimiento_valido(i, d1.obtener_numero() + d2.obtener_numero()):
                     return True
     
         # Si no hay movimientos posibles, lanzar excepción

@@ -106,8 +106,8 @@ class TestCore(unittest.TestCase):
     def test_verificar_movimientos_posibles(self):
     
         juego = BackgammonGame()
-        juego.__dice_1__ = 3
-        juego.__dice_2__ = 2
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Blanco")],[],[],[],[],
@@ -120,8 +120,8 @@ class TestCore(unittest.TestCase):
     def test_verificar_movimientos_posibles_no_hay(self):
     
         juego = BackgammonGame()
-        juego.__dice_1__ = 3
-        juego.__dice_2__ = 2
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Blanco")],[],[Checker("Negro"),Checker("Negro")],[Checker("Negro"),Checker("Negro")],[],
@@ -134,8 +134,8 @@ class TestCore(unittest.TestCase):
         juego = BackgammonGame()
 
         juego.__turno__ = "Negro"
-        juego.__dice_1__ = 3
-        juego.__dice_2__ = 2
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Negro")],[],[],[],[],
@@ -147,8 +147,8 @@ class TestCore(unittest.TestCase):
     
         juego = BackgammonGame()
         juego.__turno__ = "Negro"
-        juego.__dice_1__ = 3
-        juego.__dice_2__ = 2
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[],
