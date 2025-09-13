@@ -1,5 +1,110 @@
 # ChangeLog
 
+## 2025-9-13
+
+### Changed
+  - Función verificar_movimientos_posibles de la Clase BackgammonGame
+  - test verificar_movimientos_posibles en test
+  - test verificar_movimientos_posibles_no_hay en test
+  - test verificar_movimientos_posibles_negro en test
+  - test verificar_movimientos_posibles_negro_no_hay en test
+
+## 2025-9-10
+
+### Changed
+  - Función verificar_movimientos_y_dados de la Clase BackgammonGame
+  - test verificar_movimientos_y_dados_blanco en test
+  - test verificar_movimientos_y_dados_blanco_doble en test
+  - test verificar_movimientos_y_dados_negro en test
+  - test verificar_movimientos_y_dados_negro_doble en test
+  - test verificar_movimientos_y_dados_error en test
+
+## 2025-9-9 (23:06)
+
+### Changed
+  - Función verificar_movimientos_y_dados de la Clase BackgammonGame
+  -
+
+### Added
+  - test verificar_movimientos_y_dados_blanco en test
+  - test verificar_movimientos_y_dados_blanco_doble en test
+  - test verificar_movimientos_y_dados_negro en test
+  - test verificar_movimientos_y_dados_negro_doble en test
+  - test verificar_movimientos_y_dados_error en test
+
+## 2025-9-9 (21:18)
+
+### Added
+  - funcion verificar_moviemientos_y_dados en Clase BackgammonGame
+
+## 2025-9-9
+
+### Changed
+  - Función tirar_dados de la Clase BackgammonGame
+  - __init__ de clase Bakgammon
+
+### Added
+  - test test_cantidad_mov_iguales en test
+  - test test_cantidad_mov en test
+
+## 2025-9-8
+
+### Changed
+  - Función verificar_sacar_ficha de la Clase BackgammonGame
+
+### Added
+  - test test_sacar_ficha_error_negro en test
+  - test test_sacar_ficha_negro en test
+
+## 2025-9-4
+
+### Added
+  - test test_tirar_dados_diferentes en test
+  - test test_tirar_dados_iguales en test
+
+## 2025-8-31
+
+### Changed
+  - Función verificar_movimientos_posibles de la Clase BackgammonGame 
+
+### Added
+  - test test_verificar_movimientos_posibles_no_hay_negro en test
+  - test test_verificar_movimientos_posibles_no_hay_negro en test
+
+## 2025-8-30
+
+### Changed
+  - Función ocupar_casilla de la Clase BackgammonGame 
+
+### Added
+  - test comer_ficha en test
+
+## 2025-8-29
+
+### Added
+  - Función verificar_sacar_ficha de la clase BackgammonGame
+  - test de la función verificar_sacar_ficha 
+
+## 2025-8-28
+
+### Changed
+  - Función verificar_moviemitos_posibles de la Clase BackgammonGame 
+  - test de la funcion verificar_moviemitos_posibles
+  - Función verificar_posicion_disponible de la Clase BackgammonGame 
+  - test de la funcion verificar_posicion_disponible
+
+## 2025-8-27
+
+### Added
+  - Información al Archivo CHANGELOG.md
+  - La Clase Checker
+
+## 2025-8-27 (23:16hs)
+
+### Added
+  - Función verificar_moviemitos_posibles de la Clase BackgammonGame (los test no pasan, se debe corregir)
+  - test de la funcion verificar_moviemitos_posibles
+
 ## 2025-8-27
 
 ### Added
