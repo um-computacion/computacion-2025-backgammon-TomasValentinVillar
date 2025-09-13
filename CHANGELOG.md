@@ -1,5 +1,16 @@
 # ChangeLog
 
+## 2025-9-13 (18:35)
+
+### Added
+  - Funcion comer_ficha en clase Board
+  - test comer_ficha_negra en test
+  - test comer_ficha_blanca en test
+
+### Changed
+  - Función __init__ de la Clase Board
+
+
 ## 2025-9-13
 
 ### Changed

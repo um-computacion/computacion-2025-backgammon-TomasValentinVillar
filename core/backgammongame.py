@@ -27,7 +27,7 @@ class BackgammonGame:
         if len(board[pos_fin]) == 1: #Ahora tambien se puede comer ficha
             if board[pos_fin][0].obtener_color() != self.__turno__:
                 board[pos_fin].pop()
-
+                #funcion comer ficha de tablero(pos_fin,pos_inic)
         self.__board__.poner_ficha(pos_fin,self.__turno__)
         if self.__turno__ == 'Blanco': #corregir, debe cambiar de turno despues d que no queden movimientos
             self.__turno__ = 'Negro'
