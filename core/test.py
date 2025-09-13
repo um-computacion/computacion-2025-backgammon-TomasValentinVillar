@@ -341,3 +341,28 @@ class TestCore(unittest.TestCase):
         self.assertEqual(len(juego.__board__.__contenedor_fichas__[20]), 0)
         self.assertEqual(len(juego.__board__.obtener_contenedor_blancas()), 1)
         self.assertEqual(juego.__board__.obtener_contenedor_blancas()[0].obtener_color(), "Blanco")
+    
+    def test_sacar_ficha_blanca(self):
+        juego = BackgammonGame()
+        juego.__board__.__contenedor_fichas__ = [
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[Checker("Blanco")],[],[],[]
+        ]
+        juego.__board__.sacar_ficha(20, juego.__turno__)
+
+        self.assertEqual(len(juego.__board__.__contenedor_fichas__[20]), 0)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_blancas_sacadas()), 1)
+        self.assertEqual(juego.__board__.obtener_contenedor_blancas_sacadas()[0].obtener_color(), "Blanco")
+    
+    def test_sacar_ficha_negra(self):
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+        juego.__board__.__contenedor_fichas__ = [
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[Checker("Negro")],[],[],[]
+        ]
+        juego.__board__.sacar_ficha(20, juego.__turno__)
+
+        self.assertEqual(len(juego.__board__.__contenedor_fichas__[20]), 0)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_negras_sacadas()), 1)
+        self.assertEqual(juego.__board__.obtener_contenedor_negras_sacadas()[0].obtener_color(), "Negro")

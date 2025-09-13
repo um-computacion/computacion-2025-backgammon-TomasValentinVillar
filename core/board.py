@@ -46,3 +46,15 @@ class Board:
             self.__contenedor_fichas_negras__.append(Checker("Negro"))
         else:
             self.__contenedor_fichas_blancas__.append(Checker("Blanco"))
+    
+    def sacar_ficha(self,pos_inic,turno):
+        '''Entradas: Posicion final y turno
+
+        Funcionalidad: quitar la fucha de la posición indicada y agregar la ficha correspondiente al turno contrario al
+                        contenenedor correspondiente a las fichas que se han sacado
+        '''
+        self.__contenedor_fichas__[pos_inic].pop()
+        if turno == "Blanco":
+            self.__contenedor_fichas_blancas_sacadas__.append(Checker("Blanco"))
+        else:
+            self.__contenedor_fichas_negras_sacadas__.append(Checker("Negro"))

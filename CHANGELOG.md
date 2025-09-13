@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2025-9-13 (19:47)
+
+### Added
+  - Funcion sacar_ficha en clase Board
+  - test sacar_ficha_blanca en test
+  - test sacar_ficha_negra en test
+
 ## 2025-9-13 (18:35)
 
 ### Added
