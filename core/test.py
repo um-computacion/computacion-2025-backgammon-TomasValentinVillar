@@ -366,3 +366,19 @@ class TestCore(unittest.TestCase):
         self.assertEqual(len(juego.__board__.__contenedor_fichas__[20]), 0)
         self.assertEqual(len(juego.__board__.obtener_contenedor_negras_sacadas()), 1)
         self.assertEqual(juego.__board__.obtener_contenedor_negras_sacadas()[0].obtener_color(), "Negro")
+    
+    def test_varificar_cambio_turno_cambia(self):
+        juego = BackgammonGame()
+        juego.__dados_disponibles__ = [] #lista sin dados disponibles
+
+        juego.verificar_cambio_turno()
+        self.assertEqual(juego.__turno__, "Negro")
+
+    @patch('random.randint', side_effect=[5, 2])
+    def test_varificar_cambio_turno_no_cambia(self, mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+
+        self.assertTrue(juego.verificar_cambio_turno())
+
+        

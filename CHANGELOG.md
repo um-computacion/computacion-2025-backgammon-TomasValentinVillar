@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2025-9-14
+
+### Added
+  - Funcio verificar_cambio_turno en BackgammonGame
+  - test  test_varificar_cambio_turno_cambia en test
+  - test  test_varificar_cambio_turno_no_cambia test
+
 ## 2025-9-13 (19:47)
 
 ### Added
