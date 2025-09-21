@@ -381,4 +381,11 @@ class TestCore(unittest.TestCase):
 
         self.assertTrue(juego.verificar_cambio_turno())
 
+    def test_crear_jugador(self):
+        juego = BackgammonGame()
+        juego.crear_jugador('Tomas', 'Blanco', 'Jugando')
+        self.assertEqual('Tomas', juego.obtener_players()['Blanco'].obtener_nombre())
+        self.assertEqual('Blanco', juego.obtener_players()['Blanco'].obtener_ficha())
+    
+
         
