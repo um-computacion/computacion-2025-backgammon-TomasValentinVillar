@@ -387,5 +387,27 @@ class TestCore(unittest.TestCase):
         self.assertEqual('Tomas', juego.obtener_players()['Blanco'].obtener_nombre())
         self.assertEqual('Blanco', juego.obtener_players()['Blanco'].obtener_ficha())
     
+    def test_verficar_fichas_sacadas_15_blanco(self):
+        juego = BackgammonGame()
+        juego.__board__.__contenedor_fichas_blancas_sacadas__ = [
+            Checker("Blanco"), Checker("Blanco"), Checker("Blanco"),
+            Checker("Blanco"), Checker("Blanco"), Checker("Blanco"),
+            Checker("Blanco"), Checker("Blanco"), Checker("Blanco"),
+            Checker("Blanco"), Checker("Blanco"), Checker("Blanco"),
+            Checker("Blanco"), Checker("Blanco"), Checker("Blanco"),
+        ]
+        self.assertTrue(juego.__board__.verficar_fichas_sacadas_15(juego.__turno__))
+
+    def test_verficar_fichas_sacadas_15_negro(self):
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+        juego.__board__.__contenedor_fichas_negras_sacadas__ = [
+            Checker("Negro"), Checker("Negro"), Checker("Negro"),
+            Checker("Negro"), Checker("Negro"), Checker("Negro"),
+            Checker("Negro"), Checker("Negro"), Checker("Negro"),
+            Checker("Negro"), Checker("Negro"), Checker("Negro"),
+            Checker("Negro"), Checker("Negro"), Checker("Negro"),
+        ]
+        self.assertTrue(juego.__board__.verficar_fichas_sacadas_15(juego.__turno__))
 
         

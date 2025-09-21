@@ -3,6 +3,13 @@
 ## 2025-9-20
 
 ### Added
+  - funcion verficar_fichas_sacadas_15 en clase Boaed
+  - test test_verficar_fichas_sacadas_15_negro en test
+  - test test_verficar_fichas_sacadas_15_blanco en test
+
+## 2025-9-20
+
+### Added
   - clase player con core/player.py
   - funcion __init__ en clase Player
   - funciones para obtener atributos de clase Player
