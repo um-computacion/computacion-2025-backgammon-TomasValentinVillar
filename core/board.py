@@ -58,3 +58,16 @@ class Board:
             self.__contenedor_fichas_blancas_sacadas__.append(Checker("Blanco"))
         else:
             self.__contenedor_fichas_negras_sacadas__.append(Checker("Negro"))
+    
+    def verficar_fichas_sacadas_15(self,turno):
+        """
+        Entradas: turno
+
+        Funcion: verificar si las fichas que se han sacado son 15 para saber si el tunrno correspondiente ha ganado la partida
+        """
+        if turno == "Blanco":
+            if len(self.__contenedor_fichas_blancas_sacadas__ ) == 15:
+                return True
+        else:
+            if len(self.__contenedor_fichas_negras_sacadas__ ) == 15:
+                return True

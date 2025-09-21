@@ -1,11 +1,13 @@
 from core.board import Board
 from core.dice import Dice
+from core.player import Player
 class PosNoDisponible(Exception): #esta exepción se va a usar cuando verificar_posicion_disponible sea Falsa
     pass
 class NoHayMovimientosPosibles(Exception):
     pass
 class MovimientoInvalido(Exception):
     pass
+
 
 class BackgammonGame:
     def __init__(self):
@@ -14,8 +16,20 @@ class BackgammonGame:
         self.__dice_1__ = Dice()
         self.__dice_2__ = Dice()
         self.__dados_disponibles__ = []
+        self.__players__ = {}
     
     
+    def crear_jugador(self,nom,ficha,estado):
+        '''Entradas: nombre de jugador, ficha correspondiente, estado inicial
+
+        Funcionalidad: Crear una instacia de la clase jugador y agregarla en el diccionario jugadores
+        '''
+
+        jugador = Player(nom,ficha,estado)
+        self.__players__[ficha] = jugador
+
+    def obtener_players(self):
+        return self.__players__
 
     def ocupar_casilla(self,pos_inic,pos_fin):
         '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
