@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 2025-9-21
+
+### Added
+  - archivo ci.yml en github/workflows
+  - pylintrc
+
+## Changed
+  - requirements.txt
+
 ## 2025-9-20
 
 ### Added
