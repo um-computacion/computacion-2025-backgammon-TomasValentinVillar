@@ -1,5 +1,30 @@
 # ChangeLog
 
+## 2025-9-14
+
+### Added
+  - Funcio verificar_cambio_turno en BackgammonGame
+  - test  test_varificar_cambio_turno_cambia en test
+  - test  test_varificar_cambio_turno_no_cambia test
+
+## 2025-9-13 (19:47)
+
+### Added
+  - Funcion sacar_ficha en clase Board
+  - test sacar_ficha_blanca en test
+  - test sacar_ficha_negra en test
+
+## 2025-9-13 (18:35)
+
+### Added
+  - Funcion comer_ficha en clase Board
+  - test comer_ficha_negra en test
+  - test comer_ficha_blanca en test
+
+### Changed
+  - Función __init__ de la Clase Board
+
+
 ## 2025-9-13
 
 ### Changed

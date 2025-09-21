@@ -14,6 +14,8 @@ class BackgammonGame:
         self.__dice_1__ = Dice()
         self.__dice_2__ = Dice()
         self.__dados_disponibles__ = []
+    
+    
 
     def ocupar_casilla(self,pos_inic,pos_fin):
         '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
@@ -27,17 +29,15 @@ class BackgammonGame:
         if len(board[pos_fin]) == 1: #Ahora tambien se puede comer ficha
             if board[pos_fin][0].obtener_color() != self.__turno__:
                 board[pos_fin].pop()
-
+                #funcion comer ficha de tablero(pos_fin,pos_inic)
         self.__board__.poner_ficha(pos_fin,self.__turno__)
-        if self.__turno__ == 'Blanco': #corregir, debe cambiar de turno despues d que no queden movimientos
-            self.__turno__ = 'Negro'
-        else:
-            self.__turno__ = 'Negro'
-    '''
+
+   
+    def tirar_dados(self):
+        '''
 
         Funcionalidad: Llama a la función tirar dado para asignarle un numero a los atributos de __dice_1__ y __dice_2__
         '''
-    def tirar_dados(self):
         self.__dice_1__.tirar_dado()
         self.__dice_2__.tirar_dado()
 
@@ -161,13 +161,22 @@ class BackgammonGame:
                 return True
             else:
                 raise MovimientoInvalido("El moviemiento no coincide con el dado")
-    
+            
+        
+    def verificar_cambio_turno(self):
+        '''
+        Funcionalidad: Cambiar de turno si no quedan dados en la lista dados disponibles
 
-    
+        Salida: si siguen quedando dados disponibles se mantendrá el turno, si no quedan retornará True
+        '''
+        if self.__dados_disponibles__ == []:
+            if self.__turno__ == 'Blanco':
+                self.__turno__ = 'Negro'
+            else:
+                self.__turno__ = 'Negro'
+        else:
+            return True
 
-    #funcion realizar moviemto, se puede hacer una funcion aparte o agregar funcionalidad a funcion, acá cuando se haga un moviemmiton 
-    # se fijará si se puede hacer el movimiento segun el dado y sabrá sobre la cantidad de movimientos posibles
+        
          
     #función que verifica ganador    
-
-    
