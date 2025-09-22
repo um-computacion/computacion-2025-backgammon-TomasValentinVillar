@@ -409,6 +409,17 @@ class TestCore(unittest.TestCase):
             Checker("Negro"), Checker("Negro"), Checker("Negro"),
         ]
         self.assertTrue(juego.__board__.verficar_fichas_sacadas_15(juego.__turno__))
+    
+    def test_cambio_de_turno_blanco(self):
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        self.assertEqual(juego.__turno__,"Negro")
+    
+    def test_cambio_de_turno_negro(self):
+        juego = BackgammonGame()
+        juego.__turno__ = "Negro"
+        juego.cambiar_turno()
+        self.assertEqual(juego.__turno__,"Blanco")
 
     @patch('random.randint', side_effect=[3, 2])
     def test_realizar_moviemto(self,mock_randint):

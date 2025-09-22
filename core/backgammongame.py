@@ -18,8 +18,6 @@ class BackgammonGame:
         self.__dados_disponibles__ = []
         self.__players__ = {}
     
-
-    
     
     def crear_jugador(self,nom,ficha,estado):
         '''Entradas: nombre de jugador, ficha correspondiente, estado inicial
@@ -42,7 +40,21 @@ class BackgammonGame:
         else:
             self.ocupar_casilla(pos_inic,pos_fin)
         self.verificar_cambio_turno()
-                                                                                
+    
+    def realizar_moviento_desde_inicio(self,pos_fin):
+        self.verificar_posicion_disponible(pos_fin)
+        if self.__turno__ == "Blanco":
+            pos_inic =-1
+        else:
+            pos_inic = 24
+        self.verificar_movimientos_y_dados(pos_inic,pos_fin)
+        board = self.__board__.__contenedor_fichas__
+        if len(board[pos_fin]) == 1:
+            if board[pos_fin][0].obtener_color() != self.__turno__:
+                self.__board__.comer_ficha(pos_fin,self.__turno__)
+        self.__board__.quitar_ficha_comida(self.__turno__)
+        self.__board__.poner_ficha(pos_fin,self.__turno__)
+        self.verificar_cambio_turno()                                                                    
 
 
     def ocupar_casilla(self,pos_inic,pos_fin):
@@ -54,10 +66,9 @@ class BackgammonGame:
         board = self.__board__.__contenedor_fichas__
 
         self.__board__.quitar_ficha(pos_inic)
-        if len(board[pos_fin]) == 1: #REVISAR POR QUE YA HAY UNA FUNCION PARA SACAR FICHA
+        if len(board[pos_fin]) == 1:
             if board[pos_fin][0].obtener_color() != self.__turno__:
-                board[pos_fin].pop()
-                #funcion comer ficha de tablero(pos_fin,pos_inic)
+                self.__board__.comer_ficha(pos_fin,self.__turno__)
         self.__board__.poner_ficha(pos_fin,self.__turno__)
 
    
@@ -198,9 +209,13 @@ class BackgammonGame:
         Salida: si siguen quedando dados disponibles se mantendrá el turno, si no quedan retornará True
         '''
         if self.__dados_disponibles__ == []:
-            if self.__turno__ == 'Blanco':
-                self.__turno__ = 'Negro'
-            else:
-                self.__turno__ = 'Negro'
+            self.cambiar_turno()
         else:
             return True
+    
+    def cambiar_turno(self): #cuando el CLI llame a verificar_movimietos_posibles, si no hay se debe llamar a esta funcion
+        if self.__turno__ == 'Blanco':
+                self.__turno__ = 'Negro'
+        else:
+                self.__turno__ = 'Blanco'
+        

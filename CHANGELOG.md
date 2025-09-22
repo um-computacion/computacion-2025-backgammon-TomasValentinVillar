@@ -1,5 +1,19 @@
 # ChangeLog
 
+## 2025-9-21 (23:12)
+
+### Added
+  - funcion quitar_ficha_comida en clase Board
+  - funcion realizar_movimiento_desde_el_inicio en clase BackgammonGame 
+  - funcion cambiar_turno en clase BackgammonGame
+  - test cambio_de_turno_blanco en test
+  - test cambio_de_turno_negro en test
+
+### Changed
+  - funcion verificar_cambio_de_turno en clase BackgammnoGame
+  - funcion ocupar_casilla en clase BackgammonGame
+  - funcion realizar_movimiento en clase BackgammmonGame
+
 ## 2025-9-21 (21:02)
 
 ### Added
