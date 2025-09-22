@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2025-9-21 (21:02)
+
+### Added
+  - funcion realizar movimiento en clase BackgammonGame
+  - funcion obtener contenedor fichas
+  - test realizar moviemiento en test
+
 ## 2025-9-21
 
 ### Added

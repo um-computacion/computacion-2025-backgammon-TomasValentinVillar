@@ -410,4 +410,19 @@ class TestCore(unittest.TestCase):
         ]
         self.assertTrue(juego.__board__.verficar_fichas_sacadas_15(juego.__turno__))
 
+    @patch('random.randint', side_effect=[3, 2])
+    def test_realizar_moviemto(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro")]
+        ]
+        juego.realizar_movimiento(0,2)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[0]),1)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[2]),1)
+        self.assertEqual(juego.__board__.obtener_contenedor_fichas()[2][0].obtener_color(),"Blanco")
+
+    
+
         

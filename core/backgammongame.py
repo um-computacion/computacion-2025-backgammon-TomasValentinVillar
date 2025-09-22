@@ -18,6 +18,8 @@ class BackgammonGame:
         self.__dados_disponibles__ = []
         self.__players__ = {}
     
+
+    
     
     def crear_jugador(self,nom,ficha,estado):
         '''Entradas: nombre de jugador, ficha correspondiente, estado inicial
@@ -30,6 +32,18 @@ class BackgammonGame:
 
     def obtener_players(self):
         return self.__players__
+    
+    def realizar_movimiento(self,pos_inic,pos_fin):
+        self.verificar_posicion_disponible(pos_fin)
+        self.verificar_movimientos_y_dados(pos_inic,pos_fin)
+        self.verificar_sacar_ficha(pos_fin,self.__board__.obtener_contenedor_fichas())
+        if (pos_fin == -1) or (pos_fin == 24):
+            self.__board__.sacar_ficha(pos_inic,self.__turno__)
+        else:
+            self.ocupar_casilla(pos_inic,pos_fin)
+        self.verificar_cambio_turno()
+                                                                                
+
 
     def ocupar_casilla(self,pos_inic,pos_fin):
         '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
@@ -40,7 +54,7 @@ class BackgammonGame:
         board = self.__board__.__contenedor_fichas__
 
         self.__board__.quitar_ficha(pos_inic)
-        if len(board[pos_fin]) == 1: #Ahora tambien se puede comer ficha
+        if len(board[pos_fin]) == 1: #REVISAR POR QUE YA HAY UNA FUNCION PARA SACAR FICHA
             if board[pos_fin][0].obtener_color() != self.__turno__:
                 board[pos_fin].pop()
                 #funcion comer ficha de tablero(pos_fin,pos_inic)
@@ -82,7 +96,7 @@ class BackgammonGame:
             for pos in range(18):
                 if len(board[pos]) > 0:
                     if board[pos][0].obtener_color() == self.__turno__:
-                        raise MovimientoInvalido("No se puede realizar ese movimiento")
+                        raise MovimientoInvalido("No se puede realizar ese movimiento")     
         else:  # Turno negro
             # Negras: verificar si está en home board (0-5)  
             if posicion > 5:
@@ -190,7 +204,3 @@ class BackgammonGame:
                 self.__turno__ = 'Negro'
         else:
             return True
-
-        
-         
-    #función que verifica ganador    

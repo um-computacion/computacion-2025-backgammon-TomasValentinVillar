@@ -23,6 +23,9 @@ class Board:
 
         self.__contenedor_fichas__[pos].append(Checker(turno))
     
+    def obtener_contenedor_fichas(self):
+        return self.__contenedor_fichas__
+    
     def obtener_contenedor_blancas(self):
         return self.__contenedor_fichas_blancas__
     
