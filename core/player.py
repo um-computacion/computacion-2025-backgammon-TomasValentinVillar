@@ -12,3 +12,9 @@ class Player:
     
     def obtener_estado(self):
         return self.__estado__
+    
+    def definir_ganador(self):
+        self.__estado__ = "Ganador"
+
+    def definir_perdedor(self):
+        self.__estado__ = "Perdedor"

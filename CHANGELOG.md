@@ -1,5 +1,24 @@
 # ChangeLog
 
+## 2025-9-24 (13:33)
+
+### Added
+
+- funcion definir_ganador en clase Player
+- funcion definir_perdedor en clase Player
+- funcion verificarg_ganador_y_perdedor
+- test test_verificar_ganador_y_perdedor_gana_blanco en test
+- test test_verificar_ganador_y_perdedor_gana_negro en test
+- test test_realizar_moviento_gana en test
+- test test_realizar_moviento_gana_negro en test
+- test test_realizar_movimiento_desde_inicio_dado_no_coincide en test
+- test test_realizar_movimiento_desde_inicio_come_ficha en test
+- test test_quitar_ficha_comida en test
+- test test_quitar_ficha_comida_turno_negro en test
+
+### Changed
+- funcion realizar moviento en clase BackgammonGame
+
 ## 2025-9-24
 
 ### Added

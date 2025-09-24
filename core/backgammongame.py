@@ -7,7 +7,8 @@ class NoHayMovimientosPosibles(Exception):
     pass
 class MovimientoInvalido(Exception):
     pass
-
+class Ganador(Exception):
+    pass
 
 class BackgammonGame:
     def __init__(self):
@@ -49,6 +50,8 @@ class BackgammonGame:
                 raise MovimientoInvalido("No se puede realizar ese movimiento")
             self.verificar_movimientos_y_dados(pos_inic,pos_fin)
             self.ocupar_casilla(pos_inic,pos_fin)
+        if self.verificar_ganador_y_perdedor() == True:
+            raise Ganador("Ganaste!")
         self.verificar_cambio_turno()
     
     def realizar_moviento_desde_inicio(self,pos_fin):
@@ -228,4 +231,14 @@ class BackgammonGame:
                 self.__turno__ = 'Negro'
         else:
                 self.__turno__ = 'Blanco'
-        
+    
+    def verificar_ganador_y_perdedor(self):
+        if self.__board__.verficar_fichas_sacadas_15(self.__turno__) == True:
+            if self.__turno__ == "Blanco":
+                self.__players__[self.__turno__].definir_ganador()
+                self.__players__["Negro"].definir_perdedor()
+                return True
+            else:
+                self.__players__[self.__turno__].definir_ganador()
+                self.__players__["Blanco"].definir_perdedor()
+                return True
