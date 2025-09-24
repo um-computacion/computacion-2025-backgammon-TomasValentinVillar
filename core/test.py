@@ -433,7 +433,78 @@ class TestCore(unittest.TestCase):
         self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[0]),1)
         self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[2]),1)
         self.assertEqual(juego.__board__.obtener_contenedor_fichas()[2][0].obtener_color(),"Blanco")
-
+        self.assertEqual(len(juego.obtener_dados_disponibles()),1)
     
-
-        
+    @patch('random.randint', side_effect=[3, 2])
+    def test_realizar_moviemto_posicion_invalida(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro")]
+        ]
+        with self.assertRaises(MovimientoInvalido):
+            juego.realizar_movimiento(0,5)
+    
+    @patch('random.randint', side_effect=[3, 2])
+    def test_realizar_moviemto_posicion_inicial_invalida(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro")]
+        ]
+        with self.assertRaises(MovimientoInvalido):
+            juego.realizar_movimiento(1,3)
+    @patch('random.randint', side_effect=[3, 2])
+    def test_realizar_moviemto_sacar_ficha(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Negro"),Checker("Negro")]
+        ]
+        juego.realizar_movimiento(19,24)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_blancas_sacadas()),1)
+        self.assertEqual(juego.__board__.obtener_contenedor_blancas_sacadas()[0].obtener_color(),"Blanco")
+    @patch('random.randint', side_effect=[3, 2])
+    def test_realizar_moviemto_sacar_ficha_error(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Negro"),Checker("Negro")]
+        ]
+        with self.assertRaises(MovimientoInvalido):
+            juego.realizar_movimiento(19,24)
+    
+    @patch('random.randint', side_effect=[3, 2])
+    def test_realizar_movimientos_cambio_de_turno(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro")]
+        ]
+        juego.realizar_movimiento(0,2)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[0]),1)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[2]),1)
+        self.assertEqual(juego.__board__.obtener_contenedor_fichas()[2][0].obtener_color(),"Blanco")
+        self.assertEqual(len(juego.obtener_dados_disponibles()),1)
+        juego.realizar_movimiento(0,3)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[0]),0)
+        self.assertEqual(len(juego.__board__.obtener_contenedor_fichas()[3]),1)
+        self.assertEqual(juego.__board__.obtener_contenedor_fichas()[3][0].obtener_color(),"Blanco")
+        self.assertEqual(len(juego.obtener_dados_disponibles()),0)
+        self.assertEqual(juego.obtener_turno(),"Negro")
+    
+    @patch('random.randint', side_effect=[3, 2])
+    def test_realizar_movimiento_dado_invalido(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()
+        juego.__board__.__contenedor_fichas__ =  [
+            [Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[],[],[Checker("Negro"),Checker("Negro")]
+        ]
+        with self.assertRaises(MovimientoInvalido):
+            juego.realizar_movimiento(0,4)

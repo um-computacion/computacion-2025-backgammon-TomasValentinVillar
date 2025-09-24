@@ -1,5 +1,20 @@
 # ChangeLog
 
+## 2025-9-23
+
+### Added
+  - funcion obtener_dados_disponibles
+  - funcion obtener_turno
+  - test test_realizar_moviemto_posicion_invalida en test
+  - test test_realizar_moviemto_posicion_inicial_invalida en test
+  - test test_realizar_moviemto_sacar_ficha en test
+  - test test_realizar_moviemto_sacar_ficha_error en test
+  - test test_realizar_moviemtos_cambio_de_turno en test
+  - test test_realizar_movimiento_dado_invalido en test
+
+### Changed
+  - funcion realizar_moviento en Clase BackgammonGame
+
 ## 2025-9-21 (23:12)
 
 ### Added

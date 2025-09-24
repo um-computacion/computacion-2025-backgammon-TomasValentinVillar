@@ -30,19 +30,30 @@ class BackgammonGame:
 
     def obtener_players(self):
         return self.__players__
+
+    def obtener_dados_disponibles(self):
+        return self.__dados_disponibles__
+    
+    def obtener_turno(self):
+        return self.__turno__
     
     def realizar_movimiento(self,pos_inic,pos_fin):
-        self.verificar_posicion_disponible(pos_fin)
-        self.verificar_movimientos_y_dados(pos_inic,pos_fin)
+        if (len(self.__board__.obtener_contenedor_fichas()[pos_inic]) == 0) or (self.__board__.obtener_contenedor_fichas()[pos_inic][0].obtener_color() != self.__turno__):
+            raise MovimientoInvalido("No se puede realizar ese moviemto")
         self.verificar_sacar_ficha(pos_fin,self.__board__.obtener_contenedor_fichas())
         if (pos_fin == -1) or (pos_fin == 24):
+            self.verificar_movimientos_y_dados(pos_inic,pos_fin)
             self.__board__.sacar_ficha(pos_inic,self.__turno__)
         else:
+            if self.verificar_posicion_disponible(pos_fin) == False:
+                raise MovimientoInvalido("No se puede realizar ese movimiento")
+            self.verificar_movimientos_y_dados(pos_inic,pos_fin)
             self.ocupar_casilla(pos_inic,pos_fin)
         self.verificar_cambio_turno()
     
     def realizar_moviento_desde_inicio(self,pos_fin):
-        self.verificar_posicion_disponible(pos_fin)
+        if self.verificar_posicion_disponible(pos_fin) == False:
+            raise MovimientoInvalido("No se puede realizar ese movimiento")
         if self.__turno__ == "Blanco":
             pos_inic =-1
         else:
@@ -74,7 +85,6 @@ class BackgammonGame:
    
     def tirar_dados(self):
         '''
-
         Funcionalidad: Llama a la función tirar dado para asignarle un numero a los atributos de __dice_1__ y __dice_2__
         '''
         self.__dice_1__.tirar_dado()
