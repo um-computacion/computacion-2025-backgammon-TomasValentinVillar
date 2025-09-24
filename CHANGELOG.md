@@ -1,5 +1,18 @@
 # ChangeLog
 
+## 2025-9-24
+
+### Added
+
+- test ocupar_casilla_come_ficha en test
+- test test_realizar_movimiento_desde_inicio en test
+- test est_realizar_movimiento_desde_inicio_cambio_turno en test
+- test test_realizar_movimiento_desde_inicio_pos_invalida en test
+- test test_realizar_movimiento_desde_inicio_dado_no_coincide en test
+- test test_realizar_movimiento_desde_inicio_come_ficha en test
+- test test_quitar_ficha_comida en test
+- test test_quitar_ficha_comida_turno_negro en test
+
 ## 2025-9-23
 
 ### Added
