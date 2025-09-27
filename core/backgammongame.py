@@ -7,7 +7,8 @@ class NoHayMovimientosPosibles(Exception):
     pass
 class MovimientoInvalido(Exception):
     pass
-
+class Ganador(Exception):
+    pass
 
 class BackgammonGame:
     def __init__(self):
@@ -31,6 +32,45 @@ class BackgammonGame:
     def obtener_players(self):
         return self.__players__
 
+    def obtener_dados_disponibles(self):
+        return self.__dados_disponibles__
+    
+    def obtener_turno(self):
+        return self.__turno__
+    
+    def realizar_movimiento(self,pos_inic,pos_fin):
+        if (len(self.__board__.obtener_contenedor_fichas()[pos_inic]) == 0) or (self.__board__.obtener_contenedor_fichas()[pos_inic][0].obtener_color() != self.__turno__):
+            raise MovimientoInvalido("No se puede realizar ese moviemto")
+        self.verificar_sacar_ficha(pos_fin,self.__board__.obtener_contenedor_fichas())
+        if (pos_fin == -1) or (pos_fin == 24):
+            self.verificar_movimientos_y_dados(pos_inic,pos_fin)
+            self.__board__.sacar_ficha(pos_inic,self.__turno__)
+        else:
+            if self.verificar_posicion_disponible(pos_fin) == False:
+                raise MovimientoInvalido("No se puede realizar ese movimiento")
+            self.verificar_movimientos_y_dados(pos_inic,pos_fin)
+            self.ocupar_casilla(pos_inic,pos_fin)
+        if self.verificar_ganador_y_perdedor() == True:
+            raise Ganador("Ganaste!")
+        self.verificar_cambio_turno()
+    
+    def realizar_moviento_desde_inicio(self,pos_fin):
+        if self.verificar_posicion_disponible(pos_fin) == False:
+            raise MovimientoInvalido("No se puede realizar ese movimiento")
+        if self.__turno__ == "Blanco":
+            pos_inic =-1
+        else:
+            pos_inic = 24
+        self.verificar_movimientos_y_dados(pos_inic,pos_fin)
+        board = self.__board__.__contenedor_fichas__
+        if len(board[pos_fin]) == 1:
+            if board[pos_fin][0].obtener_color() != self.__turno__:
+                self.__board__.comer_ficha(pos_fin,self.__turno__)
+        self.__board__.quitar_ficha_comida(self.__turno__)
+        self.__board__.poner_ficha(pos_fin,self.__turno__)
+        self.verificar_cambio_turno()                                                                    
+
+
     def ocupar_casilla(self,pos_inic,pos_fin):
         '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
 
@@ -40,16 +80,14 @@ class BackgammonGame:
         board = self.__board__.__contenedor_fichas__
 
         self.__board__.quitar_ficha(pos_inic)
-        if len(board[pos_fin]) == 1: #Ahora tambien se puede comer ficha
+        if len(board[pos_fin]) == 1:
             if board[pos_fin][0].obtener_color() != self.__turno__:
-                board[pos_fin].pop()
-                #funcion comer ficha de tablero(pos_fin,pos_inic)
+                self.__board__.comer_ficha(pos_fin,self.__turno__)
         self.__board__.poner_ficha(pos_fin,self.__turno__)
 
    
     def tirar_dados(self):
         '''
-
         Funcionalidad: Llama a la función tirar dado para asignarle un numero a los atributos de __dice_1__ y __dice_2__
         '''
         self.__dice_1__.tirar_dado()
@@ -82,7 +120,7 @@ class BackgammonGame:
             for pos in range(18):
                 if len(board[pos]) > 0:
                     if board[pos][0].obtener_color() == self.__turno__:
-                        raise MovimientoInvalido("No se puede realizar ese movimiento")
+                        raise MovimientoInvalido("No se puede realizar ese movimiento")     
         else:  # Turno negro
             # Negras: verificar si está en home board (0-5)  
             if posicion > 5:
@@ -184,13 +222,23 @@ class BackgammonGame:
         Salida: si siguen quedando dados disponibles se mantendrá el turno, si no quedan retornará True
         '''
         if self.__dados_disponibles__ == []:
-            if self.__turno__ == 'Blanco':
-                self.__turno__ = 'Negro'
-            else:
-                self.__turno__ = 'Negro'
+            self.cambiar_turno()
         else:
             return True
-
-        
-         
-    #función que verifica ganador    
+    
+    def cambiar_turno(self): #cuando el CLI llame a verificar_movimietos_posibles, si no hay se debe llamar a esta funcion
+        if self.__turno__ == 'Blanco':
+                self.__turno__ = 'Negro'
+        else:
+                self.__turno__ = 'Blanco'
+    
+    def verificar_ganador_y_perdedor(self):
+        if self.__board__.verficar_fichas_sacadas_15(self.__turno__) == True:
+            if self.__turno__ == "Blanco":
+                self.__players__[self.__turno__].definir_ganador()
+                self.__players__["Negro"].definir_perdedor()
+                return True
+            else:
+                self.__players__[self.__turno__].definir_ganador()
+                self.__players__["Blanco"].definir_perdedor()
+                return True

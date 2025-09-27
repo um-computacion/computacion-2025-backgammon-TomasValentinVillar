@@ -23,6 +23,9 @@ class Board:
 
         self.__contenedor_fichas__[pos].append(Checker(turno))
     
+    def obtener_contenedor_fichas(self):
+        return self.__contenedor_fichas__
+    
     def obtener_contenedor_blancas(self):
         return self.__contenedor_fichas_blancas__
     
@@ -71,3 +74,9 @@ class Board:
         else:
             if len(self.__contenedor_fichas_negras_sacadas__ ) == 15:
                 return True
+    
+    def quitar_ficha_comida(self,turno):
+        if turno == "Blanco":
+            self.__contenedor_fichas_blancas__.pop()
+        else:
+            self.__contenedor_fichas_negras__.pop()

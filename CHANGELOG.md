@@ -1,5 +1,73 @@
 # ChangeLog
 
+## 2025-9-24 (13:33)
+
+### Added
+
+- funcion definir_ganador en clase Player
+- funcion definir_perdedor en clase Player
+- funcion verificarg_ganador_y_perdedor
+- test test_verificar_ganador_y_perdedor_gana_blanco en test
+- test test_verificar_ganador_y_perdedor_gana_negro en test
+- test test_realizar_moviento_gana en test
+- test test_realizar_moviento_gana_negro en test
+- test test_realizar_movimiento_desde_inicio_dado_no_coincide en test
+- test test_realizar_movimiento_desde_inicio_come_ficha en test
+- test test_quitar_ficha_comida en test
+- test test_quitar_ficha_comida_turno_negro en test
+
+### Changed
+- funcion realizar moviento en clase BackgammonGame
+
+## 2025-9-24
+
+### Added
+
+- test ocupar_casilla_come_ficha en test
+- test test_realizar_movimiento_desde_inicio en test
+- test est_realizar_movimiento_desde_inicio_cambio_turno en test
+- test test_realizar_movimiento_desde_inicio_pos_invalida en test
+- test test_realizar_movimiento_desde_inicio_dado_no_coincide en test
+- test test_realizar_movimiento_desde_inicio_come_ficha en test
+- test test_quitar_ficha_comida en test
+- test test_quitar_ficha_comida_turno_negro en test
+
+## 2025-9-23
+
+### Added
+  - funcion obtener_dados_disponibles
+  - funcion obtener_turno
+  - test test_realizar_moviemto_posicion_invalida en test
+  - test test_realizar_moviemto_posicion_inicial_invalida en test
+  - test test_realizar_moviemto_sacar_ficha en test
+  - test test_realizar_moviemto_sacar_ficha_error en test
+  - test test_realizar_moviemtos_cambio_de_turno en test
+  - test test_realizar_movimiento_dado_invalido en test
+
+### Changed
+  - funcion realizar_moviento en Clase BackgammonGame
+
+## 2025-9-21 (23:12)
+
+### Added
+  - funcion quitar_ficha_comida en clase Board
+  - funcion realizar_movimiento_desde_el_inicio en clase BackgammonGame 
+  - funcion cambiar_turno en clase BackgammonGame
+  - test cambio_de_turno_blanco en test
+  - test cambio_de_turno_negro en test
+
+### Changed
+  - funcion verificar_cambio_de_turno en clase BackgammnoGame
+  - funcion ocupar_casilla en clase BackgammonGame
+  - funcion realizar_movimiento en clase BackgammmonGame
+
+## 2025-9-21 (21:02)
+
+### Added
+  - funcion realizar movimiento en clase BackgammonGame
+  - funcion obtener contenedor fichas
+  - test realizar moviemiento en test
+
 ## 2025-9-21
 
 ### Added
