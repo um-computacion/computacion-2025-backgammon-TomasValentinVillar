@@ -80,3 +80,66 @@ class Board:
             self.__contenedor_fichas_blancas__.pop()
         else:
             self.__contenedor_fichas_negras__.pop()
+    
+
+    def _get_piece_symbol(self, checker):
+        """
+        Obtiene el símbolo visual de una ficha
+        Args: checker - objeto Checker
+        Returns: 'W' para blancas, 'B' para negras
+        """
+        return 'W' if checker.obtener_color() == 'Blanco' else 'B'
+
+    def draw_full_board(self):
+        """
+        Genera una representación visual del tablero para las interfaces
+        Retorna: Lista de listas representando el tablero visualmente
+        - Muestra las 24 posiciones (0-23) del tablero
+        - 5 filas máximo por columna
+        - Si hay más de 5 fichas, muestra el número en la fila 
+        """
+        result_board = []
+        for row in range(0,5):
+            result_row = []
+            for col in range(11, -1, -1):
+                position_pieces = self.__contenedor_fichas__[col]
+                if len(position_pieces) > 0:
+                    if len(position_pieces) > row:
+                        if row < 4:
+                            piece = self._get_piece_symbol(position_pieces[0])
+                        else:
+                            if len(position_pieces) <= 5:
+                                piece = self._get_piece_symbol(position_pieces[0])
+                            else:
+                                piece = str(len(position_pieces) - 4)
+                        result_row.append(piece)
+                    else:
+                        result_row.append(' ')
+                else:
+                    result_row.append(' ')
+            result_board.append(result_row)
+        
+        
+        # Segunda mitad: posiciones 12 a 23
+        for row in range(0,5):
+            result_row = []
+                        
+            for col in range(12, 24):
+                position_pieces = self.__contenedor_fichas__[col]
+                if len(position_pieces) > 0:
+                    if len(position_pieces) > row:
+                        if row < 4:
+                            piece = self._get_piece_symbol(position_pieces[0])
+                        else:
+                            if len(position_pieces) <= 5:
+                                piece = self._get_piece_symbol(position_pieces[0])
+                            else:
+                                piece = str(len(position_pieces) - 4)
+                        result_row.append(piece)
+                    else:
+                        result_row.append(' ')
+                else:
+                    result_row.append(' ')
+            result_board.append(result_row)
+                    
+        return result_board

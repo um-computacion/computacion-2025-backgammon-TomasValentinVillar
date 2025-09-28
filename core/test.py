@@ -693,4 +693,51 @@ class TestCore(unittest.TestCase):
 
         self.assertEqual(len(juego.__board__.obtener_contenedor_negras_sacadas()),15)
         self.assertEqual(juego.__board__.obtener_contenedor_negras_sacadas()[0].obtener_color(),"Negro")
-    
+
+
+    def test_draw_full_board(self):
+        board = Board()
+        board.__contenedor_fichas__ =  [
+            [Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[Checker("Negro")]
+        ]
+        board_draw = board.draw_full_board()
+        for i in board_draw:
+            print(i)
+        self.assertEqual(
+            board_draw,
+            [ # 10
+                [ # 1
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'W', 
+                ],
+                [ # 2
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'W', 
+                ],
+                [ # 3
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'W', 
+                ],
+                [ # 4
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', ' ', 
+                ],
+                [ # 5
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '4', ' ', 
+                ],
+                [ # 6
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', 'B', 
+                ],
+                [ # 7
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', ' ', 
+                ],
+                [ # 8
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', ' ', 
+                ],
+                [ # 9
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 
+                ],
+                [ # 10
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 
+                ]
+            ]
+        )
+if __name__ == '__main__':
+    unittest.main()

@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2025-9-27
+
+### Added
+
+- funcion draw_full_board en clase Board
+- funcion test_draw_full_board en test
+
 ## 2025-9-24 (13:33)
 
 ### Added
