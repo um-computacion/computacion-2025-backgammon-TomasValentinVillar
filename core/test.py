@@ -702,8 +702,6 @@ class TestCore(unittest.TestCase):
             [],[],[],[],[],[], [],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[Checker("Negro")]
         ]
         board_draw = board.draw_full_board()
-        for i in board_draw:
-            print(i)
         self.assertEqual(
             board_draw,
             [ # 10
@@ -739,5 +737,27 @@ class TestCore(unittest.TestCase):
                 ]
             ]
         )
+    
+    def test_inicilazar_tablero(self):
+        juego = BackgammonGame()
+        juego.inicializar_board()
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[0]),2)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[11]),5)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[16]),3)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[18]),5)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[23]),2)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[12]),5)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[7]),3)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[5]),5)
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[0][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[11][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[16][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[18][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[23][0].obtener_color(),"Negro")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[12][0].obtener_color(),"Negro")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[7][0].obtener_color(),"Negro")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[5][0].obtener_color(),"Negro")
+
+
 if __name__ == '__main__':
     unittest.main()

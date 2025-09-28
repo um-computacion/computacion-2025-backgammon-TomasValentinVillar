@@ -37,6 +37,9 @@ class BackgammonGame:
     
     def obtener_turno(self):
         return self.__turno__
+
+    def obtener_board(self):
+        return self.__board__
     
     def realizar_movimiento(self,pos_inic,pos_fin):
         if (len(self.__board__.obtener_contenedor_fichas()[pos_inic]) == 0) or (self.__board__.obtener_contenedor_fichas()[pos_inic][0].obtener_color() != self.__turno__):
@@ -242,3 +245,6 @@ class BackgammonGame:
                 self.__players__[self.__turno__].definir_ganador()
                 self.__players__["Blanco"].definir_perdedor()
                 return True
+    
+    def inicializar_board(self):
+        self.__board__.inicializar_tablero()

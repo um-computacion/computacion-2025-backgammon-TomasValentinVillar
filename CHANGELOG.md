@@ -1,5 +1,16 @@
 # ChangeLog
 
+## 2025-9-28
+
+### Added
+
+- Clase CLI
+- funcion mostrar_tablero en CLI
+- funcion inicializar_tablero en Board
+- funcion inicializar_board en BackgammonGame
+- test inicializar_board en test
+- funcion obtener_board en BackgammonGame
+
 ## 2025-9-27
 
 ### Added

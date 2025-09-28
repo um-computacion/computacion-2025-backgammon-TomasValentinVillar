@@ -143,3 +143,12 @@ class Board:
             result_board.append(result_row)
                     
         return result_board
+    def inicializar_tablero(self):
+        self.__contenedor_fichas__[0].extend([Checker('Blanco'),Checker('Blanco')])
+        self.__contenedor_fichas__[11].extend([Checker('Blanco'),Checker('Blanco'),Checker('Blanco'),Checker("Blanco"),Checker("Blanco")])
+        self.__contenedor_fichas__[16].extend([Checker('Blanco'),Checker('Blanco'),Checker('Blanco')])
+        self.__contenedor_fichas__[18].extend([Checker('Blanco'),Checker('Blanco'),Checker('Blanco'),Checker("Blanco"),Checker("Blanco")])
+        self.__contenedor_fichas__[23].extend([Checker('Negro'),Checker('Negro')])
+        self.__contenedor_fichas__[12].extend([Checker('Negro'),Checker('Negro'),Checker('Negro'),Checker("Negro"),Checker("Negro")])
+        self.__contenedor_fichas__[7].extend([Checker('Negro'),Checker('Negro'),Checker('Negro')])
+        self.__contenedor_fichas__[5].extend([Checker('Negro'),Checker('Negro'),Checker('Negro'),Checker("Negro"),Checker("Negro")])
