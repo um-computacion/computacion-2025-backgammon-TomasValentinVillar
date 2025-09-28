@@ -1,5 +1,22 @@
 # ChangeLog
 
+## 2025-9-28 (18:00)
+
+### Added
+
+- funcion verificar_ficha_comida en Board
+- test test_verificar_movimientos_posibles_desde_inicio en test
+- test test_verificar_movimientos_posibles_desde_inicio_no_hay en test
+- test test_verificar_movimientos_posibles_desde_inicio_negro en test
+- test test_verificar_movimientos_posibles_desde_inicio_negro_no_hay en test
+- test test_verificar_ficha_comida en test
+- test test_verificar_ficha_comida_no_hay en test
+- test test_verificar_ficha_comida_negra en test
+- test test_verificar_ficha_comida_negra_no_hay en test
+
+### Changed
+- funcion verificar_movimientos_posibles en BackgammonGame
+
 ## 2025-9-28
 
 ### Added

@@ -152,3 +152,12 @@ class Board:
         self.__contenedor_fichas__[12].extend([Checker('Negro'),Checker('Negro'),Checker('Negro'),Checker("Negro"),Checker("Negro")])
         self.__contenedor_fichas__[7].extend([Checker('Negro'),Checker('Negro'),Checker('Negro')])
         self.__contenedor_fichas__[5].extend([Checker('Negro'),Checker('Negro'),Checker('Negro'),Checker("Negro"),Checker("Negro")])
+
+    def verificar_ficha_comida(self,turno):
+        if turno == "Blanco":
+            if len(self.__contenedor_fichas_blancas__) > 0:
+                return True
+        else:
+            if len(self.__contenedor_fichas_negras__) > 0:
+                return True
+        return False

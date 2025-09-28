@@ -174,6 +174,71 @@ class TestCore(unittest.TestCase):
         ]
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
+    
+    def test_verificar_movimientos_posibles_desde_inicio(self):
+    
+        juego = BackgammonGame()
+        juego.__turno__ = "Blanco"
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_blancas__ = [Checker("Blanco")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[Checker("Negro")],[],[], [],[],[Checker("Negro")],[],[],[]
+        ]
+
+        self.assertTrue(juego.verifificar_movimientos_posibles())
+    
+    def test_verificar_movimientos_posibles_desde_inicio_no_hay(self):
+    
+        juego = BackgammonGame()
+        juego.__turno__ = "Blanco"
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_blancas__ = [Checker("Blanco")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[Checker("Negro"),Checker("Negro")],[Checker("Negro"),Checker("Negro")],[],[Checker("Negro"),Checker("Negro")],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[],[]
+        ]
+
+        with self.assertRaises(NoHayMovimientosPosibles):
+            juego.verifificar_movimientos_posibles()
+    
+
+    def test_verificar_movimientos_posibles_desde_inicio_negro(self):
+    
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_negras__ = [Checker("Negro")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[Checker('Blanco')],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[Checker("Blanco")],[],[],[]
+        ]
+
+        self.assertTrue(juego.verifificar_movimientos_posibles())
+    
+    def test_verificar_movimientos_posibles_desde_inicio_negro_no_hay(self):
+    
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_negras__ = [Checker("Negro")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[Checker('Blanco')],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[]
+        ]
+
+        with self.assertRaises(NoHayMovimientosPosibles):
+            juego.verifificar_movimientos_posibles()
+    
+
     def test_sacar_ficha(self):
         juego = BackgammonGame()
         
@@ -757,7 +822,26 @@ class TestCore(unittest.TestCase):
         self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[12][0].obtener_color(),"Negro")
         self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[7][0].obtener_color(),"Negro")
         self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[5][0].obtener_color(),"Negro")
-
+    
+    def test_verificar_ficha_comida(self):
+        juego = BackgammonGame()
+        juego.__board__.__contenedor_fichas_blancas__.append(Checker("Blanco"))
+        self.assertTrue(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_verificar_ficha_comida_no_hay(self):
+        juego = BackgammonGame()
+        self.assertFalse(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_verificar_ficha_comida_negra(self):
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        juego.__board__.__contenedor_fichas_negras__.append(Checker("Negro"))
+        self.assertTrue(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_verificar_ficha_comida_negra_no_hay(self):
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        self.assertFalse(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
 
 if __name__ == '__main__':
     unittest.main()

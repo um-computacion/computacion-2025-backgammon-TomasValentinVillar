@@ -169,9 +169,32 @@ class BackgammonGame:
         
             # Usar la función existente para verificar posición destino
             return self.verificar_posicion_disponible(pos_destino)
+        #funcion auxiliar para verificar si un movimiento es valido si se saca una ficha que se ha comido
+        def es_movimiento_valido_desde_inicio(pos_origen, pasos):
+            
+                # Calcular destino según el color
+            if self.__turno__ == "Blanco":
+                pos_destino = pos_origen + pasos  # Blancas van hacia arriba (0->23)
+            else:  # Negro
+                pos_destino = pos_origen - pasos  # Negras van hacia abajo (23->0)
     
+            # Verificar límites
+            if pos_destino < 0 or pos_destino >= 24:
+                return False
+        
+            # Usar la función existente para verificar posición destino
+            return self.verificar_posicion_disponible(pos_destino)
+        if self.obtener_board().verificar_ficha_comida(self.__turno__) == True:
+            if self.__turno__ == "Blanco":
+                origen = -1
+            else:
+                origen = 24
+            if es_movimiento_valido_desde_inicio(origen, d1.obtener_numero()) or es_movimiento_valido_desde_inicio(origen, d2.obtener_numero()):
+                    return True
+            if es_movimiento_valido_desde_inicio(origen, d1.obtener_numero() + d2.obtener_numero()):
+                    return True
             # Verificar movimientos posibles con cada dado individualmente
-        for i in range(24):
+        for i in range(24): #falta verifcar que hallan moviemientos desde inicio
                 if es_movimiento_valido(i, d1.obtener_numero()) or es_movimiento_valido(i, d2.obtener_numero()):
                     return True
     
@@ -248,3 +271,4 @@ class BackgammonGame:
     
     def inicializar_board(self):
         self.__board__.inicializar_tablero()
+    
