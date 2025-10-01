@@ -171,8 +171,6 @@ class BackgammonGame:
             if pos_destino < 0 or pos_destino >= 24:
                 try:
                     if self.verificar_sacar_ficha(pos_origen, self.__board__.obtener_contenedor_fichas()) == True:
-                        print(self.__turno__)
-                        print(pos_origen)
                         return True
                 except MovimientoInvalido:
                     pass  

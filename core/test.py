@@ -727,7 +727,7 @@ class TestCore(unittest.TestCase):
         self.assertEqual(juego.obtener_players()["Negro"].obtener_estado(),"Ganador")
         self.assertEqual(juego.obtener_players()["Blanco"].obtener_estado(),"Perdedor")
 
-    @patch('random.randint', side_effect=[3, 2])
+    @patch('random.randint', side_effect=[6, 5])
     def test_realizar_moviento_gana(self,mock_randint):
         juego = BackgammonGame()
         juego.tirar_dados()
@@ -735,7 +735,7 @@ class TestCore(unittest.TestCase):
         juego.crear_jugador("Juan Perez","Negro","Jugando")
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
-            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [],[],[],[Checker("Blanco")],[],[]
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [],[],[],[],[Checker('Blanco')],[]
         ]
         juego.__board__.__contenedor_fichas_blancas_sacadas__= [
             Checker("Blanco"), Checker("Blanco"), Checker("Blanco"),
@@ -745,7 +745,7 @@ class TestCore(unittest.TestCase):
             Checker("Blanco"), Checker("Blanco"), 
         ]
         with self.assertRaises(Ganador):
-            juego.realizar_movimiento(21,24)
+            juego.realizar_movimiento(22,24)
 
         self.assertEqual(len(juego.__board__.obtener_contenedor_blancas_sacadas()),15)
         self.assertEqual(juego.__board__.obtener_contenedor_blancas_sacadas()[0].obtener_color(),"Blanco")
@@ -857,6 +857,18 @@ class TestCore(unittest.TestCase):
         juego = BackgammonGame()
         juego.cambiar_turno()
         self.assertFalse(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_obtener_cantidad_de_fichas_comidas(self):
+        board = Board()
+        board.__contenedor_fichas_blancas__.extend([Checker('Blanco'),Checker('Blanco')])
+        
+        self.assertEqual(board.obtener_cantidad_de_fichas_comidas("Blanco"), 2)
+    
+    def test_obtener_cantidad_de_fichas_comidas_negro(self):
+        board = Board()
+        board.__contenedor_fichas_negras__.extend([Checker('Negro'),Checker('Negro')])
+        
+        self.assertEqual(board.obtener_cantidad_de_fichas_comidas("Negro"), 2)
 
 if __name__ == '__main__':
     unittest.main()

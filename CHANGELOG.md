@@ -1,5 +1,24 @@
 # ChangeLog
 
+## 2025-10-1 
+
+### Added
+
+- funcion obtener_cantidad_de_fichas_comidas en clase Board
+- test_verificar_movimientos_posibles en test
+- test_obtener_cantidad_de_fichas_comidas en test
+- test_obtener_cantidad_de_fichas_comidas_negro en test
+
+### Changed
+- funcion ejecutar en CLI
+- funcion realizar_movimiento en clase BackgammonGame
+- funcion tirar_dados en clase BackgammonGame
+- funcion verificar_ficha en clase BackgammonGame
+- funcion verificar_movimientos_y_dados 
+- test_sacar_ficha en test
+- test_sacar_ficha_negro en test
+- test_realizar_movimiento_sacar_ficha en test
+
 ## 2025-9-28 (18:00)
 
 ### Added
