@@ -44,13 +44,12 @@ class BackgammonGame:
     def realizar_movimiento(self,pos_inic,pos_fin):
         if (len(self.__board__.obtener_contenedor_fichas()[pos_inic]) == 0) or (self.__board__.obtener_contenedor_fichas()[pos_inic][0].obtener_color() != self.__turno__):
             raise MovimientoInvalido("No se puede realizar ese moviemto")
-        self.verificar_sacar_ficha(pos_fin,self.__board__.obtener_contenedor_fichas())
         if (pos_fin == -1) or (pos_fin == 24):
-            self.verificar_movimientos_y_dados(pos_inic,pos_fin)
+            self.verificar_sacar_ficha(pos_inic,self.__board__.obtener_contenedor_fichas())
             self.__board__.sacar_ficha(pos_inic,self.__turno__)
         else:
             if self.verificar_posicion_disponible(pos_fin) == False:
-                raise MovimientoInvalido("No se puede realizar ese movimiento")
+                raise MovimientoInvalido("No se puede realizar ese movimiento++++")
             self.verificar_movimientos_y_dados(pos_inic,pos_fin)
             self.ocupar_casilla(pos_inic,pos_fin)
         if self.verificar_ganador_y_perdedor() == True:
@@ -59,7 +58,7 @@ class BackgammonGame:
     
     def realizar_moviento_desde_inicio(self,pos_fin):
         if self.verificar_posicion_disponible(pos_fin) == False:
-            raise MovimientoInvalido("No se puede realizar ese movimiento")
+            raise MovimientoInvalido("No se puede realizar ese movimiento+++")
         if self.__turno__ == "Blanco":
             pos_inic =-1
         else:
@@ -97,7 +96,7 @@ class BackgammonGame:
         self.__dice_2__.tirar_dado()
 
         if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
-            self.__dados_disponibles__ = [self.__dice_1__,self.__dice_2__,self.__dice_1__,self.__dice_2__]
+            self.__dados_disponibles__ = [self.__dice_1__,self.__dice_1__,self.__dice_1__,self.__dice_1__]
         else:
             self.__dados_disponibles__ = [self.__dice_1__,self.__dice_2__]
         
@@ -117,22 +116,31 @@ class BackgammonGame:
     def verificar_sacar_ficha(self, posicion, board):
         if self.__turno__ == "Blanco":
             # Blancas: verificar si está en home board (18-23)
-            if posicion < 18:
-                return True
             # Verificar que no hay fichas blancas fuera del home board (0-17)
             for pos in range(18):
                 if len(board[pos]) > 0:
                     if board[pos][0].obtener_color() == self.__turno__:
-                        raise MovimientoInvalido("No se puede realizar ese movimiento")     
+                        raise MovimientoInvalido("No se puede quitar ficha") 
+
+            if ((24 - posicion) <= self.__dice_1__.obtener_numero()) or ((24 - posicion) <= self.__dice_2__.obtener_numero()):
+                return True
+            
+            
+            else:
+                raise MovimientoInvalido("El movimiento no coincide con el dado")
+             
         else:  # Turno negro
             # Negras: verificar si está en home board (0-5)  
-            if posicion > 5:
-                return True
             # Verificar que no hay fichas negras fuera del home board (6-23)
             for pos in range(6, 24):
                 if len(board[pos]) > 0:
                     if board[pos][0].obtener_color() == self.__turno__:
-                        raise MovimientoInvalido("No se puede realizar ese movimiento")
+                        raise MovimientoInvalido("No se puede realizar ese movimiento+")
+            
+            if ((-(-1 - posicion)) <= self.__dice_1__.obtener_numero()) or ((-(-1 - posicion)) <= self.__dice_2__.obtener_numero()):
+                return True
+            else:
+                raise MovimientoInvalido("El movimiento no coincide con el dado") 
     
         return True
     
@@ -156,18 +164,26 @@ class BackgammonGame:
             else:  # Negro
                 pos_destino = pos_origen - pasos  # Negras van hacia abajo (23->0)
     
-            # Verificar límites
-            if pos_destino < 0 or pos_destino >= 24:
-                return False
-        
-            # Verificar que hay fichas del jugador actual en la posición origen
+
             if len(board[pos_origen]) == 0:
                 return False
+            
+            if pos_destino < 0 or pos_destino >= 24:
+                try:
+                    if self.verificar_sacar_ficha(pos_origen, self.__board__.obtener_contenedor_fichas()) == True:
+                        print(self.__turno__)
+                        print(pos_origen)
+                        return True
+                except MovimientoInvalido:
+                    pass  
+                return False
+            
         
             if board[pos_origen][0].obtener_color() != self.__turno__:
                 return False
         
             # Usar la función existente para verificar posición destino
+                         
             return self.verificar_posicion_disponible(pos_destino)
         #funcion auxiliar para verificar si un movimiento es valido si se saca una ficha que se ha comido
         def es_movimiento_valido_desde_inicio(pos_origen, pasos):
@@ -221,7 +237,10 @@ class BackgammonGame:
                 return True
             if (pos_fin - pos_inic) == d1.obtener_numero() + d2.obtener_numero():
                 self.__dados_disponibles__.remove(d1)
-                self.__dados_disponibles__.remove(d2)
+                if d1.obtener_numero() == d2.obtener_numero():
+                    self.__dados_disponibles__.remove(d1)
+                else:
+                    self.__dados_disponibles__.remove(d2)
                 return True
             else:
                 raise MovimientoInvalido("El moviemiento no coincide con el dado")
@@ -235,7 +254,10 @@ class BackgammonGame:
                 return True
             if (pos_inic - pos_fin) == d1.obtener_numero() + d2.obtener_numero():
                 self.__dados_disponibles__.remove(d1)
-                self.__dados_disponibles__.remove(d2)
+                if d1.obtener_numero() == d2.obtener_numero():
+                    self.__dados_disponibles__.remove(d1)
+                else:
+                    self.__dados_disponibles__.remove(d2)
                 return True
             else:
                 raise MovimientoInvalido("El moviemiento no coincide con el dado")

@@ -1,4 +1,4 @@
-from core.backgammongame import BackgammonGame
+from core.backgammongame import BackgammonGame, NoHayMovimientosPosibles,MovimientoInvalido, Ganador
 class CLI:
 
     def __init__(self):
@@ -44,14 +44,55 @@ class CLI:
             break
         
         while True:
-            print("Tablero")
-            self.mostrar_tablero()
-            print(f'Truno: {self.__juego__.obtener_players()[self.__juego__.obtener_turno()].obtener_nombre()}, Ficha: {self.__juego__.obtener_turno()}')
-            try:
-                if self.__juego__ == "Blanco":
-                    if len(self.__juego__.obtener_board().obtener_contenedor_blancas()) > 0:
-                        self.__juego__.
 
+            print("Tablero")
+            if len(self.__juego__.obtener_dados_disponibles()) == 0:
+                self.__juego__.tirar_dados()
+            try:
+                while True:
+                    if self.__juego__.obtener_board().verificar_ficha_comida(self.__juego__.obtener_turno()):
+                        self.mostrar_tablero()
+                        print(f'Truno: {self.__juego__.obtener_players()[self.__juego__.obtener_turno()].obtener_nombre()}, Ficha: {self.__juego__.obtener_turno()}')
+                        lista_dados = ''
+                        for i in self.__juego__.obtener_dados_disponibles():
+                            lista_dados += f'{str(i.obtener_numero())}, '
+                        print(f"Sus dados disponibles son: {lista_dados}")
+                        print(f"Tienes {self.__juego__.obtener_board().obtener_cantidad_de_fichas_comidas(self.__juego__.obtener_turno())} fichas que se han comido ")
+                        self.__juego__.verifificar_movimientos_posibles()
+                        pos_fin = int(input("Ingrese la pocición final: "))
+                        self.__juego__.realizar_moviento_desde_inicio(pos_fin)
+                        if len(self.__juego__.obtener_dados_disponibles()) == 0:
+                            break
+                        print("-" * 50)
+                    else:
+                        print(f'Truno: {self.__juego__.obtener_players()[self.__juego__.obtener_turno()].obtener_nombre()}, Ficha: {self.__juego__.obtener_turno()}')
+                        self.mostrar_tablero()
+                        lista_dados = ''
+                        for i in self.__juego__.obtener_dados_disponibles():
+                            lista_dados += f'{str(i.obtener_numero())}, '
+                        print(f"Sus dados disponibles son: {lista_dados}")                    
+                        self.__juego__.verifificar_movimientos_posibles()
+                        pos_inic = int(input("Ingrese la pocición inicial: "))
+                        pos_fin = int(input("Ingrese la pocición final: "))
+                        self.__juego__.realizar_movimiento(pos_inic,pos_fin)
+                        if len(self.__juego__.obtener_dados_disponibles()) == 0:
+                            break
+                        print("-" * 50)
+
+            except MovimientoInvalido as e:
+                print(e)
+
+            except NoHayMovimientosPosibles as e:
+                self.__juego__.cambiar_turno()
+                print(e)
+            
+            except Ganador as e:
+                self.mostrar_tablero()
+                print(e)
+                break
+
+
+                    
 
 
 if __name__ == '__main__':

@@ -161,3 +161,9 @@ class Board:
             if len(self.__contenedor_fichas_negras__) > 0:
                 return True
         return False
+    
+    def obtener_cantidad_de_fichas_comidas(self,turno):
+        if turno == "Blanco":
+            return len(self.obtener_contenedor_blancas())
+        else:
+            return len(self.obtener_contenedor_negras())
