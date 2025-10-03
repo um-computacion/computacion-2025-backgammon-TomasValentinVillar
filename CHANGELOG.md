@@ -1,7 +1,16 @@
 # ChangeLog
 
-## 2025-10-3
+## 2025-10-3 (10:22)
 
+### Added
+
+- clase Rule_Validator en core/rule_validator
+
+### Changed
+
+- funcion verificar_sacar_ficha en clase Backgammongame
+
+## 2025-10-3
 
 ### Added
 
