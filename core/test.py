@@ -161,6 +161,19 @@ class TestCore(unittest.TestCase):
         ]        
         self.assertTrue(juego.verifificar_movimientos_posibles())
     
+    def test_verificar_movimientos_posibles_solo_sacar(self):
+    
+        juego = BackgammonGame()
+
+        juego.__dice_1__.__numero__ = 5
+        juego.__dice_2__.__numero__ = 3
+        
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[Checker("Blanco")],[Checker("Blanco")]
+        ]        
+        self.assertTrue(juego.verifificar_movimientos_posibles())
+    
     def test_verificar_movimientos_posibles_no_hay_negro(self):
     
         juego = BackgammonGame()
@@ -174,16 +187,81 @@ class TestCore(unittest.TestCase):
         ]
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
-    def test_sacar_ficha(self):
+    
+    def test_verificar_movimientos_posibles_desde_inicio(self):
+    
         juego = BackgammonGame()
-        
+        juego.__turno__ = "Blanco"
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_blancas__ = [Checker("Blanco")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[Checker("Negro")],[],[], [],[],[Checker("Negro")],[],[],[]
+        ]
+
+        self.assertTrue(juego.verifificar_movimientos_posibles())
+    
+    def test_verificar_movimientos_posibles_desde_inicio_no_hay(self):
+    
+        juego = BackgammonGame()
+        juego.__turno__ = "Blanco"
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_blancas__ = [Checker("Blanco")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[Checker("Negro"),Checker("Negro")],[Checker("Negro"),Checker("Negro")],[],[Checker("Negro"),Checker("Negro")],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[],[]
+        ]
+
+        with self.assertRaises(NoHayMovimientosPosibles):
+            juego.verifificar_movimientos_posibles()
+    
+
+    def test_verificar_movimientos_posibles_desde_inicio_negro(self):
+    
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_negras__ = [Checker("Negro")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[Checker('Blanco')],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[Checker("Blanco")],[],[],[]
+        ]
+
+        self.assertTrue(juego.verifificar_movimientos_posibles())
+    
+    def test_verificar_movimientos_posibles_desde_inicio_negro_no_hay(self):
+    
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        juego.__dice_1__.__numero__ = 3
+        juego.__dice_2__.__numero__ = 2
+        juego.__board__.__contenedor_fichas_negras__ = [Checker("Negro")]
+
+        juego.__board__.__contenedor_fichas__ =  [
+            [],[],[],[Checker('Blanco')],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[]
+        ]
+
+        with self.assertRaises(NoHayMovimientosPosibles):
+            juego.verifificar_movimientos_posibles()
+    
+    @patch('random.randint', side_effect = [3,2])
+    def test_sacar_ficha(self,mock_randint):
+        juego = BackgammonGame()
+        juego.tirar_dados()        
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[],[],[],[],[],
             [],[],[],[],[],[], [],[],[],[],[Checker("Blanco")],[Checker("Blanco")]
             ]
             
-        self.assertTrue(juego.verificar_sacar_ficha(21,juego.__board__.__contenedor_fichas__))
-        self.assertTrue(juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__))
+        self.assertTrue(juego.verificar_sacar_ficha(22,juego.__board__.__contenedor_fichas__))
+        self.assertTrue(juego.verificar_sacar_ficha(23,juego.__board__.__contenedor_fichas__))
     
     def test_sacar_ficha_error(self):
         juego = BackgammonGame()
@@ -194,17 +272,19 @@ class TestCore(unittest.TestCase):
 
         with self.assertRaises(MovimientoInvalido):    
             juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__)
-    
-    def test_sacar_ficha_negro(self):
+
+    @patch('random.randint', side_effect = [3,2])
+    def test_sacar_ficha_negro(self,mock_randint):
         juego = BackgammonGame()
         juego.__turno__ = "Negro"
+        juego.tirar_dados()
         juego.__board__.__contenedor_fichas__ =  [
             [Checker("Negro")],[Checker("Negro")],[],[],[],[], [],[],[],[],[],[],
             [],[],[],[],[],[], [],[],[],[],[],[]
             ]
             
-        self.assertTrue(juego.verificar_sacar_ficha(6,juego.__board__.__contenedor_fichas__))
-        self.assertTrue(juego.verificar_sacar_ficha(-1,juego.__board__.__contenedor_fichas__)) #quitar ficha de tablero
+        self.assertTrue(juego.verificar_sacar_ficha(1,juego.__board__.__contenedor_fichas__))
+        self.assertTrue(juego.verificar_sacar_ficha(0,juego.__board__.__contenedor_fichas__)) #quitar ficha de tablero
     
     def test_sacar_ficha_error_negro(self):
         juego = BackgammonGame()
@@ -480,9 +560,9 @@ class TestCore(unittest.TestCase):
         juego.tirar_dados()
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
-            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Negro"),Checker("Negro")]
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")]
         ]
-        juego.realizar_movimiento(19,24)
+        juego.realizar_movimiento(23,24)
         self.assertEqual(len(juego.__board__.obtener_contenedor_blancas_sacadas()),1)
         self.assertEqual(juego.__board__.obtener_contenedor_blancas_sacadas()[0].obtener_color(),"Blanco")
     @patch('random.randint', side_effect=[3, 2])
@@ -494,7 +574,7 @@ class TestCore(unittest.TestCase):
             [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Negro"),Checker("Negro")]
         ]
         with self.assertRaises(MovimientoInvalido):
-            juego.realizar_movimiento(19,24)
+            juego.realizar_movimiento(22,24)
     
     @patch('random.randint', side_effect=[3, 2])
     def test_realizar_movimientos_cambio_de_turno(self,mock_randint):
@@ -647,7 +727,7 @@ class TestCore(unittest.TestCase):
         self.assertEqual(juego.obtener_players()["Negro"].obtener_estado(),"Ganador")
         self.assertEqual(juego.obtener_players()["Blanco"].obtener_estado(),"Perdedor")
 
-    @patch('random.randint', side_effect=[3, 2])
+    @patch('random.randint', side_effect=[6, 5])
     def test_realizar_moviento_gana(self,mock_randint):
         juego = BackgammonGame()
         juego.tirar_dados()
@@ -655,7 +735,7 @@ class TestCore(unittest.TestCase):
         juego.crear_jugador("Juan Perez","Negro","Jugando")
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
-            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [],[],[],[],[Checker("Blanco")],[]
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [],[],[],[],[Checker('Blanco')],[]
         ]
         juego.__board__.__contenedor_fichas_blancas_sacadas__= [
             Checker("Blanco"), Checker("Blanco"), Checker("Blanco"),
@@ -693,4 +773,102 @@ class TestCore(unittest.TestCase):
 
         self.assertEqual(len(juego.__board__.obtener_contenedor_negras_sacadas()),15)
         self.assertEqual(juego.__board__.obtener_contenedor_negras_sacadas()[0].obtener_color(),"Negro")
+
+
+    def test_draw_full_board(self):
+        board = Board()
+        board.__contenedor_fichas__ =  [
+            [Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[],[], [],[],[],[],[],[],
+            [],[],[],[],[],[], [],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[Checker("Negro")]
+        ]
+        board_draw = board.draw_full_board()
+        self.assertEqual(
+            board_draw,
+            [ # 10
+                [ # 1
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'W', 
+                ],
+                [ # 2
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'W', 
+                ],
+                [ # 3
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'W', 
+                ],
+                [ # 4
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', ' ', 
+                ],
+                [ # 5
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '4', ' ', 
+                ],
+                [ # 6
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', 'B', 
+                ],
+                [ # 7
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', ' ', 
+                ],
+                [ # 8
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', ' ', 
+                ],
+                [ # 9
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 
+                ],
+                [ # 10
+                    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 
+                ]
+            ]
+        )
     
+    def test_inicilazar_tablero(self):
+        juego = BackgammonGame()
+        juego.inicializar_board()
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[0]),2)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[11]),5)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[16]),3)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[18]),5)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[23]),2)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[12]),5)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[7]),3)
+        self.assertEqual(len(juego.obtener_board().obtener_contenedor_fichas()[5]),5)
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[0][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[11][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[16][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[18][0].obtener_color(),"Blanco")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[23][0].obtener_color(),"Negro")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[12][0].obtener_color(),"Negro")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[7][0].obtener_color(),"Negro")
+        self.assertEqual(juego.obtener_board().obtener_contenedor_fichas()[5][0].obtener_color(),"Negro")
+    
+    def test_verificar_ficha_comida(self):
+        juego = BackgammonGame()
+        juego.__board__.__contenedor_fichas_blancas__.append(Checker("Blanco"))
+        self.assertTrue(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_verificar_ficha_comida_no_hay(self):
+        juego = BackgammonGame()
+        self.assertFalse(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_verificar_ficha_comida_negra(self):
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        juego.__board__.__contenedor_fichas_negras__.append(Checker("Negro"))
+        self.assertTrue(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_verificar_ficha_comida_negra_no_hay(self):
+        juego = BackgammonGame()
+        juego.cambiar_turno()
+        self.assertFalse(juego.obtener_board().verificar_ficha_comida(juego.obtener_turno()))
+    
+    def test_obtener_cantidad_de_fichas_comidas(self):
+        board = Board()
+        board.__contenedor_fichas_blancas__.extend([Checker('Blanco'),Checker('Blanco')])
+        
+        self.assertEqual(board.obtener_cantidad_de_fichas_comidas("Blanco"), 2)
+    
+    def test_obtener_cantidad_de_fichas_comidas_negro(self):
+        board = Board()
+        board.__contenedor_fichas_negras__.extend([Checker('Negro'),Checker('Negro')])
+        
+        self.assertEqual(board.obtener_cantidad_de_fichas_comidas("Negro"), 2)
+
+if __name__ == '__main__':
+    unittest.main()

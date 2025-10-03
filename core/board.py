@@ -80,3 +80,90 @@ class Board:
             self.__contenedor_fichas_blancas__.pop()
         else:
             self.__contenedor_fichas_negras__.pop()
+    
+
+    def _get_piece_symbol(self, checker):
+        """
+        Obtiene el símbolo visual de una ficha
+        Args: checker - objeto Checker
+        Returns: 'W' para blancas, 'B' para negras
+        """
+        return 'W' if checker.obtener_color() == 'Blanco' else 'B'
+
+    def draw_full_board(self):
+        """
+        Genera una representación visual del tablero para las interfaces
+        Retorna: Lista de listas representando el tablero visualmente
+        - Muestra las 24 posiciones (0-23) del tablero
+        - 5 filas máximo por columna
+        - Si hay más de 5 fichas, muestra el número en la fila 
+        """
+        result_board = []
+        for row in range(0,5):
+            result_row = []
+            for col in range(11, -1, -1):
+                position_pieces = self.__contenedor_fichas__[col]
+                if len(position_pieces) > 0:
+                    if len(position_pieces) > row:
+                        if row < 4:
+                            piece = self._get_piece_symbol(position_pieces[0])
+                        else:
+                            if len(position_pieces) <= 5:
+                                piece = self._get_piece_symbol(position_pieces[0])
+                            else:
+                                piece = str(len(position_pieces) - 4)
+                        result_row.append(piece)
+                    else:
+                        result_row.append(' ')
+                else:
+                    result_row.append(' ')
+            result_board.append(result_row)
+        
+        
+        # Segunda mitad: posiciones 12 a 23
+        for row in range(0,5):
+            result_row = []
+                        
+            for col in range(12, 24):
+                position_pieces = self.__contenedor_fichas__[col]
+                if len(position_pieces) > 0:
+                    if len(position_pieces) > row:
+                        if row < 4:
+                            piece = self._get_piece_symbol(position_pieces[0])
+                        else:
+                            if len(position_pieces) <= 5:
+                                piece = self._get_piece_symbol(position_pieces[0])
+                            else:
+                                piece = str(len(position_pieces) - 4)
+                        result_row.append(piece)
+                    else:
+                        result_row.append(' ')
+                else:
+                    result_row.append(' ')
+            result_board.append(result_row)
+                    
+        return result_board
+    def inicializar_tablero(self):
+        self.__contenedor_fichas__[0].extend([Checker('Blanco'),Checker('Blanco')])
+        self.__contenedor_fichas__[11].extend([Checker('Blanco'),Checker('Blanco'),Checker('Blanco'),Checker("Blanco"),Checker("Blanco")])
+        self.__contenedor_fichas__[16].extend([Checker('Blanco'),Checker('Blanco'),Checker('Blanco')])
+        self.__contenedor_fichas__[18].extend([Checker('Blanco'),Checker('Blanco'),Checker('Blanco'),Checker("Blanco"),Checker("Blanco")])
+        self.__contenedor_fichas__[23].extend([Checker('Negro'),Checker('Negro')])
+        self.__contenedor_fichas__[12].extend([Checker('Negro'),Checker('Negro'),Checker('Negro'),Checker("Negro"),Checker("Negro")])
+        self.__contenedor_fichas__[7].extend([Checker('Negro'),Checker('Negro'),Checker('Negro')])
+        self.__contenedor_fichas__[5].extend([Checker('Negro'),Checker('Negro'),Checker('Negro'),Checker("Negro"),Checker("Negro")])
+
+    def verificar_ficha_comida(self,turno):
+        if turno == "Blanco":
+            if len(self.__contenedor_fichas_blancas__) > 0:
+                return True
+        else:
+            if len(self.__contenedor_fichas_negras__) > 0:
+                return True
+        return False
+    
+    def obtener_cantidad_de_fichas_comidas(self,turno):
+        if turno == "Blanco":
+            return len(self.obtener_contenedor_blancas())
+        else:
+            return len(self.obtener_contenedor_negras())

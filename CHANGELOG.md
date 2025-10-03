@@ -1,5 +1,59 @@
 # ChangeLog
 
+## 2025-10-1 
+
+### Added
+
+- funcion obtener_cantidad_de_fichas_comidas en clase Board
+- test_verificar_movimientos_posibles en test
+- test_obtener_cantidad_de_fichas_comidas en test
+- test_obtener_cantidad_de_fichas_comidas_negro en test
+
+### Changed
+- funcion ejecutar en CLI
+- funcion realizar_movimiento en clase BackgammonGame
+- funcion tirar_dados en clase BackgammonGame
+- funcion verificar_ficha en clase BackgammonGame
+- funcion verificar_movimientos_y_dados 
+- test_sacar_ficha en test
+- test_sacar_ficha_negro en test
+- test_realizar_movimiento_sacar_ficha en test
+
+## 2025-9-28 (18:00)
+
+### Added
+
+- funcion verificar_ficha_comida en Board
+- test test_verificar_movimientos_posibles_desde_inicio en test
+- test test_verificar_movimientos_posibles_desde_inicio_no_hay en test
+- test test_verificar_movimientos_posibles_desde_inicio_negro en test
+- test test_verificar_movimientos_posibles_desde_inicio_negro_no_hay en test
+- test test_verificar_ficha_comida en test
+- test test_verificar_ficha_comida_no_hay en test
+- test test_verificar_ficha_comida_negra en test
+- test test_verificar_ficha_comida_negra_no_hay en test
+
+### Changed
+- funcion verificar_movimientos_posibles en BackgammonGame
+
+## 2025-9-28
+
+### Added
+
+- Clase CLI
+- funcion mostrar_tablero en CLI
+- funcion inicializar_tablero en Board
+- funcion inicializar_board en BackgammonGame
+- test inicializar_board en test
+- funcion obtener_board en BackgammonGame
+
+## 2025-9-27
+
+### Added
+
+- funcion draw_full_board en clase Board
+- funcion test_draw_full_board en test
+
 ## 2025-9-24 (13:33)
 
 ### Added
