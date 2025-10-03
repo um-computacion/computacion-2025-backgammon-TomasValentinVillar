@@ -1,8 +1,8 @@
 import unittest
 from core.backgammongame import BackgammonGame,PosNoDisponible,NoHayMovimientosPosibles, MovimientoInvalido,Ganador
 from core.board import Board
-from core.checker import Checker
-from core.dice import Dice
+from core.models.checker import Checker
+from core.models.dice import Dice
 from unittest.mock import patch
 class TestCore(unittest.TestCase):
 

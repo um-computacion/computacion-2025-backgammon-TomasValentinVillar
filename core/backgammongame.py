@@ -1,6 +1,7 @@
 from core.board import Board
-from core.dice import Dice
-from core.player import Player
+from core.models.dice import Dice
+from core.models.player import Player
+from core.validators.move_validator import MoveValidator
 class PosNoDisponible(Exception): #esta exepción se va a usar cuando verificar_posicion_disponible sea Falsa
     pass
 class NoHayMovimientosPosibles(Exception):
@@ -18,6 +19,7 @@ class BackgammonGame:
         self.__dice_2__ = Dice()
         self.__dados_disponibles__ = []
         self.__players__ = {}
+        self.__move_validator__ = MoveValidator()
     
     
     def crear_jugador(self,nom,ficha,estado):
@@ -101,17 +103,13 @@ class BackgammonGame:
             self.__dados_disponibles__ = [self.__dice_1__,self.__dice_2__]
         
 
-    def verificar_posicion_disponible(self,posicion):
-
-        board = self.__board__.__contenedor_fichas__
-        if len(board[posicion]) == 0:
-             return True
-        elif board[posicion][0].obtener_color()== self.__turno__:
-             return True
-        elif len(board[posicion]) == 1: #comer ficha
-             return True 
-        else:
-            return False
+    def verificar_posicion_disponible(self, posicion):
+        # Mantener para compatibilidad - delega en MoveValidator
+        return self.__move_validator__.es_posicion_disponible(
+            self.__board__, 
+            posicion, 
+            self.__turno__
+    )
 
     def verificar_sacar_ficha(self, posicion, board):
         if self.__turno__ == "Blanco":

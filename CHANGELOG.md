@@ -1,6 +1,22 @@
 # ChangeLog
 
-## 2025-10-1 
+## 2025-10-3
+
+
+### Added
+
+- carpetas models, services y validators en core
+- archivos dice_manager.py y move_calculator.py en serivces
+- archivos move_validator.py y rule_validator.py en serivces
+
+### Changed
+
+- se ha movido los archivos dice.py, player.py y checker.py a la carpeta models
+- funcion __init__ en clase BackgammonGame
+- funcion verificar_posicion_disponible en clase BackgammonGame
+
+## 2025-10-1
+
 
 ### Added
 
