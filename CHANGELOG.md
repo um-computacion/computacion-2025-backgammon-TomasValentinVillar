@@ -1,10 +1,26 @@
 # ChangeLog
 
-## 2025-10-5 (10:22)
+## 2025-10-5 (16:53)
 
 ### Added
 
-- clase DiceManager en core/rule_validator
+- clase MoveCalculator en core/services/move_calculator
+
+### Changed
+
+- funcion  verificar_movimientos_posibles en clase BackgammonGame
+- función __init__ en clase BackgammonGame
+- función obtener_dados_disponibles en clase BackgammonGmae
+
+### Deleted
+
+- Excepción PosNoDisponibles (nunca fue usada)
+
+## 2025-10-5
+
+### Added
+
+- clase DiceManager en core/services/dice_manager
 
 ### Changed
 

@@ -2,10 +2,10 @@ from core.board import Board
 from core.models.dice import Dice
 from core.models.player import Player
 from core.services.dice_manager import DiceManager
+from core.services.move_calculator import MoveCalculator
 from core.validators.move_validator import MoveValidator
 from core.validators.rule_validator import RuleValidator
-class PosNoDisponible(Exception): #esta exepción se va a usar cuando verificar_posicion_disponible sea Falsa
-    pass
+
 class NoHayMovimientosPosibles(Exception):
     pass
 class MovimientoInvalido(Exception):
@@ -14,16 +14,24 @@ class Ganador(Exception):
     pass
 
 class BackgammonGame:
-    def __init__(self):
+    def __init__(self, board=None, dice1=None, dice2=None, 
+                 move_validator=None, rule_validator=None):
         self.__turno__ = "Blanco"
-        self.__board__ = Board()
-        self.__dice_1__ = Dice()
-        self.__dice_2__ = Dice()
+        
+        # Inyección de dependencias
+        self.__board__ = board if board is not None else Board()
+        self.__dice_1__ = dice1 if dice1 is not None else Dice()
+        self.__dice_2__ = dice2 if dice2 is not None else Dice()
+        
+        self.__move_validator__ = move_validator if move_validator is not None else MoveValidator()
+        self.__rule_validator__ = rule_validator if rule_validator is not None else RuleValidator()
         self.__dice_manager__ = DiceManager(self.__dice_1__, self.__dice_2__)
+        self.__move_calculator__ = MoveCalculator(
+            self.__move_validator__, 
+            self.__rule_validator__
+        )
         self.__dados_disponibles__ = []
         self.__players__ = {}
-        self.__move_validator__ = MoveValidator()
-        self.__rule_validator__ = RuleValidator()
     
     
     def crear_jugador(self,nom,ficha,estado):
@@ -107,12 +115,12 @@ class BackgammonGame:
             self.__dados_disponibles__ = [self.__dice_1__, self.__dice_2__]
 
     def obtener_dados_disponibles(self):
-    # Mantener interfaz - delega en DiceManager
-        return self.__dice_manager__.obtener_dados_disponibles()
+        """LEGACY - Mantiene interfaz para compatibilidad"""
+        return self.__dados_disponibles__
         
 
     def verificar_posicion_disponible(self, posicion):
-        # Mantener para compatibilidad - delega en MoveValidator
+        # LEGACY Mantener para compatibilidad - delega en MoveValidator
         return self.__move_validator__.es_posicion_disponible(
             self.__board__, 
             posicion, 
@@ -120,7 +128,7 @@ class BackgammonGame:
     )
 
     def verificar_sacar_ficha(self, posicion, board):
-        # Mantener para compatibilidad - delega en RuleValidator
+        # LEGACY Mantener para compatibilidad - delega en RuleValidator
         try:
             self.__rule_validator__.puede_sacar_ficha(
                 self.__board__, 
@@ -134,85 +142,19 @@ class BackgammonGame:
             raise MovimientoInvalido(str(e))
     
     def verifificar_movimientos_posibles(self):
-        '''
-
-        Funcionalidad: verifica hay al menos un movimiento posible segun las posiciones del tablero y los numeros de los dados
-
-        Salida: True si hay al menos un movimeto posible o Exepcion NoHayMovimientosPosibles si no hay movimientos posibles
-        '''
-        board = self.__board__.__contenedor_fichas__
-        d1 = self.__dice_1__
-        d2 = self.__dice_2__
-
-        # Función auxiliar para verificar si un movimiento es válido
-        def es_movimiento_valido(pos_origen, pasos):
-            
-                # Calcular destino según el color
-            if self.__turno__ == "Blanco":
-                pos_destino = pos_origen + pasos  # Blancas van hacia arriba (0->23)
-            else:  # Negro
-                pos_destino = pos_origen - pasos  # Negras van hacia abajo (23->0)
-    
-
-            if len(board[pos_origen]) == 0:
-                return False
-            
-            if pos_destino < 0 or pos_destino >= 24:
-                try:
-                    if self.verificar_sacar_ficha(pos_origen, self.__board__.obtener_contenedor_fichas()) == True:
-                        return True
-                except MovimientoInvalido:
-                    pass  
-                return False
-            
-        
-            if board[pos_origen][0].obtener_color() != self.__turno__:
-                return False
-        
-            # Usar la función existente para verificar posición destino
-                         
-            return self.verificar_posicion_disponible(pos_destino)
-        #funcion auxiliar para verificar si un movimiento es valido si se saca una ficha que se ha comido
-        def es_movimiento_valido_desde_inicio(pos_origen, pasos):
-            
-                # Calcular destino según el color
-            if self.__turno__ == "Blanco":
-                pos_destino = pos_origen + pasos  # Blancas van hacia arriba (0->23)
-            else:  # Negro
-                pos_destino = pos_origen - pasos  # Negras van hacia abajo (23->0)
-    
-            # Verificar límites
-            if pos_destino < 0 or pos_destino >= 24:
-                return False
-        
-            # Usar la función existente para verificar posición destino
-            return self.verificar_posicion_disponible(pos_destino)
-        if self.obtener_board().verificar_ficha_comida(self.__turno__) == True:
-            if self.__turno__ == "Blanco":
-                origen = -1
-            else:
-                origen = 24
-            if es_movimiento_valido_desde_inicio(origen, d1.obtener_numero()) or es_movimiento_valido_desde_inicio(origen, d2.obtener_numero()):
-                    return True
-            if es_movimiento_valido_desde_inicio(origen, d1.obtener_numero() + d2.obtener_numero()):
-                    return True
-            # Verificar movimientos posibles con cada dado individualmente
-        for i in range(24): #falta verifcar que hallan moviemientos desde inicio
-                if es_movimiento_valido(i, d1.obtener_numero()) or es_movimiento_valido(i, d2.obtener_numero()):
-                    return True
-    
-        # Verificar movimiento combinado (solo si no son dobles)
-        if d1.obtener_numero() != d2.obtener_numero():
-            for i in range(24):
-                if es_movimiento_valido(i, d1.obtener_numero() + d2.obtener_numero()):
-                    return True
-    
-        # Si no hay movimientos posibles, lanzar excepción
-        raise NoHayMovimientosPosibles("No hay movimientos posibles")
+        # Mantener interfaz - delega en MoveCalculator
+        try:
+            return self.__move_calculator__.hay_movimientos_posibles(
+                self.__board__, 
+                self.__turno__, 
+                self.__dice_manager__
+            )
+        except ValueError as e:
+            raise NoHayMovimientosPosibles(str(e))
     
     def verificar_movimientos_y_dados(self, pos_inic, pos_fin):
         """
-        MÉTODO PÚBLICO - Se mantiene para compatibilidad con CLI y tests
+        LEGACY MÉTODO PÚBLICO - Se mantiene para compatibilidad con CLI y tests
         Ahora delega en DiceManager internamente
         """
         # Calcular pasos según el turno
@@ -247,7 +189,7 @@ class BackgammonGame:
                     self.__dados_disponibles__.remove(self.__dice_2__)
             return True
         except ValueError as e:
-            raise MovimientoInvalido(e)
+            raise MovimientoInvalido(str(e))
             
         
     def verificar_cambio_turno(self):

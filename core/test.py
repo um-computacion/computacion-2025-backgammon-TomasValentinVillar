@@ -1,5 +1,5 @@
 import unittest
-from core.backgammongame import BackgammonGame,PosNoDisponible,NoHayMovimientosPosibles, MovimientoInvalido,Ganador
+from core.backgammongame import BackgammonGame,NoHayMovimientosPosibles, MovimientoInvalido,Ganador
 from core.board import Board
 from core.models.checker import Checker
 from core.models.dice import Dice
