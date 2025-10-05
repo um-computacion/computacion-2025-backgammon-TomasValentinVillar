@@ -1,4 +1,4 @@
-from core.checker import Checker
+from core.models.checker import Checker
 
 class Board:
     def __init__(self):

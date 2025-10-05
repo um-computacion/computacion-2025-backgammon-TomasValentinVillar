@@ -343,3 +343,82 @@ Luego en `verificar_movimientos_y_dados`, remover el dado usado de la lista.
 
 - Referencia: core/backgammongame.py
 
+
+
+## promnt
+
+. Modelo: Claude Sonnet 4
+
+. promnt: hola estoy haciendo mi proyecto de BackgammonGame en python para aprender programación orientada a objetos, ya tengo terminado lo que es la logica de negocio, osea lo que es codigo en sí y tambien termine la interfaz de terminal (CLI), y ahora tengo que hacer que cumpla las propiedades SOLID, y está toda la logica de negocio testeada (le pasé todo mi código)
+
+. me dió a elegir entre 3 opciones
+
+. Respuesta¡Perfecto! Ya tienes las **tres opciones completas**:
+
+## 📚 Resumen de lo que te di:
+
+### **A) Código Completo Refactorizado** ✅
+- `MoveValidator` - Validación de movimientos
+- `RuleValidator` - Validación de reglas especiales  
+- `DiceManager` - Gestión de dados
+- `MoveCalculator` - Cálculo de movimientos posibles
+- `BackgammonGame` refactorizado - Mantiene compatibilidad con tus tests
+
+### **B) Guía Paso a Paso** ✅
+- 6 fases detalladas (11 días estimados)
+- Cada fase con pasos específicos
+- Comandos para ejecutar tests después de cada cambio
+- Tests de ejemplo para cada clase nueva
+- Checklist de verificación
+
+### **C) Mapeo de Métodos** ✅
+- Tabla de referencia: qué método va a qué clase
+- Análisis de Board.draw_full_board()
+- Ejemplo antes/después completo
+- Estructura final de carpetas
+- Checklist SOLID
+
+---
+
+## 🎯 ¿Por dónde empezar?
+
+Te recomiendo este orden:
+
+1. **Lee la guía paso a paso** (Artefacto 2) para entender el proceso
+2. **Mira el mapeo de métodos** (Artefacto 3) cuando tengas dudas de "¿esto dónde va?"
+3. **Usa el código refactorizado** (Artefactos individuales) como referencia cuando implementes
+
+**Mi sugerencia:** Empieza por **FASE 2** (MoveValidator) este fin de semana. Es la más fácil y verás resultados inmediatos.
+
+---
+
+## 🤔 Preguntas frecuentes que podrías tener:
+
+**P: ¿Tengo que crear TODO ahora mismo?**  
+R: No, sigue las fases. Empieza con MoveValidator y ve paso a paso.
+
+**P: ¿Mis tests actuales van a fallar?**  
+R: No, si sigues la guía y mantienes los métodos públicos de BackgammonGame.
+
+**P: ¿Esto es demasiado código para un proyecto de aprendizaje?**  
+R: Al principio parece más, pero cada clase es más simple y fácil de entender que la versión monolítica.
+
+**P: ¿Y si quiero agregar una GUI después?**  
+R: Perfecto, con esta estructura solo creas un `GUIRenderer` sin tocar nada más.
+
+---
+
+¿Tienes alguna duda sobre alguna parte específica? ¿Quieres que te ayude con algo en particular de tu implementación? 🚀
+
+. usé la respuesta sin modificaciones, para la clase move validator, el resto lo haré en proximos commits
+
+. Referencia: core/models/player
+- core/models/player.py
+- core/models/checker.py
+- core/models/dice.py
+- core/validators/move_validator.py
+- core/validators/rule_validator.py
+- core/services/dice_manager.py
+- core/services/move_calculator.py
+- core/backgammongne.py
+- core/board.py

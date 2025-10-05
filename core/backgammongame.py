@@ -1,6 +1,8 @@
 from core.board import Board
-from core.dice import Dice
-from core.player import Player
+from core.models.dice import Dice
+from core.models.player import Player
+from core.validators.move_validator import MoveValidator
+from core.validators.rule_validator import RuleValidator
 class PosNoDisponible(Exception): #esta exepción se va a usar cuando verificar_posicion_disponible sea Falsa
     pass
 class NoHayMovimientosPosibles(Exception):
@@ -18,6 +20,8 @@ class BackgammonGame:
         self.__dice_2__ = Dice()
         self.__dados_disponibles__ = []
         self.__players__ = {}
+        self.__move_validator__ = MoveValidator()
+        self.__rule_validator__ = RuleValidator()
     
     
     def crear_jugador(self,nom,ficha,estado):
@@ -101,48 +105,27 @@ class BackgammonGame:
             self.__dados_disponibles__ = [self.__dice_1__,self.__dice_2__]
         
 
-    def verificar_posicion_disponible(self,posicion):
-
-        board = self.__board__.__contenedor_fichas__
-        if len(board[posicion]) == 0:
-             return True
-        elif board[posicion][0].obtener_color()== self.__turno__:
-             return True
-        elif len(board[posicion]) == 1: #comer ficha
-             return True 
-        else:
-            return False
+    def verificar_posicion_disponible(self, posicion):
+        # Mantener para compatibilidad - delega en MoveValidator
+        return self.__move_validator__.es_posicion_disponible(
+            self.__board__, 
+            posicion, 
+            self.__turno__
+    )
 
     def verificar_sacar_ficha(self, posicion, board):
-        if self.__turno__ == "Blanco":
-            # Blancas: verificar si está en home board (18-23)
-            # Verificar que no hay fichas blancas fuera del home board (0-17)
-            for pos in range(18):
-                if len(board[pos]) > 0:
-                    if board[pos][0].obtener_color() == self.__turno__:
-                        raise MovimientoInvalido("No se puede quitar ficha") 
-
-            if ((24 - posicion) <= self.__dice_1__.obtener_numero()) or ((24 - posicion) <= self.__dice_2__.obtener_numero()):
-                return True
-            
-            
-            else:
-                raise MovimientoInvalido("El movimiento no coincide con el dado")
-             
-        else:  # Turno negro
-            # Negras: verificar si está en home board (0-5)  
-            # Verificar que no hay fichas negras fuera del home board (6-23)
-            for pos in range(6, 24):
-                if len(board[pos]) > 0:
-                    if board[pos][0].obtener_color() == self.__turno__:
-                        raise MovimientoInvalido("No se puede realizar ese movimiento+")
-            
-            if ((-(-1 - posicion)) <= self.__dice_1__.obtener_numero()) or ((-(-1 - posicion)) <= self.__dice_2__.obtener_numero()):
-                return True
-            else:
-                raise MovimientoInvalido("El movimiento no coincide con el dado") 
-    
-        return True
+        # Mantener para compatibilidad - delega en RuleValidator
+        try:
+            self.__rule_validator__.puede_sacar_ficha(
+                self.__board__, 
+                posicion, 
+                self.__turno__, 
+                self.__dice_1__, 
+                self.__dice_2__
+            )
+            return True
+        except ValueError as e:
+            raise MovimientoInvalido(str(e))
     
     def verifificar_movimientos_posibles(self):
         '''
