@@ -1,6 +1,7 @@
 from core.board import Board
 from core.models.dice import Dice
 from core.models.player import Player
+from core.services.dice_manager import DiceManager
 from core.validators.move_validator import MoveValidator
 from core.validators.rule_validator import RuleValidator
 class PosNoDisponible(Exception): #esta exepción se va a usar cuando verificar_posicion_disponible sea Falsa
@@ -18,6 +19,7 @@ class BackgammonGame:
         self.__board__ = Board()
         self.__dice_1__ = Dice()
         self.__dice_2__ = Dice()
+        self.__dice_manager__ = DiceManager(self.__dice_1__, self.__dice_2__)
         self.__dados_disponibles__ = []
         self.__players__ = {}
         self.__move_validator__ = MoveValidator()
@@ -36,9 +38,8 @@ class BackgammonGame:
     def obtener_players(self):
         return self.__players__
 
-    def obtener_dados_disponibles(self):
-        return self.__dados_disponibles__
     
+        
     def obtener_turno(self):
         return self.__turno__
 
@@ -93,16 +94,21 @@ class BackgammonGame:
 
    
     def tirar_dados(self):
-        '''
-        Funcionalidad: Llama a la función tirar dado para asignarle un numero a los atributos de __dice_1__ y __dice_2__
-        '''
-        self.__dice_1__.tirar_dado()
-        self.__dice_2__.tirar_dado()
-
+        """
+        Mantiene interfaz original - usa DiceManager pero sincroniza __dados_disponibles__
+        """
+        self.__dice_manager__.tirar_dados()
+            
+        # Sincronizar con __dados_disponibles__ para compatibilidad
         if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
-            self.__dados_disponibles__ = [self.__dice_1__,self.__dice_1__,self.__dice_1__,self.__dice_1__]
+            self.__dados_disponibles__ = [self.__dice_1__, self.__dice_1__, 
+                                            self.__dice_1__, self.__dice_1__]
         else:
-            self.__dados_disponibles__ = [self.__dice_1__,self.__dice_2__]
+            self.__dados_disponibles__ = [self.__dice_1__, self.__dice_2__]
+
+    def obtener_dados_disponibles(self):
+    # Mantener interfaz - delega en DiceManager
+        return self.__dice_manager__.obtener_dados_disponibles()
         
 
     def verificar_posicion_disponible(self, posicion):
@@ -204,44 +210,44 @@ class BackgammonGame:
         # Si no hay movimientos posibles, lanzar excepción
         raise NoHayMovimientosPosibles("No hay movimientos posibles")
     
-    def verificar_movimientos_y_dados(self, pos_inic,pos_fin):
-        d1 = self.__dice_1__
-        d2 = self.__dice_2__
-        
-
+    def verificar_movimientos_y_dados(self, pos_inic, pos_fin):
+        """
+        MÉTODO PÚBLICO - Se mantiene para compatibilidad con CLI y tests
+        Ahora delega en DiceManager internamente
+        """
+        # Calcular pasos según el turno
         if self.__turno__ == "Blanco":
-            if (pos_fin - pos_inic) == d1.obtener_numero():
-                self.__dados_disponibles__.remove(d1)
-                return True
-            if (pos_fin - pos_inic) == d2.obtener_numero():
-                self.__dados_disponibles__.remove(d2)
-                return True
-            if (pos_fin - pos_inic) == d1.obtener_numero() + d2.obtener_numero():
-                self.__dados_disponibles__.remove(d1)
-                if d1.obtener_numero() == d2.obtener_numero():
-                    self.__dados_disponibles__.remove(d1)
-                else:
-                    self.__dados_disponibles__.remove(d2)
-                return True
+            pasos = pos_fin - pos_inic
+        else:
+            pasos = pos_inic - pos_fin
+        
+        # Intentar usar dado individual
+        try:
+            self.__dice_manager__.usar_dado(pasos)
+            # Sincronizar con __dados_disponibles__ (compatibilidad)
+            if self.__dice_1__.obtener_numero() == pasos and self.__dice_1__ in self.__dados_disponibles__:
+                self.__dados_disponibles__.remove(self.__dice_1__)
+            elif self.__dice_2__.obtener_numero() == pasos and self.__dice_2__ in self.__dados_disponibles__:
+                self.__dados_disponibles__.remove(self.__dice_2__)
+            return True
+        except ValueError:
+            pass
+        
+        # Intentar usar dados combinados
+        try:
+            self.__dice_manager__.usar_dados_combinados(pasos)
+            # Sincronizar con __dados_disponibles__
+            if self.__dice_1__ in self.__dados_disponibles__:
+                self.__dados_disponibles__.remove(self.__dice_1__)
+            if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
+                if self.__dice_1__ in self.__dados_disponibles__:
+                    self.__dados_disponibles__.remove(self.__dice_1__)
             else:
-                raise MovimientoInvalido("El moviemiento no coincide con el dado")
-            
-        elif self.__turno__ == "Negro":
-            if (pos_inic - pos_fin) == d1.obtener_numero():
-                self.__dados_disponibles__.remove(d1)
-                return True
-            if (pos_inic - pos_fin) == d2.obtener_numero():
-                self.__dados_disponibles__.remove(d2)
-                return True
-            if (pos_inic - pos_fin) == d1.obtener_numero() + d2.obtener_numero():
-                self.__dados_disponibles__.remove(d1)
-                if d1.obtener_numero() == d2.obtener_numero():
-                    self.__dados_disponibles__.remove(d1)
-                else:
-                    self.__dados_disponibles__.remove(d2)
-                return True
-            else:
-                raise MovimientoInvalido("El moviemiento no coincide con el dado")
+                if self.__dice_2__ in self.__dados_disponibles__:
+                    self.__dados_disponibles__.remove(self.__dice_2__)
+            return True
+        except ValueError as e:
+            raise MovimientoInvalido(e)
             
         
     def verificar_cambio_turno(self):

@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 2025-10-5 (10:22)
+
+### Added
+
+- clase DiceManager en core/rule_validator
+
+### Changed
+
+- funcion  verificar_movimientos_y_dados en clase BackgammonGame
+- función tirar_dados en clase BackgammonGame
+- función obtener_dados_disponibles en clase BackgammonGmae
+
 ## 2025-10-3 (10:22)
 
 ### Added
@@ -8,7 +20,7 @@
 
 ### Changed
 
-- funcion verificar_sacar_ficha en clase Backgammongame
+- funcion verificar_sacar_ficha en clase BackgammonGame
 
 ## 2025-10-3
 
