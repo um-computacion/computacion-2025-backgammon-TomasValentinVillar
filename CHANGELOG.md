@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 2025-10-8
+
+### Added
+
+- archivos test_board.py en core
+- archivos test_dice.py en core
+
+### Changed
+
+- muevo los test de board desde test_backgammongame a test_board
+- muevo los test de dice desde test_backgammongame a test_dice
+
 ## 2025-10-5 (16:53)
 
 ### Added
