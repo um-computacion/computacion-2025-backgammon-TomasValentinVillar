@@ -422,3 +422,318 @@ R: Perfecto, con esta estructura solo creas un `GUIRenderer` sin tocar nada más
 - core/services/move_calculator.py
 - core/backgammongne.py
 - core/board.py
+
+## promt
+. modelo: Claude Sonnet 4.5
+. promt: ya hice las fases 1,2 y 3, ahora hiba a hacer la fase 4 pero vi hay que sacar al metodo verficarmovimientos y_dados pero va hacer que halla fallos en los test y el CLI, tambien pasaria lo mismo en verificar_movimientos_posibles / (otra promt) entonces puedes corregir el artefacto de guia y el artefacto de BackgammonGame Refactorizado? solo hazlo si es necesario porque en una parte de la guia dice por lo que entiendo de refactorizar verificar_movimietos_y_dados y cambiarlo por uno que se llama usardados_para_movimiento
+
+. 
+
+. ¡Excelente pregunta! Estás muy atento 👏
+
+Tienes razón en preocuparte, pero **NO vas a tener problemas** si sigues el enfoque correcto. Te explico:
+
+## 🎯 La clave: NO ELIMINAR, DELEGAR
+
+### ❌ Lo que NO debes hacer (rompe tests):
+
+```python
+# MALO - Eliminar el método
+class BackgammonGame:
+    # def verificar_movimientos_y_dados(self, pos_inic, pos_fin):  ← BORRADO
+    #     pass
+```
+
+### ✅ Lo que SÍ debes hacer (mantiene compatibilidad):
+
+```python
+# BUENO - Mantener el método pero que DELEGUE internamente
+class BackgammonGame:
+    def verificar_movimientos_y_dados(self, pos_inic, pos_fin):
+        """
+        MÉTODO LEGACY - Se mantiene para compatibilidad con tests y CLI
+        Ahora delega en DiceManager
+        """
+        pasos = self.__move_calculator__.calcular_pasos_movimiento(
+            pos_inic, pos_fin, self.__turno__
+        )
+        
+        try:
+            self.__dice_manager__.usar_dado(pasos)
+            return True
+        except ValueError:
+            try:
+                self.__dice_manager__.usar_dados_combinados(pasos)
+                return True
+            except ValueError:
+                raise MovimientoInvalido("El movimiento no coincide con el dado")
+```
+
+---
+
+## 📋 Estrategia para FASE 4 sin romper nada
+
+### Paso 4.1: Crear DiceManager
+```python
+# core/services/dice_manager.py
+# (copia el código del artefacto)
+```
+
+### Paso 4.2: Agregar DiceManager a BackgammonGame
+```python
+class BackgammonGame:
+    def __init__(self):
+        self.__turno__ = "Blanco"
+        self.__board__ = Board()
+        self.__dice_1__ = Dice()
+        self.__dice_2__ = Dice()
+        
+        # AGREGAR (no reemplazar aún __dados_disponibles__)
+        self.__dice_manager__ = DiceManager(self.__dice_1__, self.__dice_2__)
+        
+        # MANTENER por ahora para compatibilidad
+        self.__dados_disponibles__ = []
+        
+        self.__move_validator__ = MoveValidator()
+        self.__rule_validator__ = RuleValidator()
+        self.__players__ = {}
+```
+
+### Paso 4.3: Modificar `tirar_dados()` - Sincronizar ambos
+```python
+def tirar_dados(self):
+    """
+    Mantiene interfaz original - ahora usa DiceManager pero sincroniza
+    """
+    # Delegar a DiceManager
+    self.__dice_manager__.tirar_dados()
+    
+    # MANTENER sincronizado con __dados_disponibles__ (compatibilidad)
+    if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
+        self.__dados_disponibles__ = [self.__dice_1__, self.__dice_1__, 
+                                       self.__dice_1__, self.__dice_1__]
+    else:
+        self.__dados_disponibles__ = [self.__dice_1__, self.__dice_2__]
+```
+
+### Paso 4.4: Modificar `verificar_movimientos_y_dados()` - Mantener interfaz
+```python
+def verificar_movimientos_y_dados(self, pos_inic, pos_fin):
+    """
+    LEGACY - Mantiene interfaz para compatibilidad
+    Internamente usa DiceManager
+    """
+    # Calcular pasos según el turno
+    if self.__turno__ == "Blanco":
+        pasos = pos_fin - pos_inic
+    else:
+        pasos = pos_inic - pos_fin
+    
+    # Intentar usar dado individual
+    try:
+        self.__dice_manager__.usar_dado(pasos)
+        # SINCRONIZAR: también remover de __dados_disponibles__
+        if self.__dice_1__.obtener_numero() == pasos and self.__dice_1__ in self.__dados_disponibles__:
+            self.__dados_disponibles__.remove(self.__dice_1__)
+        elif self.__dice_2__.obtener_numero() == pasos and self.__dice_2__ in self.__dados_disponibles__:
+            self.__dados_disponibles__.remove(self.__dice_2__)
+        return True
+    except ValueError:
+        pass
+    
+    # Intentar usar dados combinados
+    try:
+        self.__dice_manager__.usar_dados_combinados(pasos)
+        # SINCRONIZAR: remover ambos de __dados_disponibles__
+        if self.__dice_1__ in self.__dados_disponibles__:
+            self.__dados_disponibles__.remove(self.__dice_1__)
+        if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
+            if self.__dice_1__ in self.__dados_disponibles__:
+                self.__dados_disponibles__.remove(self.__dice_1__)
+        else:
+            if self.__dice_2__ in self.__dados_disponibles__:
+                self.__dados_disponibles__.remove(self.__dice_2__)
+        return True
+    except ValueError:
+        raise MovimientoInvalido("El movimiento no coincide con el dado")
+```
+
+### Paso 4.5: Modificar `obtener_dados_disponibles()` - Mantener interfaz
+```python
+def obtener_dados_disponibles(self):
+    """
+    LEGACY - Mantiene interfaz para compatibilidad
+    Puede retornar de __dados_disponibles__ o DiceManager (están sincronizados)
+    """
+    # Opción 1: Retornar el legacy (por ahora)
+    return self.__dados_disponibles__
+    
+    # Opción 2: Retornar de DiceManager (cuando quites __dados_disponibles__)
+    # return self.__dice_manager__.obtener_dados_disponibles()
+```
+
+### Paso 4.6: Ejecutar tests
+```bash
+python -m pytest tests/ -v
+```
+✅ **Deben pasar TODOS** porque mantuviste la interfaz
+
+---
+
+## 🔄 Para `verifificar_movimientos_posibles()` (FASE 5)
+
+### Mismo enfoque - Mantener interfaz:
+
+```python
+def verifificar_movimientos_posibles(self):
+    """
+    LEGACY - Mantiene interfaz para compatibilidad con tests y CLI
+    Internamente delega en MoveCalculator
+    """
+    try:
+        return self.__move_calculator__.hay_movimientos_posibles(
+            self.__board__, 
+            self.__turno__, 
+            self.__dice_manager__
+        )
+    except ValueError as e:
+        # Mantener el mismo tipo de excepción que espera el CLI
+        raise NoHayMovimientosPosibles(str(e))
+```
+
+**¿Ves?** El método sigue existiendo, mismo nombre, mismos parámetros, misma excepción. Solo cambia la implementación interna.
+
+---
+
+## 🎯 Regla de Oro
+
+### ✅ SIEMPRE:
+1. **Mantén los métodos públicos** (los que usa CLI o tests)
+2. **Delega la implementación** a las nuevas clases
+3. **Sincroniza estado** si usas datos redundantes temporalmente
+4. **Ejecuta tests después de cada cambio**
+
+### ❌ NUNCA:
+1. **Elimines métodos públicos** que usa CLI o tests
+2. **Cambies firmas de métodos** (nombre, parámetros, return)
+3. **Cambies tipos de excepciones** que ya están siendo usadas
+
+---
+
+## 📝 Ejemplo Concreto de tu situación
+
+### Tu CLI probablemente hace algo así:
+
+```python
+# cli/game_cli.py
+def jugar_turno(self):
+    game.tirar_dados()  # ← Usa este método
+    
+    dados = game.obtener_dados_disponibles()  # ← Usa este método
+    print(f"Dados: {dados}")
+    
+    # ... jugador elige movimiento ...
+    
+    try:
+        game.verificar_movimientos_y_dados(pos_inic, pos_fin)  # ← Usa este método
+    except MovimientoInvalido as e:
+        print(f"Error: {e}")
+```
+
+### Después de refactorizar (CLI NO CAMBIA):
+
+```python
+# cli/game_cli.py
+def jugar_turno(self):
+    game.tirar_dados()  # ← SIGUE FUNCIONANDO (delega a DiceManager)
+    
+    dados = game.obtener_dados_disponibles()  # ← SIGUE FUNCIONANDO
+    print(f"Dados: {dados}")
+    
+    # ... jugador elige movimiento ...
+    
+    try:
+        game.verificar_movimientos_y_dados(pos_inic, pos_fin)  # ← SIGUE FUNCIONANDO
+    except MovimientoInvalido as e:  # ← MISMA EXCEPCIÓN
+        print(f"Error: {e}")
+```
+
+**Todo funciona igual desde afuera, solo cambia la implementación interna** 🎯
+
+---
+
+## 🚀 Continúa con confianza
+
+Sigue con la FASE 4 usando esta estrategia:
+1. Crea `DiceManager`
+2. Agrega a `BackgammonGame.__init__()`
+3. Mantén `__dados_disponibles__` temporalmente
+4. Modifica los métodos para que DELEGUEN pero MANTENGAN interfaz
+5. Ejecuta tests
+
+**Más adelante** (cuando tengas más confianza) puedes:
+- Eliminar `__dados_disponibles__` completamente
+- Simplificar los métodos legacy
+- Marcarlos como deprecated si quieres
+
+¿Te quedó claro? ¿Quieres que te muestre el código exacto de cómo quedaría tu `BackgammonGame` después de FASE 4? 🎯
+
+. Perfecto! ✅ Ya corregí **todos los artefactos**:
+
+## 📋 Resumen de correcciones realizadas:
+
+### 1️⃣ **Guía Paso a Paso** (Artefacto actualizado)
+- ✅ FASE 4 ahora mantiene `verificar_movimientos_y_dados()` como método público
+- ✅ Agregado código de sincronización entre `DiceManager` y `__dados_disponibles__`
+- ✅ Ya no sugiere eliminar métodos públicos
+
+### 2️⃣ **BackgammonGame Refactorizado** (Artefacto actualizado)
+- ✅ Mantiene `__dados_disponibles__` en el `__init__()`
+- ✅ `tirar_dados()` sincroniza ambos sistemas
+- ✅ `verificar_movimientos_y_dados()` mantiene interfaz pública completa con sincronización
+- ✅ `obtener_dados_disponibles()` retorna `__dados_disponibles__`
+- ✅ `verificar_cambio_turno()` usa `__dados_disponibles__`
+- ✅ Métodos privados usan métodos públicos para mantener consistencia
+
+### 3️⃣ **Nuevo Artefacto: Notas de Refactorización Segura**
+- ✅ Explica el patrón de sincronización dual
+- ✅ Muestra qué NO hacer y qué SÍ hacer
+- ✅ Incluye checklist para FASE 4
+- ✅ Ejemplos de antes/después
+
+---
+
+## 🎯 Ahora puedes continuar FASE 4 sin problemas:
+
+```python
+# Tu código quedará así:
+class BackgammonGame:
+    def __init__(self):
+        # ...
+        self.__dice_manager__ = DiceManager(self.__dice_1__, self.__dice_2__)
+        self.__dados_disponibles__ = []  # ← MANTENER
+    
+    def tirar_dados(self):
+        self.__dice_manager__.tirar_dados()
+        # Sincronizar con __dados_disponibles__
+        if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
+            self.__dados_disponibles__ = [self.__dice_1__] * 4
+        else:
+            self.__dados_disponibles__ = [self.__dice_1__, self.__dice_2__]
+    
+    def verificar_movimientos_y_dados(self, pos_inic, pos_fin):
+        # ← MANTENER este método público
+        # Implementación que delega a DiceManager y sincroniza
+        pass
+```
+
+**Tus tests y CLI seguirán funcionando perfectamente** ✅
+
+¿Listo para continuar con FASE 4? 🚀
+
+. la repuesta fue usada con modificaciones: el cambio fue en el if de usar_dados_combinados en la clase DiceManager donde modifique el if deonde ahora la condición es la siguiente: len(self.__dados_disponibles__) >= 2
+
+. Referencia:
+- core/services/dice_manager.py
+- core/backgammongne.py
+
