@@ -1,5 +1,7 @@
 [run]
 omit = 
     */venv/*
-    core/test.py
+    core/test_backgammongame.py
+    core/test_dice.py
+    core/test_board.py
     

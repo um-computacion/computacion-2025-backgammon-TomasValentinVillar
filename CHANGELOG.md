@@ -1,11 +1,46 @@
 # ChangeLog
 
+## 2025-10-8 (17:45)
+
+### Added
+
+- archivos test_checker.py en core
+- archivos test_player.py en core
+- test_obtener_nombre en test_player
+- test_obtener_estado en test_player
+- test_obtener_ficha en test_player
+- test_definir_ganador en test_player
+- test_definir_perdedor en test_player
+- test_tirar_dado en test_dice
+- tesst_obtener_color en test_checker
+
+### Changed
+
+- funcion __init__ en clase BackgammonGame
+- función tirar_dados clase BackgammonGame
+- función verificar_movimientos_y_dados clase BackgammonGame
+- función obtener_dados_dispnibles clase BackgammonGame
+- test_cantidad_mov en test_backgammongame
+- test_cantidad_mov_iguales en test_backgammongame
+- test_verificar_movimientos_y_dados_blanco en test_backgammongame
+- test_verificar_movimientos_y_dados_blanco_doble en test_backgammongame
+- test_verificar_movimientos_y_dados_negro en test_backgammongame
+- test_verificar_movimientos_y_dados_negro_doble en test_backgammongame
+- test_verificar_movimientos_y_dados_error en test_backgammongame
+- test_varificar_cambio_turno_cambia en test_backgammongame
+
+### Deleted
+
+- atributo __dado_disponibles__ de BackgammonGame
+
 ## 2025-10-8
 
 ### Added
 
 - archivos test_board.py en core
 - archivos test_dice.py en core
+- test__get_symbol_w en test_board
+- test__get_symbol_B en test_board
 
 ### Changed
 
