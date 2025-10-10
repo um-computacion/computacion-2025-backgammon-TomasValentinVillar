@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 2025-10-9
+
+### Added
+
+- archivo test_dice_manager.py con los test de clase DiceManager
+- archivo test_rule_validator.py con los test de clase RuleValidator
+- archivo test_move_validator.py con los test de clase MoveValidator
+- archivo test_move_calculator.py con los test de clase MoveCalculator
+
 ## 2025-10-8 (17:45)
 
 ### Added
