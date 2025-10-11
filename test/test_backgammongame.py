@@ -205,8 +205,8 @@ class TestBackgammonGame(unittest.TestCase):
             [],[],[],[],[],[], [],[],[],[],[Checker("Blanco")],[Checker("Blanco")]
             ]
             
-        self.assertTrue(juego.verificar_sacar_ficha(22,juego.__board__.__contenedor_fichas__))
-        self.assertTrue(juego.verificar_sacar_ficha(23,juego.__board__.__contenedor_fichas__))
+        self.assertTrue(juego.verificar_sacar_ficha(22,juego.__board__))
+        self.assertTrue(juego.verificar_sacar_ficha(23,juego.__board__))
     
     def test_sacar_ficha_error(self):
         juego = BackgammonGame()
@@ -216,7 +216,7 @@ class TestBackgammonGame(unittest.TestCase):
             ]
 
         with self.assertRaises(MovimientoInvalido):    
-            juego.verificar_sacar_ficha(24,juego.__board__.__contenedor_fichas__)
+            juego.verificar_sacar_ficha(24,juego.__board__)
 
     @patch('random.randint', side_effect = [3,2])
     def test_sacar_ficha_negro(self,mock_randint):
@@ -228,8 +228,8 @@ class TestBackgammonGame(unittest.TestCase):
             [],[],[],[],[],[], [],[],[],[],[],[]
             ]
             
-        self.assertTrue(juego.verificar_sacar_ficha(1,juego.__board__.__contenedor_fichas__))
-        self.assertTrue(juego.verificar_sacar_ficha(0,juego.__board__.__contenedor_fichas__)) #quitar ficha de tablero
+        self.assertTrue(juego.verificar_sacar_ficha(1,juego.__board__))
+        self.assertTrue(juego.verificar_sacar_ficha(0,juego.__board__)) #quitar ficha de tablero
     
     def test_sacar_ficha_error_negro(self):
         juego = BackgammonGame()
@@ -241,7 +241,7 @@ class TestBackgammonGame(unittest.TestCase):
             ]
 
         with self.assertRaises(MovimientoInvalido):    
-            juego.verificar_sacar_ficha(-1,juego.__board__.__contenedor_fichas__)# se intenta quitar ficha de tablero
+            juego.verificar_sacar_ficha(-1,juego.__board__)# se intenta quitar ficha de tablero
     
 
     def test_comer_ficha(self):

@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2025-10-10
+
+### Changed
+
+- corrijo el archivo backgammongame.py para mejorar la de pylint (pasó 1 aproximadamente a 6,61 y 
+    y el directorio core paso de 1 aproximadamente a 5)
+
 ## 2025-10-9
 
 ### Added
