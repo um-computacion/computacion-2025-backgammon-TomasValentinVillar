@@ -30,7 +30,6 @@ class BackgammonGame:
             self.__move_validator__, 
             self.__rule_validator__
         )
-        self.__dados_disponibles__ = []
         self.__players__ = {}
     
     
@@ -45,9 +44,7 @@ class BackgammonGame:
 
     def obtener_players(self):
         return self.__players__
-
-    
-        
+   
     def obtener_turno(self):
         return self.__turno__
 
@@ -87,7 +84,7 @@ class BackgammonGame:
 
 
     def ocupar_casilla(self,pos_inic,pos_fin):
-        '''Entradas: cuadrante inicial, posición inicial,cuadrante final, posición final y turno actual
+        '''Entradas: posición inicial y posición final
 
         Funcionalidad: Utiliza las funciones quitar_ficha y poner_ficha para hacer el movimiento de la ficha de una casilla a otra
         '''
@@ -107,16 +104,10 @@ class BackgammonGame:
         """
         self.__dice_manager__.tirar_dados()
             
-        # Sincronizar con __dados_disponibles__ para compatibilidad
-        if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
-            self.__dados_disponibles__ = [self.__dice_1__, self.__dice_1__, 
-                                            self.__dice_1__, self.__dice_1__]
-        else:
-            self.__dados_disponibles__ = [self.__dice_1__, self.__dice_2__]
 
     def obtener_dados_disponibles(self):
         """LEGACY - Mantiene interfaz para compatibilidad"""
-        return self.__dados_disponibles__
+        return self.__dice_manager__.obtener_dados_disponibles()
         
 
     def verificar_posicion_disponible(self, posicion):
@@ -166,11 +157,6 @@ class BackgammonGame:
         # Intentar usar dado individual
         try:
             self.__dice_manager__.usar_dado(pasos)
-            # Sincronizar con __dados_disponibles__ (compatibilidad)
-            if self.__dice_1__.obtener_numero() == pasos and self.__dice_1__ in self.__dados_disponibles__:
-                self.__dados_disponibles__.remove(self.__dice_1__)
-            elif self.__dice_2__.obtener_numero() == pasos and self.__dice_2__ in self.__dados_disponibles__:
-                self.__dados_disponibles__.remove(self.__dice_2__)
             return True
         except ValueError:
             pass
@@ -178,15 +164,6 @@ class BackgammonGame:
         # Intentar usar dados combinados
         try:
             self.__dice_manager__.usar_dados_combinados(pasos)
-            # Sincronizar con __dados_disponibles__
-            if self.__dice_1__ in self.__dados_disponibles__:
-                self.__dados_disponibles__.remove(self.__dice_1__)
-            if self.__dice_1__.obtener_numero() == self.__dice_2__.obtener_numero():
-                if self.__dice_1__ in self.__dados_disponibles__:
-                    self.__dados_disponibles__.remove(self.__dice_1__)
-            else:
-                if self.__dice_2__ in self.__dados_disponibles__:
-                    self.__dados_disponibles__.remove(self.__dice_2__)
             return True
         except ValueError as e:
             raise MovimientoInvalido(str(e))
@@ -198,7 +175,7 @@ class BackgammonGame:
 
         Salida: si siguen quedando dados disponibles se mantendrá el turno, si no quedan retornará True
         '''
-        if self.__dados_disponibles__ == []:
+        if self.__dice_manager__.obtener_dados_disponibles() == []:
             self.cambiar_turno()
         else:
             return True

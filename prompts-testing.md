@@ -259,3 +259,56 @@ def test_tirar_dados_con_helper(self, mock_randint):
 . La repuesta fue usada con modificaciones, utilicé la opción 1, y quité el _BackgammonGame de los self.assert
 
 . referencia core/test.py
+
+## promt
+
+. Modelo: Claude Sonnet 4.5
+. hola, necesito que hagas los tes de dice_manager, move_calculator, move_validator y rule_validator de nuevo pero usando unittest en lugar de pytest, como el la guia paso a paso que eran pocos test pero usando el pytest
+.
+. Ahora actualizo la suite completa y el README:¡Listo! Ahora tienes tests **reducidos y esenciales** con `unittest`:
+
+## 📊 Resumen de la Versión Reducida:
+
+### Total: **19 tests** (vs 61 anteriores)
+
+- ✅ **DiceManager**: 4 tests (era 12)
+  - Tirar dados normales y dobles
+  - Usar dado individual y combinado
+
+- ✅ **MoveValidator**: 5 tests (era 15)
+  - Validar posiciones disponibles/bloqueadas
+  - Calcular destinos para blancas y negras
+
+- ✅ **RuleValidator**: 5 tests (era 16)
+  - Sacar fichas del home board
+  - Verificar fichas comidas y en home
+
+- ✅ **MoveCalculator**: 5 tests (era 18)
+  - Detectar movimientos posibles/imposibles
+  - Calcular pasos
+  - Movimientos desde inicio (fichas comidas)
+
+---
+
+## 🎯 Características de esta versión:
+
+1. **Tests autocontenidos**: No usa `setUp()`, cada test crea sus propias instancias
+2. **Cobertura esencial**: Solo los tests principales que demuestran SOLID
+3. **Fácil de leer**: Menos tests = más fácil de entender
+4. **Rápido de ejecutar**: ~19 tests se ejecutan en menos tiempo
+
+---
+
+## 🚀 Para ejecutar:
+
+```bash
+# Todos los tests
+python tests/test_all_solid_classes.py
+
+# Test individual
+python -m unittest tests.test_dice_manager -v
+```
+
+Estos tests son suficientes para demostrar que tu refactorización cumple con SOLID. ¿Quieres que ajuste algo más? 🎯
+
+. La respuesta fue usada con modificaciones, en donde para cambiar el atributo de una clase se utiliza el nombre la clase cuyo atributo se debe alterar, lo modifico para que no se use el nombre de la clase, también en dodne se utuliza la función tirar_dados la modifico para que  se use el patch para definir el resultado de numeros aleatorios
