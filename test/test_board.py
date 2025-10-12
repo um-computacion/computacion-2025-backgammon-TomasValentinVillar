@@ -10,8 +10,8 @@ class TestBoard(unittest.TestCase):
         board = Board()
         board.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[],[],[],[],[],
-            [],[],[],[],[],[], [],[],[],[],[],[]
-        ]
+            [],[],[],[],[],[], [],[],[],[],[],[]]
+
         resultado_fichas = [
             [],[],[],[],[],[], [],[],[],[],[],[],
             [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blaco")],[],[],[],[]

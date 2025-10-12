@@ -229,10 +229,11 @@ class BackgammonGame:
             if self.__turno__ == "Blanco":
                 self.__players__[self.__turno__].definir_ganador()
                 self.__players__["Negro"].definir_perdedor()
-            else:
-                self.__players__[self.__turno__].definir_ganador()
-                self.__players__["Blanco"].definir_perdedor()
+                return True
+            self.__players__[self.__turno__].definir_ganador()
+            self.__players__["Blanco"].definir_perdedor()
             return True
+        return None
 
     def inicializar_board(self):
         """
