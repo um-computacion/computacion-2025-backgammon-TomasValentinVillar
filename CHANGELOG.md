@@ -1,5 +1,28 @@
 # ChangeLog
 
+## 2025-10-12
+
+### Changed
+
+- corrijo el archivo move_calculator.py y cli py para aumentar la nota del pylint
+- agrego dos líneas en .pylintrc para que pylint reconozca los imports en los archivos
+- corrijo el github/workflows/ci.yml para que se muestre correctamente en github
+
+## 2025-10-11
+
+### Changed
+
+- corrijo el archivos backgammongame.py, board.py, dice_manager.py, move_validator.py, rule_validator.py, checker.py, dice.py y player.py
+- el puntaje de pylint pasó de 5 aprox a 8 aprox
+
+## 2025-10-10
+
+### Changed
+
+- corrijo el archivo backgammongame.py para mejorar la de pylint (pasó 1 aproximadamente a 6,61 y 
+    y el directorio core paso de 1 aproximadamente a 5)
+- muevo los test a un directorio distinto exclisvo para los test
+
 ## 2025-10-9
 
 ### Added
