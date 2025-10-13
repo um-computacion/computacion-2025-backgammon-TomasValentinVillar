@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 2025-10-12 (23:24)
+
+### Added
+
+- archivo colors.py en pygame_ui
+- archivo __init__.py en pygame_ui
+- clase BackgammonUI en pygameui.py
+
 ## 2025-10-12
 
 ### Changed
