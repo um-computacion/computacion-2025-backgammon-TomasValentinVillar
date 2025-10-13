@@ -1,5 +1,6 @@
 """
 Modulo encargado de gestionar los dados y movientos disponibles
+contiene a la clase DiceManager
 """
 
 class DiceManager:

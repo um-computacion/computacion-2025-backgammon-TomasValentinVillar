@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 2025-10-12
+
+### Changed
+
+- corrijo el archivo move_calculator.py y cli py para aumentar la nota del pylint
+- agrego dos líneas en .pylintrc para que pylint reconozca los imports en los archivos
+- corrijo el github/workflows/ci.yml para que se muestre correctamente en github
+
 ## 2025-10-11
 
 ### Changed
