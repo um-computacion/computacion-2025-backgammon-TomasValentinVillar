@@ -1,5 +1,19 @@
 # ChangeLog
 
+## 2025-10-18 (23:24)
+
+### Added
+
+- archivo board_adapter en directorio pygame_ui
+
+### Changed
+
+- archivo pygameui.py en directorio pygame_ui
+
+### Deleted
+
+- archivo colors.py en pygame_ui
+
 ## 2025-10-12 (23:24)
 
 ### Added
