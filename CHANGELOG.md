@@ -1,6 +1,11 @@
 # ChangeLog
 
-## 2025-10-18 (23:24)
+## 2025-10-18 (19:24)
+
+- función render_board en pygameui.py
+- función main en pygameui.py
+
+## 2025-10-18 
 
 ### Added
 

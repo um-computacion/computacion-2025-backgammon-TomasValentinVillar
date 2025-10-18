@@ -25,10 +25,10 @@ def main():
     game.crear_jugador("Jugador 1", "Blanco", "Jugando")
     game.crear_jugador("Jugador 2", "Negro", "Jugando")
     
-    # Adaptador para pygame
+    # Adaptador
     board_adapter = BoardAdapter(game)
     
-    # Estado de la UI
+    # Estado UI
     posicion_seleccionada = None
     mensaje = "Presiona ESPACIO para tirar dados"
     hitmap = {}
@@ -48,11 +48,14 @@ def main():
                         game.tirar_dados()
                         try:
                             game.verifificar_movimientos_posibles()
-                            mensaje = f"Dados: {[d.obtener_numero() for d in game.obtener_dados_disponibles()]}"
+                            dados_valores = [d.obtener_numero() for d in game.obtener_dados_disponibles()]
+                            mensaje = f"Dados lanzados: {dados_valores}"
                         except NoHayMovimientosPosibles:
                             mensaje = "No hay movimientos. Cambiando turno..."
                             game.cambiar_turno()
                             game.tirar_dados()
+                    else:
+                        mensaje = "Ya hay dados disponibles"
             
             elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
                 idx = hit_test(hitmap, e.pos)
@@ -64,37 +67,49 @@ def main():
                         if len(contenedor[idx]) > 0:
                             if contenedor[idx][0].obtener_color() == game.obtener_turno():
                                 posicion_seleccionada = idx
-                                mensaje = f"Seleccionado: {idx}. Click destino"
+                                mensaje = f"Seleccionada pos {idx}. Click en destino"
+                            else:
+                                mensaje = f"Pos {idx} no es tu ficha"
+                        else:
+                            mensaje = f"Pos {idx} está vacía"
                     else:
                         # Mover ficha
                         try:
                             game.realizar_movimiento(posicion_seleccionada, idx)
-                            mensaje = f"Movido: {posicion_seleccionada} → {idx}"
+                            mensaje = f"✓ Movido: {posicion_seleccionada} → {idx}"
                             posicion_seleccionada = None
-                            board_adapter.actualizar()  # Actualizar vista
+                            board_adapter.actualizar()
                         except MovimientoInvalido as ex:
-                            mensaje = f"Error: {str(ex)}"
+                            mensaje = f"✗ Error: {str(ex)[:50]}"  # Limitar mensaje
                             posicion_seleccionada = None
                         except Ganador:
-                            mensaje = f"¡{game.obtener_turno()} GANÓ!"
-                            running = False
+                            mensaje = f"🏆 ¡{game.obtener_turno()} GANÓ!"
 
-        # Actualizar adaptador y renderizar
+        # Renderizar
         board_adapter.actualizar()
         hitmap = render_board(screen, board_adapter, font)
         
-        # Mostrar información del turno
+        # UI INFO (siempre visible)
         turno_text = font_big.render(f"Turno: {game.obtener_turno()}", True, BLACK)
         screen.blit(turno_text, (10, 10))
         
-        # Mostrar mensaje
+        # DADOS (siempre visible)
+        dados = game.obtener_dados_disponibles()
+        if dados:
+            dados_valores = [d.obtener_numero() for d in dados]
+            dados_text = font_big.render(f"Dados: {dados_valores}", True, (0, 100, 0))
+        else:
+            dados_text = font_big.render("Dados: [] (ESPACIO)", True, (200, 0, 0))
+        screen.blit(dados_text, (10, 50))
+        
+        # MENSAJE
         msg_text = font.render(mensaje, True, BLACK)
         screen.blit(msg_text, (10, HEIGHT - 30))
         
-        # Resaltar posición seleccionada
+        # Resaltar selección
         if posicion_seleccionada is not None and posicion_seleccionada in hitmap:
             rect = hitmap[posicion_seleccionada]
-            pygame.draw.rect(screen, (255, 215, 0), rect, 3)  # Borde dorado
+            pygame.draw.rect(screen, (255, 215, 0), rect, 3)
 
         pygame.display.flip()
         clock.tick(60)
@@ -105,9 +120,8 @@ def main():
 
 
 def render_board(screen, board_adapter, font):
-
     screen.fill(BACKGROUND)
-    board = board_adapter  # board_adapter simula game.board
+    board = board_adapter
 
     margin = 40
     width = WIDTH - 2 * margin
@@ -134,20 +148,43 @@ def render_board(screen, board_adapter, font):
 
     radius = point_width // 3
 
-    # Dibujar fichas
+    # CORRECCIÓN: Crear hitmap para TODAS las posiciones
     for col in range(24):
         data = board.pos.get(col)
+        
+        # Calcular coordenadas base (SIEMPRE, incluso si está vacío)
+        if col < 12:
+            i = 11 - col
+            base_x = margin + i * point_width + point_width // 2
+            rect = pygame.Rect(
+                base_x - point_width//2, 
+                margin,
+                point_width, 
+                point_height
+            )
+        else:
+            i = col - 12
+            base_x = margin + i * point_width + point_width // 2
+            rect = pygame.Rect(
+                base_x - point_width//2, 
+                HEIGHT - margin - point_height,
+                point_width, 
+                point_height
+            )
+        
+        # SIEMPRE agregar al hitmap (aunque esté vacío)
+        hitmap[col] = rect
+        
+        # Si no hay fichas, continuar (ya agregamos hitmap)
         if not data:
             continue
         
+        # Dibujar fichas si existen
         color_str, count = data
         color = WHITE if color_str == 'white' else BLACK
         text_color = BLACK if color == WHITE else WHITE
         
         if col < 12:
-            i = 11 - col
-            base_x = margin + i * point_width + point_width // 2
-            
             for n in range(min(count, 4)):
                 y = margin + (n * (radius * 2 + 2)) + radius
                 pygame.draw.circle(screen, color, (base_x, y), radius)
@@ -164,9 +201,6 @@ def render_board(screen, board_adapter, font):
                     (base_x - text_surface.get_width() // 2, 
                      y - text_surface.get_height() // 2))
         else:
-            i = col - 12
-            base_x = margin + i * point_width + point_width // 2
-            
             for n in range(min(count, 4)):
                 y = HEIGHT - margin - (n * (radius * 2 + 2)) - radius
                 pygame.draw.circle(screen, color, (base_x, y), radius)
@@ -182,14 +216,6 @@ def render_board(screen, board_adapter, font):
                 screen.blit(text_surface, 
                     (base_x - text_surface.get_width() // 2, 
                      y - text_surface.get_height() // 2))
-        
-        rect = pygame.Rect(
-            base_x - point_width//2, 
-            margin if col < 12 else HEIGHT - margin - point_height, 
-            point_width, 
-            point_height
-        )
-        hitmap[col] = rect
 
     return hitmap
 
