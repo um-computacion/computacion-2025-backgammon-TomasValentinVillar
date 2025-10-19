@@ -1,9 +1,26 @@
 # ChangeLog
 
+## 2025-10-19
+
+### Changed
+
+- función main en pygameui.py
+
+### Added
+
+- función render_captured_pieces en pygameuy.py
+- función hit_test_captured
+
 ## 2025-10-18 (19:24)
+
+### Changed
 
 - función render_board en pygameui.py
 - función main en pygameui.py
+
+### To Do
+
+- que funcione corrextamente la lógica para comer fichas
 
 ## 2025-10-18 
 
