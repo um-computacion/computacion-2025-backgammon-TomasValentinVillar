@@ -1,5 +1,63 @@
 # ChangeLog
 
+## 2025-10-20
+
+### Changed
+
+- función main en pygameui.py
+
+### Added
+
+- función hit_test_bear_off en pygameuy.py
+- función render_bear_off_zones en pygameuy.py
+- función puede_empezar_bear_off en pygameuy.py
+
+
+
+## 2025-10-19
+
+### Changed
+
+- función main en pygameui.py
+
+### Added
+
+- función render_captured_pieces en pygameuy.py
+- función hit_test_captured
+
+## 2025-10-18 (19:24)
+
+### Changed
+
+- función render_board en pygameui.py
+- función main en pygameui.py
+
+### To Do
+
+- que funcione corrextamente la lógica para comer fichas
+
+## 2025-10-18 
+
+### Added
+
+- archivo board_adapter en directorio pygame_ui
+
+### Changed
+
+- archivo pygameui.py en directorio pygame_ui
+
+### Deleted
+
+- archivo colors.py en pygame_ui
+
+## 2025-10-12 (23:24)
+
+### Added
+
+- archivo colors.py en pygame_ui
+- archivo __init__.py en pygame_ui
+- clase BackgammonUI en pygameui.py
+
 ## 2025-10-12
 
 ### Changed
