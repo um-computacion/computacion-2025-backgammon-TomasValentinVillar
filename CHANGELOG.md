@@ -1,5 +1,19 @@
 # ChangeLog
 
+## 2025-10-20
+
+### Changed
+
+- función main en pygameui.py
+
+### Added
+
+- función hit_test_bear_off en pygameuy.py
+- función render_bear_off_zones en pygameuy.py
+- función puede_empezar_bear_off en pygameuy.py
+
+
+
 ## 2025-10-19
 
 ### Changed
