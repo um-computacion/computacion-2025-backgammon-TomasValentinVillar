@@ -115,14 +115,15 @@ class MoveCalculator:
         # Verificar si está sacando ficha
         if not self.__move_validator__.es_posicion_valida(pos_destino):
             try:
-                valores = dice_manager.obtener_valores()
-                from core.models.dice import Dice
-                dado1 = Dice()
-                dado2 = Dice()
-                dado1.__numero__ = valores[0]
-                dado2.__numero__ = valores[1]
-
-                self.__rule_validator__.puede_sacar_ficha(board, pos_origen, turno, dado1, dado2)
+                #✅ Pasar dados disponibles en lugar de crear dados nuevos
+                dados_disponibles = dice_manager.obtener_dados_disponibles()
+                
+                self.__rule_validator__.puede_sacar_ficha(
+                    board, 
+                    pos_origen, 
+                    turno, 
+                    dados_disponibles  # ✅ Cambio aquí
+                )
                 return True
             except ValueError:
                 return False

@@ -14,6 +14,7 @@ class TestRuleValidator(unittest.TestCase):
         board = Board()
         dice1 = Dice()
         dice2 = Dice()
+        dados_disponibles = [dice1,dice2]
         
         # Colocar solo fichas blancas en home board
         board.poner_ficha(22, "Blanco")
@@ -24,7 +25,7 @@ class TestRuleValidator(unittest.TestCase):
         dice2.__numero__ = 3
         
         # Debe poder sacar desde posición 22 (distancia 2 al final)
-        resultado = validator.puede_sacar_ficha(board, 22, "Blanco", dice1, dice2)
+        resultado = validator.puede_sacar_ficha(board, 22, "Blanco", dados_disponibles)
         self.assertTrue(resultado)
     
     def test_no_puede_sacar_si_hay_fichas_fuera_home_blancas(self):
@@ -33,7 +34,7 @@ class TestRuleValidator(unittest.TestCase):
         board = Board()
         dice1 = Dice()
         dice2 = Dice()
-        
+        dados_disponibles = [dice1,dice2]
         # Colocar ficha blanca fuera del home board
         board.poner_ficha(10, "Blanco")
         board.poner_ficha(22, "Blanco")
@@ -42,7 +43,7 @@ class TestRuleValidator(unittest.TestCase):
         dice2.__numero__ = 3
         
         with self.assertRaises(ValueError):
-            validator.puede_sacar_ficha(board, 22, "Blanco", dice1, dice2)
+            validator.puede_sacar_ficha(board, 22, "Blanco", dados_disponibles)
     
     def test_tiene_fichas_comidas(self):
         """Test: Verificar si hay fichas comidas"""

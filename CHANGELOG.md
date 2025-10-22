@@ -1,5 +1,20 @@
 # ChangeLog
 
+## 2025-10-22
+
+### Changed
+
+- función _es_movimiento_valido en clase MoveCalculater
+- función puede_sacar_ficha en clase RuleValidator
+- función _puede_sacar_ficha_blanca en clase RuleValidator
+- función _puede_sacar_ficha_negra en clase RuleValidator
+- función realizar_movimiento en clase BackgammonGame
+- función verificar_sacar_ficha en en clase BackgammonGame
+
+### To DO
+
+- que pase el test_verificar_moviemtos_posibles_solo_sacar 
+
 ## 2025-10-20
 
 ### Changed
@@ -11,7 +26,6 @@
 - función hit_test_bear_off en pygameuy.py
 - función render_bear_off_zones en pygameuy.py
 - función puede_empezar_bear_off en pygameuy.py
-
 
 
 ## 2025-10-19

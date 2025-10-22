@@ -9,33 +9,37 @@ class RuleValidator:
     Cumple con SRP: Solo valida reglas del juego
     """
 
-    def puede_sacar_ficha(self, board, posicion, turno, dado1, dado2):
+    def puede_sacar_ficha(self, board, posicion, turno, dados_disponibles):
         """
         Verifica si se puede sacar una ficha del tablero
 
-        Reglas:
+        Reglas CORRECTAS:
         - Todas las fichas deben estar en el home board
-        - El movimiento debe coincidir con un dado o ser menor si no hay fichas más atrás
+        - El dado debe coincidir EXACTAMENTE con la distancia, O
+        - Si el dado es MAYOR y NO hay fichas más atrás, se puede sacar
 
         Args:
             board: Instancia de Board
             posicion: int - posición de la ficha a sacar
             turno: str - turno actual
-            dado1, dado2: Instancias de Dice
+            dados_disponibles: list - Lista de instancias de Dice DISPONIBLES
 
         Returns:
-            bool - True si se puede sacar
+            int - El dado que se debe usar (para consumirlo después)
 
         Raises:
             ValueError si no se puede sacar
         """
         contenedor = board.obtener_contenedor_fichas()
 
-        if turno == "Blanco":
-            return self._puede_sacar_ficha_blanca(contenedor, posicion, dado1, dado2)
-        return self._puede_sacar_ficha_negra(contenedor, posicion, dado1, dado2)
+        # Extraer valores de dados DISPONIBLES
+        valores_disponibles = [d.obtener_numero() for d in dados_disponibles]
 
-    def _puede_sacar_ficha_blanca(self, contenedor, posicion, dado1, dado2):
+        if turno == "Blanco":
+            return self._puede_sacar_ficha_blanca(contenedor, posicion, valores_disponibles)
+        return self._puede_sacar_ficha_negra(contenedor, posicion, valores_disponibles)
+
+    def _puede_sacar_ficha_blanca(self, contenedor, posicion, valores_disponibles):
         """
         Verifica si las blancas pueden sacar ficha
         Home board: posiciones 18-23
@@ -46,16 +50,31 @@ class RuleValidator:
                 if contenedor[pos][0].obtener_color() == "Blanco":
                     raise ValueError("No se puede sacar ficha: hay fichas fuera del home board")
 
-        # Calcular distancia al final
+        # Calcular distancia exacta al final
         distancia = 24 - posicion
 
-        # Verificar si coincide con algún dado
-        if distancia <= dado1.obtener_numero() or distancia <= dado2.obtener_numero():
-            return True
+        # Buscar dado EXACTO disponible
+        if distancia in valores_disponibles:
+            return distancia
 
-        raise ValueError("El movimiento no coincide con ningún dado")
+        # Buscar dado MAYOR (solo si NO hay fichas más atrás)
+        # Verificar que no hay fichas blancas en posiciones anteriores (18 a posicion-1)
+        hay_fichas_atras = False
+        for pos in range(18, posicion):
+            if len(contenedor[pos]) > 0:
+                if contenedor[pos][0].obtener_color() == "Blanco":
+                    hay_fichas_atras = True
+                    break
 
-    def _puede_sacar_ficha_negra(self, contenedor, posicion, dado1, dado2):
+        if not hay_fichas_atras:
+            # Buscar el dado disponible más pequeño que sea mayor a la distancia
+            dados_mayores = [v for v in valores_disponibles if v > distancia]
+            if dados_mayores:
+                return min(dados_mayores)  # Retornar el más pequeño
+
+        raise ValueError("No se puede sacar: el dado no coincide con la distancia")
+
+    def _puede_sacar_ficha_negra(self, contenedor, posicion, valores_disponibles):
         """
         Verifica si las negras pueden sacar ficha
         Home board: posiciones 0-5
@@ -66,14 +85,29 @@ class RuleValidator:
                 if contenedor[pos][0].obtener_color() == "Negro":
                     raise ValueError("No se puede sacar ficha: hay fichas fuera del home board")
 
-        # Calcular distancia al final
+        # Calcular distancia exacta al final
         distancia = posicion + 1
 
-        # Verificar si coincide con algún dado
-        if distancia <= dado1.obtener_numero() or distancia <= dado2.obtener_numero():
-            return True
+        #Buscar dado EXACTO disponible
+        if distancia in valores_disponibles:
+            return distancia
 
-        raise ValueError("El movimiento no coincide con ningún dado")
+        # Buscar dado MAYOR (solo si NO hay fichas más atrás)
+        # Verificar que no hay fichas negras en posiciones posteriores (posicion+1 a 5)
+        hay_fichas_atras = False
+        for pos in range(posicion + 1, 6):
+            if len(contenedor[pos]) > 0:
+                if contenedor[pos][0].obtener_color() == "Negro":
+                    hay_fichas_atras = True
+                    break
+
+        if not hay_fichas_atras:
+            # Buscar el dado disponible más pequeño que sea mayor a la distancia
+            dados_mayores = [v for v in valores_disponibles if v > distancia]
+            if dados_mayores:
+                return min(dados_mayores)  # Retornar el más pequeño
+
+        raise ValueError("No se puede sacar: el dado no coincide con la distancia")
 
     def tiene_fichas_comidas(self, board, turno):
         """
@@ -109,7 +143,7 @@ class RuleValidator:
                     if contenedor[pos][0].obtener_color() == "Blanco":
                         return False
             return True
-            # Home board negras: 0-5
+        # Home board negras: 0-5
         for pos in range(6, 24):
             if len(contenedor[pos]) > 0:
                 if contenedor[pos][0].obtener_color() == "Negro":
