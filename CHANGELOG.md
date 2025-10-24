@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2025-10-24
+
+### Changed
+
+- función _es_movimiento_valido en clase MoveCalculater
+- test test_verificar_moviemtos_posibles_solo_sacar en test_backgammongame
+
 ## 2025-10-22
 
 ### Changed

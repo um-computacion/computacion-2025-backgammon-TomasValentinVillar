@@ -106,12 +106,12 @@ class TestBackgammonGame(unittest.TestCase):
         ]        
         self.assertTrue(juego.verifificar_movimientos_posibles())
     
-    def test_verificar_movimientos_posibles_solo_sacar(self):
+    @patch('random.randint', side_effect=[3, 5])
+    def test_verificar_movimientos_posibles_solo_sacar(self,mock_randint):
     
         juego = BackgammonGame()
 
-        juego.__dice_1__.__numero__ = 5
-        juego.__dice_2__.__numero__ = 3
+        juego.tirar_dados()
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[],[],[],[],[],

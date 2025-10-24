@@ -112,24 +112,39 @@ class MoveCalculator:
         """
         pos_destino = self.__move_validator__.calcular_destino(pos_origen, pasos, turno)
 
-        # Verificar si está sacando ficha
         if not self.__move_validator__.es_posicion_valida(pos_destino):
+            # Verificar si puede sacar ficha
             try:
-                #✅ Pasar dados disponibles en lugar de crear dados nuevos
                 dados_disponibles = dice_manager.obtener_dados_disponibles()
-                
                 self.__rule_validator__.puede_sacar_ficha(
                     board, 
                     pos_origen, 
                     turno, 
-                    dados_disponibles  # ✅ Cambio aquí
+                    dados_disponibles
                 )
-                return True
+                return True  # ✅ Puede sacar
             except ValueError:
-                return False
+                return False  # ❌ No puede sacar
 
-        # Movimiento normal
+
+        if (turno == "Blanco" and pos_destino == 23) or (turno == "Negro" and pos_destino == 0):
+            # Verificar si TODAS las fichas están en home board
+            if self.__rule_validator__.todas_fichas_en_home_board(board, turno):
+                # Verificar si el dado coincide EXACTAMENTE para sacar
+                try:
+                    dados_disponibles = dice_manager.obtener_dados_disponibles()
+                    self.__rule_validator__.puede_sacar_ficha(
+                        board, 
+                        pos_origen, 
+                        turno, 
+                        dados_disponibles
+                    )
+                    return True  # ✅ Puede sacar desde pos 23/0
+                except ValueError:
+                    pass  # No puede sacar, intentar movimiento normal
+
         return self.__move_validator__.es_posicion_disponible(board, pos_destino, turno)
+
 
     def calcular_pasos_movimiento(self, pos_inicial, pos_final, turno):
         """
