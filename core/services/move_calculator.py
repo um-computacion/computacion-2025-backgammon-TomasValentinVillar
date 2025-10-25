@@ -122,9 +122,9 @@ class MoveCalculator:
                     turno, 
                     dados_disponibles
                 )
-                return True  # ✅ Puede sacar
+                return True
             except ValueError:
-                return False  # ❌ No puede sacar
+                return False
 
 
         if (turno == "Blanco" and pos_destino == 23) or (turno == "Negro" and pos_destino == 0):
