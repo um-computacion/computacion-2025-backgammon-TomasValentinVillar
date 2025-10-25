@@ -69,8 +69,13 @@ class BackgammonGame:
         if (len(board[pos_inic]) == 0) or (board[pos_inic][0].obtener_color() != self.__turno__):
             raise MovimientoInvalido("No se puede realizar ese moviemto")
         if pos_fin in (-1,24):
-            self.verificar_sacar_ficha(pos_inic,self.__board__)
+            dado_usado = self.verificar_sacar_ficha(pos_inic,self.__board__)
             self.__board__.sacar_ficha(pos_inic,self.__turno__)
+            try:
+                self.__dice_manager__.usar_dado(dado_usado)
+            except ValueError as e:
+                # Si no se puede consumir el dado, algo está mal
+                raise MovimientoInvalido(f"Error al consumir dado: {str(e)}") from e
         else:
             if not self.verificar_posicion_disponible(pos_fin):
                 raise MovimientoInvalido("No se puede realizar ese movimiento")
@@ -142,19 +147,22 @@ class BackgammonGame:
 
     def verificar_sacar_ficha(self, posicion, board):
         """
-        Entradas: posicion y board board
+        Entradas: posicion y board
         Funcionalidad: verifica si se puede sacar una ficha del tablero utilizando a rule_validator
-        Salida: True o Excepción MovimientoInvalido si se intenta sacar ficha y no es posible
+        Salida: int - el valor del dado que se debe usar
+        Excepción: MovimientoInvalido si se intenta sacar ficha y no es posible
         """
         try:
-            self.__rule_validator__.puede_sacar_ficha(
+            
+            dados_disponibles = self.__dice_manager__.obtener_dados_disponibles()
+            
+            dado_usado = self.__rule_validator__.puede_sacar_ficha(
                 board,
                 posicion,
                 self.__turno__,
-                self.__dice_1__,
-                self.__dice_2__
+                dados_disponibles 
             )
-            return True
+            return dado_usado
         except ValueError as e:
             raise MovimientoInvalido(str(e)) from e
 

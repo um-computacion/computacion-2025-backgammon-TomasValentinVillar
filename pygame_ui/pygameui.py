@@ -22,9 +22,6 @@ def main():
     # TU JUEGO SOLID
     game = BackgammonGame()
     game.inicializar_board()
-    game.crear_jugador("Jugador 1", "Blanco", "Jugando")
-    game.crear_jugador("Jugador 2", "Negro", "Jugando")
-    
     # Adaptador
     board_adapter = BoardAdapter(game)
     

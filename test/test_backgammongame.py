@@ -106,12 +106,12 @@ class TestBackgammonGame(unittest.TestCase):
         ]        
         self.assertTrue(juego.verifificar_movimientos_posibles())
     
-    def test_verificar_movimientos_posibles_solo_sacar(self):
+    @patch('random.randint', side_effect=[3, 5])
+    def test_verificar_movimientos_posibles_solo_sacar(self,mock_randint):
     
         juego = BackgammonGame()
 
-        juego.__dice_1__.__numero__ = 5
-        juego.__dice_2__.__numero__ = 3
+        juego.tirar_dados()
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[],[],[],[],[],
@@ -202,11 +202,11 @@ class TestBackgammonGame(unittest.TestCase):
         juego.tirar_dados()        
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[],[],[],[],[],
-            [],[],[],[],[],[], [],[],[],[],[Checker("Blanco")],[Checker("Blanco")]
+            [],[],[],[],[],[], [],[],[],[Checker("Blanco")],[Checker("Blanco")],[]
             ]
             
-        self.assertTrue(juego.verificar_sacar_ficha(22,juego.__board__))
-        self.assertTrue(juego.verificar_sacar_ficha(23,juego.__board__))
+        self.assertEqual(juego.verificar_sacar_ficha(22,juego.__board__),2)
+        self.assertEqual(juego.verificar_sacar_ficha(21,juego.__board__),3)
     
     def test_sacar_ficha_error(self):
         juego = BackgammonGame()
@@ -224,12 +224,12 @@ class TestBackgammonGame(unittest.TestCase):
         juego.__turno__ = "Negro"
         juego.tirar_dados()
         juego.__board__.__contenedor_fichas__ =  [
-            [Checker("Negro")],[Checker("Negro")],[],[],[],[], [],[],[],[],[],[],
+            [],[Checker("Negro")],[Checker("Negro")],[],[],[], [],[],[],[],[],[],
             [],[],[],[],[],[], [],[],[],[],[],[]
             ]
             
-        self.assertTrue(juego.verificar_sacar_ficha(1,juego.__board__))
-        self.assertTrue(juego.verificar_sacar_ficha(0,juego.__board__)) #quitar ficha de tablero
+        self.assertEqual(juego.verificar_sacar_ficha(1,juego.__board__),2)
+        self.assertEqual(juego.verificar_sacar_ficha(2,juego.__board__),3)
     
     def test_sacar_ficha_error_negro(self):
         juego = BackgammonGame()
@@ -429,18 +429,18 @@ class TestBackgammonGame(unittest.TestCase):
         ]
         with self.assertRaises(MovimientoInvalido):
             juego.realizar_movimiento(1,3)
-    @patch('random.randint', side_effect=[3, 2])
+    @patch('random.randint', side_effect=[6, 2])
     def test_realizar_moviemto_sacar_ficha(self,mock_randint):
         juego = BackgammonGame()
         juego.tirar_dados()
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")], [],[Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],
-            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco")]
+            [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco")],[Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")]
         ]
-        juego.realizar_movimiento(23,24)
+        juego.realizar_movimiento(18,24)
         self.assertEqual(len(juego.__board__.obtener_contenedor_blancas_sacadas()),1)
         self.assertEqual(juego.__board__.obtener_contenedor_blancas_sacadas()[0].obtener_color(),"Blanco")
-    @patch('random.randint', side_effect=[3, 2])
+    @patch('random.randint', side_effect=[6, 2])
     def test_realizar_moviemto_sacar_ficha_error(self,mock_randint):
         juego = BackgammonGame()
         juego.tirar_dados()
@@ -449,7 +449,7 @@ class TestBackgammonGame(unittest.TestCase):
             [Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro"),Checker("Negro")],[],[],[],[],[], [Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Negro"),Checker("Negro")]
         ]
         with self.assertRaises(MovimientoInvalido):
-            juego.realizar_movimiento(22,24)
+            juego.realizar_movimiento(19,24)
     
     @patch('random.randint', side_effect=[3, 2])
     def test_realizar_movimientos_cambio_de_turno(self,mock_randint):
