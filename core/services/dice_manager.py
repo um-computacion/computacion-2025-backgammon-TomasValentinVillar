@@ -1,5 +1,5 @@
 """
-Modulo encargado de gestionar los dados y movientos disponibles
+Modulo encargado de gestionar los dados y movimientos disponibles
 contiene a la clase DiceManager
 """
 
@@ -48,51 +48,16 @@ class DiceManager:
             ValueError si no hay dado disponible para esos pasos
         """
         # Intentar usar dado 1
-        if self.__dice1__.obtener_numero()== pasos and self.__dice1__ in self.__dados_disponibles__:
+        if self.__dice1__.obtener_numero() == pasos and self.__dice1__ in self.__dados_disponibles__:
             self.__dados_disponibles__.remove(self.__dice1__)
             return True
 
         # Intentar usar dado 2
-        if self.__dice2__.obtener_numero()== pasos and self.__dice2__ in self.__dados_disponibles__:
+        if self.__dice2__.obtener_numero() == pasos and self.__dice2__ in self.__dados_disponibles__:
             self.__dados_disponibles__.remove(self.__dice2__)
             return True
 
         raise ValueError(f"No hay dado disponible para {pasos} pasos")
-
-    def usar_dados_combinados(self, pasos):
-        """
-        Usa ambos dados para un movimiento combinado
-
-        Args:
-            pasos: int - total de pasos (suma de ambos dados)
-
-        Returns:
-            bool - True si se pudieron usar ambos dados
-
-        Raises:
-            ValueError si no se pueden combinar los dados
-        """
-        # ✅ CORRECCIÓN: Verificar que hay al menos 2 dados disponibles
-        if len(self.__dados_disponibles__) < 2:
-            raise ValueError("No hay suficientes dados disponibles para movimiento combinado")
-
-        # Calcular la suma esperada
-        total = self.__dice1__.obtener_numero() + self.__dice2__.obtener_numero()
-
-        if pasos != total:
-            raise ValueError(f"El movimiento no coincide con la suma de dados ({total})")
-
-        # ✅ Remover dos dados (los primeros dos de la lista)
-        self.__dados_disponibles__.remove(self.__dice1__)
-        
-        if self.__dice1__.obtener_numero() == self.__dice2__.obtener_numero():
-            # Si son dobles, remover dos del mismo
-            self.__dados_disponibles__.remove(self.__dice1__)
-        else:
-            # Si son diferentes, remover el otro
-            self.__dados_disponibles__.remove(self.__dice2__)
-
-        return True
 
     def tiene_dados_disponibles(self):
         """

@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 2025-10-26 (20:20)
+
+### Changed
+
+- función verificar_movimientos_y_dados
+- función _hay_movimientos_desde_inicio en clase MoceCalculator
+- función _hay_movimientos_normales en clase MoceCalculator
+
+### Deleted
+
+- función usar_dados_combiandos()
+
 ## 2025-10-26
 
 ### Changed
