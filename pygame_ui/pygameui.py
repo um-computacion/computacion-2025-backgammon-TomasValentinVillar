@@ -449,8 +449,6 @@ def hit_test_captured(pos, game):
 
 def render_bear_off_zones(screen, game, font):
     """
-    ✅ CORREGIDO: Zonas OUT más estrechas, pegadas a los bordes extremos
-    NO tapan las posiciones 0 y 23
     """
     margin = 40
     font_small = pygame.font.SysFont(None, 16)

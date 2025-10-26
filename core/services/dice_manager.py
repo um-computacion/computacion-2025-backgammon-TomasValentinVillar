@@ -72,25 +72,27 @@ class DiceManager:
         Raises:
             ValueError si no se pueden combinar los dados
         """
+        # ✅ CORRECCIÓN: Verificar que hay al menos 2 dados disponibles
+        if len(self.__dados_disponibles__) < 2:
+            raise ValueError("No hay suficientes dados disponibles para movimiento combinado")
+
+        # Calcular la suma esperada
         total = self.__dice1__.obtener_numero() + self.__dice2__.obtener_numero()
 
         if pasos != total:
             raise ValueError(f"El movimiento no coincide con la suma de dados ({total})")
 
-        # Remover ambos dados
-        if len(self.__dados_disponibles__) >= 2:
+        # ✅ Remover dos dados (los primeros dos de la lista)
+        self.__dados_disponibles__.remove(self.__dice1__)
+        
+        if self.__dice1__.obtener_numero() == self.__dice2__.obtener_numero():
+            # Si son dobles, remover dos del mismo
             self.__dados_disponibles__.remove(self.__dice1__)
-            
-            if self.__dice1__.obtener_numero() == self.__dice2__.obtener_numero():
-                # Si son dobles, remover dos del mismo
-                self.__dados_disponibles__.remove(self.__dice1__)
-            else:
-                # Si son diferentes, remover el otro
-                self.__dados_disponibles__.remove(self.__dice2__)
+        else:
+            # Si son diferentes, remover el otro
+            self.__dados_disponibles__.remove(self.__dice2__)
 
-            return True
-
-        raise ValueError("No hay suficientes dados disponibles")
+        return True
 
     def tiene_dados_disponibles(self):
         """

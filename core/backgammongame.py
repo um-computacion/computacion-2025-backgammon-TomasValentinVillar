@@ -181,13 +181,7 @@ class BackgammonGame:
             raise NoHayMovimientosPosibles(str(e)) from e
 
     def verificar_movimientos_y_dados(self, pos_inic, pos_fin):
-        """
-        Entradas: posicion inicial y posicion final
-        Funcionalidad: verifica si el movimiento que se quiere realizar coincide con los dados o no
-        Salida: True si es valido o Excepcion MovielntoInvalido 
-                si el movimiento no coincide con el dado 
-        """
-        # Calcular pasos según el turno
+        # Calcular pasos
         if self.__turno__ == "Blanco":
             pasos = pos_fin - pos_inic
         else:
@@ -198,15 +192,14 @@ class BackgammonGame:
             self.__dice_manager__.usar_dado(pasos)
             return True
         except ValueError:
-            pass
+            pass  # ❌ Si falla, intenta combinado
 
         # Intentar usar dados combinados
         try:
-            self.__dice_manager__.usar_dados_combinados(pasos)
+            self.__dice_manager__.usar_dados_combinados(pasos)  # ❌ Esto falla
             return True
         except ValueError as e:
             raise MovimientoInvalido(str(e)) from e
-
 
     def verificar_cambio_turno(self):
         '''
