@@ -1,5 +1,21 @@
 # ChangeLog
 
+## 2025-10-26
+
+### Changed
+
+- función _hay_movimietos_desde_inicio en clase MoveCalculator
+- función verificar_movimientos_y_dados en clase BackgammonGame
+- función usar_dados_combinados en clase DiceManager
+
+## 2025-10-25
+
+### Changed
+
+- función main en pygameui.py
+- función render_bear_off_zones en pygame.py
+- función hittest_bear_off en pygame.py
+
 ## 2025-10-24
 
 ### Changed

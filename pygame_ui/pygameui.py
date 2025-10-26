@@ -22,6 +22,29 @@ def main():
     # TU JUEGO SOLID
     game = BackgammonGame()
     game.inicializar_board()
+    # Limpiar tablero
+    '''contenedor = game.obtener_board().obtener_contenedor_fichas()
+    for i in range(24):
+        contenedor[i].clear()
+
+    # Poner blancas en home board (18-23)
+    from core.models.checker import Checker
+    for i in range(18, 24):
+        for _ in range(2):  # 2 fichas por posición
+            contenedor[i].append(Checker("Blanco"))
+    contenedor[23].append(Checker("Blanco"))
+    contenedor[23].append(Checker("Blanco"))
+    contenedor[23].append(Checker("Blanco"))
+    # Poner negras en home board (0-5)
+    for i in range(0, 6):
+        for _ in range(2):
+            contenedor[i].append(Checker("Negro"))
+    contenedor[0].append(Checker("Negro"))
+    contenedor[0].append(Checker("Negro"))
+    contenedor[0].append(Checker("Negro"))
+    game.crear_jugador("Jugador 1", "Blanco", "Jugando")
+    game.crear_jugador("Jugador 2", "Negro", "Jugando")
+    '''
     # Adaptador
     board_adapter = BoardAdapter(game)
     
@@ -41,9 +64,23 @@ def main():
             elif e.type == pygame.KEYDOWN:
                 if e.key in (pygame.K_ESCAPE, pygame.K_q):
                     running = False
+                
+                elif e.key == pygame.K_r and estado == "GANADOR":
+                    # ✅ Reiniciar juego
+                    game = BackgammonGame()
+                    game.inicializar_board()
+                    game.crear_jugador("Jugador 1", "Blanco", "Jugando")
+                    game.crear_jugador("Jugador 2", "Negro", "Jugando")
+                    board_adapter = BoardAdapter(game)
+                    estado = "JUGANDO"
+                    posicion_seleccionada = None
+                    mensaje = "Presiona ESPACIO para tirar dados"
+                
                 elif e.key == pygame.K_SPACE:
-                    # Tirar dados
-                    if not game.obtener_dados_disponibles():
+                    # ✅ Solo permitir tirar dados si NO hay ganador
+                    if estado == "GANADOR":
+                        mensaje = "¡Juego terminado! Presiona R para reiniciar o ESC para salir"
+                    elif not game.obtener_dados_disponibles():
                         game.tirar_dados()
                         try:
                             game.verifificar_movimientos_posibles()
@@ -56,21 +93,11 @@ def main():
                     else:
                         mensaje = "Ya hay dados disponibles"
             
-            elif e.type == pygame.KEYDOWN:
-                if e.key in (pygame.K_ESCAPE, pygame.K_q):
-                    running = False
-                elif e.key == pygame.K_r and estado == "GANADOR":
-                    # Reiniciar juego
-                    game = BackgammonGame()
-                    game.inicializar_board()
-                    game.crear_jugador("Jugador 1", "Blanco", "Jugando")
-                    game.crear_jugador("Jugador 2", "Negro", "Jugando")
-                    board_adapter = BoardAdapter(game)
-                    estado = "JUGANDO"
-                    posicion_seleccionada = None
-                    mensaje = "Presiona ESPACIO para tirar dados"
-            
             elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
+                # ✅ Solo permitir clicks si NO hay ganador
+                if estado == "GANADOR":
+                    continue  # Ignorar clicks
+                
                 # NUEVO: Verificar bear off primero
                 bear_off_pos = hit_test_bear_off(e.pos, game)
                 
@@ -89,8 +116,12 @@ def main():
                             mensaje = f"✗ No puedes sacar: {str(ex)[:40]}"
                             posicion_seleccionada = None
                         except Ganador:
-                            mensaje = f"🏆 ¡{game.obtener_turno()} GANÓ!"
-                            # Aquí puedes cambiar a estado "GANADOR"
+                            # ✅ AGREGADO: Manejar victoria al sacar ficha
+                            estado = "GANADOR"
+                            ganador = game.obtener_turno()
+                            mensaje = f"🏆 ¡{ganador} GANÓ LA PARTIDA!"
+                            posicion_seleccionada = None
+                            board_adapter.actualizar()
                     else:
                         mensaje = "Selecciona primero una ficha para sacar"
                 
@@ -99,71 +130,61 @@ def main():
                     bar_click = hit_test_captured(e.pos, game)
                     
                     if bar_click:
-                        # ... código existente de barra ...
-                        posicion_seleccionada = 'bar'
-                        mensaje = "Ficha comida seleccionada"
+                        # Seleccionó ficha comida
+                        if posicion_seleccionada is None:
+                            posicion_seleccionada = 'bar'
+                            mensaje = f"Ficha comida seleccionada. Click en destino"
+                        else:
+                            mensaje = "Ya hay una posición seleccionada"
                     
                     else:
-                        # Verificar tablero
+                        # Verificar tablero normal
                         idx = hit_test(hitmap, e.pos)
                         
                         if idx is not None:
-                # Primero verificar si clickeó la barra
-                            bar_click = hit_test_captured(e.pos, game)
-                            
-                            if bar_click:
-                                # Seleccionó ficha comida
-                                if posicion_seleccionada is None:
-                                    posicion_seleccionada = 'bar'  # Marcador especial
-                                    mensaje = f"Ficha comida seleccionada. Click en destino (0-5 o 18-23)"
+                            if posicion_seleccionada is None:
+                                # Verificar si tiene fichas comidas (NO puede mover otras)
+                                if game.obtener_board().verificar_ficha_comida(game.obtener_turno()):
+                                    mensaje = "¡Debes meter primero las fichas comidas!"
                                 else:
-                                    mensaje = "Ya hay una posición seleccionada"
-                            else:
-                                # Click en tablero normal
-                                idx = hit_test(hitmap, e.pos)
-                                
-                                if idx is not None:
-                                    if posicion_seleccionada is None:
-                                        # Verificar si tiene fichas comidas (NO puede mover otras)
-                                        if game.obtener_board().verificar_ficha_comida(game.obtener_turno()):
-                                            mensaje = "¡Debes meter primero las fichas comidas!"
+                                    # Seleccionar ficha normal
+                                    contenedor = game.obtener_board().obtener_contenedor_fichas()
+                                    if len(contenedor[idx]) > 0:
+                                        if contenedor[idx][0].obtener_color() == game.obtener_turno():
+                                            posicion_seleccionada = idx
+                                            mensaje = f"Seleccionada pos {idx}. Click en destino"
                                         else:
-                                            # Seleccionar ficha normal
-                                            contenedor = game.obtener_board().obtener_contenedor_fichas()
-                                            if len(contenedor[idx]) > 0:
-                                                if contenedor[idx][0].obtener_color() == game.obtener_turno():
-                                                    posicion_seleccionada = idx
-                                                    mensaje = f"Seleccionada pos {idx}. Click en destino"
-                                                else:
-                                                    mensaje = f"Pos {idx} no es tu ficha"
-                                            else:
-                                                mensaje = f"Pos {idx} está vacía"
-                                    
-                                    elif posicion_seleccionada == 'bar':
-                                        # Mover desde barra (ficha comida)
-                                        try:
-                                            game.realizar_moviento_desde_inicio(idx)
-                                            mensaje = f"✓ Ficha comida movida a {idx}"
-                                            posicion_seleccionada = None
-                                            board_adapter.actualizar()
-                                        except MovimientoInvalido as ex:
-                                            mensaje = f"✗ Error: {str(ex)[:50]}"
-                                            posicion_seleccionada = None
-                                    
+                                            mensaje = f"Pos {idx} no es tu ficha"
                                     else:
-                                        # Mover ficha normal
-                                        try:
-                                            game.realizar_movimiento(posicion_seleccionada, idx)
-                                            mensaje = f"✓ Movido: {posicion_seleccionada} → {idx}"
-                                            posicion_seleccionada = None
-                                            board_adapter.actualizar()
-                                        except MovimientoInvalido as ex:
-                                            mensaje = f"✗ Error: {str(ex)[:50]}"
-                                            posicion_seleccionada = None
-                                        except Ganador:
-                                            estado = "GANADOR"
-                                            ganador = game.obtener_turno()
-                                            mensaje = f"🏆 ¡{ganador} GANÓ LA PARTIDA!"
+                                        mensaje = f"Pos {idx} está vacía"
+                            
+                            elif posicion_seleccionada == 'bar':
+                                # Mover desde barra (ficha comida)
+                                try:
+                                    game.realizar_moviento_desde_inicio(idx)
+                                    mensaje = f"✓ Ficha comida movida a {idx}"
+                                    posicion_seleccionada = None
+                                    board_adapter.actualizar()
+                                except MovimientoInvalido as ex:
+                                    mensaje = f"✗ Error: {str(ex)[:50]}"
+                                    posicion_seleccionada = None
+                            
+                            else:
+                                # Mover ficha normal
+                                try:
+                                    game.realizar_movimiento(posicion_seleccionada, idx)
+                                    mensaje = f"✓ Movido: {posicion_seleccionada} → {idx}"
+                                    posicion_seleccionada = None
+                                    board_adapter.actualizar()
+                                except MovimientoInvalido as ex:
+                                    mensaje = f"✗ Error: {str(ex)[:50]}"
+                                    posicion_seleccionada = None
+                                except Ganador:
+                                    estado = "GANADOR"
+                                    ganador = game.obtener_turno()
+                                    mensaje = f"🏆 ¡{ganador} GANÓ LA PARTIDA!"
+                                    posicion_seleccionada = None
+                                    board_adapter.actualizar()
 
         # Renderizar
         board_adapter.actualizar()
@@ -201,39 +222,39 @@ def main():
             turno = game.obtener_turno()
             
             if turno == "Blanco":
-                # Resaltar área blanca
                 rect = pygame.Rect(barra_x - 25, 120, 50, 180)
             else:
-                # Resaltar área negra
                 rect = pygame.Rect(barra_x - 25, HEIGHT - 300, 50, 180)
             
             pygame.draw.rect(screen, (255, 215, 0), rect, 3)
         
-            # Pantalla de victoria
-            if estado == "GANADOR":
-                # Overlay oscuro
-                overlay = pygame.Surface((WIDTH, HEIGHT))
-                overlay.set_alpha(180)
-                overlay.fill((0, 0, 0))
-                screen.blit(overlay, (0, 0))
-                
-                # Mensaje principal
-                victoria_text = pygame.font.SysFont(None, 72).render(
-                    f"🏆 {ganador} GANÓ! 🏆", 
-                    True, 
-                    (255, 215, 0)
-                )
-                text_rect = victoria_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
-                screen.blit(victoria_text, text_rect)
-                
-                # Submensaje
-                sub_text = font_big.render(
-                    "Presiona ESC para salir o R para reiniciar", 
-                    True, 
-                    WHITE
-                )
-                sub_rect = sub_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
-                screen.blit(sub_text, sub_rect)
+        # ═══════════════════════════════════════════════════════════
+        # ✅ PANTALLA DE VICTORIA (OVERLAY)
+        # ═══════════════════════════════════════════════════════════
+        if estado == "GANADOR":
+            # Overlay oscuro
+            overlay = pygame.Surface((WIDTH, HEIGHT))
+            overlay.set_alpha(180)
+            overlay.fill((0, 0, 0))
+            screen.blit(overlay, (0, 0))
+            
+            # Mensaje principal
+            victoria_text = pygame.font.SysFont(None, 72).render(
+                f"🏆 {ganador} GANÓ! 🏆", 
+                True, 
+                (255, 215, 0)
+            )
+            text_rect = victoria_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
+            screen.blit(victoria_text, text_rect)
+            
+            # Submensaje
+            sub_text = font_big.render(
+                "Presiona ESC para salir o R para reiniciar", 
+                True, 
+                WHITE
+            )
+            sub_rect = sub_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
+            screen.blit(sub_text, sub_rect)
 
         pygame.display.flip()
         clock.tick(60)
@@ -272,11 +293,11 @@ def render_board(screen, board_adapter, font):
 
     radius = point_width // 3
 
-    # CORRECCIÓN: Crear hitmap para TODAS las posiciones
+    # Crear hitmap para TODAS las posiciones
     for col in range(24):
         data = board.pos.get(col)
         
-        # Calcular coordenadas base (SIEMPRE, incluso si está vacío)
+        # Calcular coordenadas base (SIEMPRE)
         if col < 12:
             i = 11 - col
             base_x = margin + i * point_width + point_width // 2
@@ -296,14 +317,13 @@ def render_board(screen, board_adapter, font):
                 point_height
             )
         
-        # SIEMPRE agregar al hitmap (aunque esté vacío)
+        # SIEMPRE agregar al hitmap
         hitmap[col] = rect
         
-        # Si no hay fichas, continuar (ya agregamos hitmap)
         if not data:
             continue
         
-        # Dibujar fichas si existen
+        # Dibujar fichas
         color_str, count = data
         color = WHITE if color_str == 'white' else BLACK
         text_color = BLACK if color == WHITE else WHITE
@@ -345,12 +365,12 @@ def render_board(screen, board_adapter, font):
 
 
 def hit_test(hitmap, pos):
-
     x, y = pos
     for idx, rect in hitmap.items():
         if rect.collidepoint(x, y):
             return idx
     return None
+
 
 def render_captured_pieces(screen, game, font):
     """
@@ -359,15 +379,12 @@ def render_captured_pieces(screen, game, font):
     margin = 40
     radius = 15
     
-    # Obtener fichas comidas
     board = game.obtener_board()
     blancas_comidas = len(board.obtener_contenedor_blancas())
     negras_comidas = len(board.obtener_contenedor_negras())
     
-    # Posición de la barra (derecha del tablero)
     barra_x = WIDTH - margin + 10
     
-    # Título
     titulo = font.render("Comidas", True, BLACK)
     screen.blit(titulo, (barra_x - 20, 100))
     
@@ -377,9 +394,8 @@ def render_captured_pieces(screen, game, font):
         for i in range(min(blancas_comidas, 5)):
             y = y_start + (i * (radius * 2 + 4))
             pygame.draw.circle(screen, WHITE, (barra_x, y), radius)
-            pygame.draw.circle(screen, BLACK, (barra_x, y), radius, 2)  # Borde
+            pygame.draw.circle(screen, BLACK, (barra_x, y), radius, 2)
         
-        # Si hay más de 5, mostrar número
         if blancas_comidas > 5:
             y = y_start + (4 * (radius * 2 + 4))
             pygame.draw.circle(screen, WHITE, (barra_x, y), radius)
@@ -394,9 +410,8 @@ def render_captured_pieces(screen, game, font):
         for i in range(min(negras_comidas, 5)):
             y = y_start - (i * (radius * 2 + 4))
             pygame.draw.circle(screen, BLACK, (barra_x, y), radius)
-            pygame.draw.circle(screen, WHITE, (barra_x, y), radius, 2)  # Borde
+            pygame.draw.circle(screen, WHITE, (barra_x, y), radius, 2)
         
-        # Si hay más de 5, mostrar número
         if negras_comidas > 5:
             y = y_start - (4 * (radius * 2 + 4))
             pygame.draw.circle(screen, BLACK, (barra_x, y), radius)
@@ -405,205 +420,188 @@ def render_captured_pieces(screen, game, font):
                 (barra_x - text_surface.get_width() // 2, 
                  y - text_surface.get_height() // 2))
 
+
 def hit_test_captured(pos, game):
     """
     Detecta si el click es en la zona de fichas comidas.
-    Retorna 'bar_white' o 'bar_black' si hay ficha comida del turno actual.
     """
     margin = 40
     barra_x = WIDTH - margin + 10
-    radius = 15
     
     x, y = pos
     
-    # Verificar si está cerca de la barra (área clickeable)
     if not (barra_x - 30 <= x <= barra_x + 30):
         return None
     
     turno = game.obtener_turno()
     board = game.obtener_board()
     
-    # Verificar fichas BLANCAS comidas
     if turno == "Blanco" and len(board.obtener_contenedor_blancas()) > 0:
-        # Área de fichas blancas (arriba)
         if 120 <= y <= 300:
             return 'bar_white'
     
-    # Verificar fichas NEGRAS comidas
     if turno == "Negro" and len(board.obtener_contenedor_negras()) > 0:
-        # Área de fichas negras (abajo)
         if HEIGHT - 300 <= y <= HEIGHT - 120:
             return 'bar_black'
     
     return None
 
+
+def render_bear_off_zones(screen, game, font):
+    """
+    """
+    margin = 40
+    font_small = pygame.font.SysFont(None, 16)
+    
+    board = game.obtener_board()
+    blancas_sacadas = len(board.obtener_contenedor_blancas_sacadas())
+    negras_sacadas = len(board.obtener_contenedor_negras_sacadas())
+    
+    # ═══════════════════════════════════════
+    # ZONA BLANCAS (extremo derecho absoluto)
+    # ═══════════════════════════════════════
+    zona_blancas = pygame.Rect(
+        WIDTH - 30,              # ✅ Pegado al borde derecho
+        HEIGHT // 2 + 60,
+        25,                      # ✅ MUY estrecha
+        HEIGHT // 2 - margin - 80
+    )
+    
+    pygame.draw.rect(screen, (200, 220, 200), zona_blancas)
+    pygame.draw.rect(screen, BLACK, zona_blancas, 2)
+    
+    # Título vertical
+    titulo_b = font_small.render("OUT", True, BLACK)
+    titulo_rotado = pygame.transform.rotate(titulo_b, 90)
+    screen.blit(titulo_rotado, (zona_blancas.centerx - 8, zona_blancas.y + 10))
+    
+    if blancas_sacadas > 0:
+        radius = 7
+        y_start = zona_blancas.y + 50
+        
+        for i in range(min(blancas_sacadas, 3)):
+            y = y_start + (i * (radius * 2 + 2))
+            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
+            pygame.draw.circle(screen, BLACK, (zona_blancas.centerx, y), radius, 1)
+        
+        if blancas_sacadas > 3:
+            y = y_start + (2 * (radius * 2 + 2))
+            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
+            text_surface = font_small.render(str(blancas_sacadas - 2), True, BLACK)
+            screen.blit(text_surface, 
+                (zona_blancas.centerx - text_surface.get_width() // 2, 
+                 y - text_surface.get_height() // 2))
+        
+        total_text = font_small.render(f"{blancas_sacadas}/15", True, BLACK)
+        screen.blit(total_text, 
+            (zona_blancas.centerx - total_text.get_width() // 2, 
+             zona_blancas.bottom - 15))
+    
+    # ═══════════════════════════════════════
+    # ZONA NEGRAS (extremo izquierdo absoluto)
+    # ═══════════════════════════════════════
+    zona_negras = pygame.Rect(
+        5,                       # ✅ Pegado al borde izquierdo
+        margin + 40,
+        25,                      # ✅ MUY estrecha
+        HEIGHT // 2 - margin - 80
+    )
+    
+    pygame.draw.rect(screen, (200, 220, 200), zona_negras)
+    pygame.draw.rect(screen, BLACK, zona_negras, 2)
+    
+    titulo_n = font_small.render("OUT", True, BLACK)
+    titulo_rotado_n = pygame.transform.rotate(titulo_n, 90)
+    screen.blit(titulo_rotado_n, (zona_negras.centerx - 8, zona_negras.y + 10))
+    
+    if negras_sacadas > 0:
+        radius = 7
+        y_start = zona_negras.y + 50
+        
+        for i in range(min(negras_sacadas, 3)):
+            y = y_start + (i * (radius * 2 + 2))
+            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
+            pygame.draw.circle(screen, WHITE, (zona_negras.centerx, y), radius, 1)
+        
+        if negras_sacadas > 3:
+            y = y_start + (2 * (radius * 2 + 2))
+            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
+            text_surface = font_small.render(str(negras_sacadas - 2), True, WHITE)
+            screen.blit(text_surface, 
+                (zona_negras.centerx - text_surface.get_width() // 2, 
+                 y - text_surface.get_height() // 2))
+        
+        total_text = font_small.render(f"{negras_sacadas}/15", True, BLACK)
+        screen.blit(total_text, 
+            (zona_negras.centerx - total_text.get_width() // 2, 
+             zona_negras.bottom - 15))
+    
+    # Resaltar si puede sacar
+    turno = game.obtener_turno()
+    if turno == "Blanco":
+        if puede_empezar_bear_off(game, "Blanco"):
+            pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3)
+    else:
+        if puede_empezar_bear_off(game, "Negro"):
+            pygame.draw.rect(screen, (100, 255, 100), zona_negras, 3)
+
+
 def hit_test_bear_off(pos, game):
     """
-    Detecta si el click es en la zona de bear off (sacar fichas).
-    Retorna -1 (blancas) o 24 (negras) según corresponda.
+    ✅ CORREGIDO: Coordenadas ajustadas a zonas pegadas a bordes
     """
     x, y = pos
     margin = 40
     
     turno = game.obtener_turno()
     
-    # Zona BLANCAS (derecha del tablero, mitad inferior)
-    # Solo si es turno blanco y puede sacar
+    # Zona BLANCAS (extremo derecho)
     if turno == "Blanco":
-        zona_x = WIDTH - margin - 60  # Extremo derecho
-        zona_y_start = HEIGHT // 2
-        zona_y_end = HEIGHT - margin
-        
-        if zona_x <= x <= WIDTH - margin:
-            if zona_y_start <= y <= zona_y_end:
-                # Verificar si puede sacar (todas en home board)
-                if game.obtener_board().verficar_fichas_sacadas_15(turno):
-                    return None  # Ya ganó
-                # Aquí podrías verificar si está en home board
-                return 24  # Posición especial para sacar blancas
-    
-    # Zona NEGRAS (izquierda del tablero, mitad superior)
-    # Solo si es turno negro y puede sacar
-    if turno == "Negro":
-        zona_x_start = margin
-        zona_x_end = margin + 60
-        zona_y_start = margin
-        zona_y_end = HEIGHT // 2
+        zona_x_start = WIDTH - 30
+        zona_x_end = WIDTH - 5
+        zona_y_start = HEIGHT // 2 + 60
+        zona_y_end = HEIGHT - margin - 20
         
         if zona_x_start <= x <= zona_x_end:
             if zona_y_start <= y <= zona_y_end:
                 if game.obtener_board().verficar_fichas_sacadas_15(turno):
-                    return None  # Ya ganó
-                return -1  # Posición especial para sacar negras
+                    return None
+                return 24
+    
+    # Zona NEGRAS (extremo izquierdo)
+    if turno == "Negro":
+        zona_x_start = 5
+        zona_x_end = 30
+        zona_y_start = margin + 40
+        zona_y_end = HEIGHT // 2 - 40
+        
+        if zona_x_start <= x <= zona_x_end:
+            if zona_y_start <= y <= zona_y_end:
+                if game.obtener_board().verficar_fichas_sacadas_15(turno):
+                    return None
+                return -1
     
     return None
 
-def render_bear_off_zones(screen, game, font):
-    """
-    Renderiza las zonas donde se pueden sacar fichas y las fichas sacadas.
-    """
-    margin = 40
-    
-    # Obtener fichas sacadas
-    board = game.obtener_board()
-    blancas_sacadas = len(board.obtener_contenedor_blancas_sacadas())
-    negras_sacadas = len(board.obtener_contenedor_negras_sacadas())
-    
-    # ═══════════════════════════════════════
-    # ZONA BLANCAS (derecha, abajo)
-    # ═══════════════════════════════════════
-    zona_blancas = pygame.Rect(
-        WIDTH - margin - 60, 
-        HEIGHT // 2 + 20, 
-        55, 
-        HEIGHT // 2 - margin - 20
-    )
-    
-    # Fondo de la zona
-    pygame.draw.rect(screen, (200, 220, 200), zona_blancas)
-    pygame.draw.rect(screen, BLACK, zona_blancas, 2)
-    
-    # Título
-    titulo_b = font.render("OUT", True, BLACK)
-    screen.blit(titulo_b, (zona_blancas.centerx - 15, zona_blancas.y + 10))
-    
-    # Contador de fichas blancas sacadas
-    if blancas_sacadas > 0:
-        # Dibujar fichas (máximo 5 visuales)
-        radius = 12
-        for i in range(min(blancas_sacadas, 5)):
-            y = zona_blancas.y + 50 + (i * (radius * 2 + 3))
-            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
-            pygame.draw.circle(screen, BLACK, (zona_blancas.centerx, y), radius, 2)
-        
-        # Si hay más de 5, mostrar número
-        if blancas_sacadas > 5:
-            y = zona_blancas.y + 50 + (4 * (radius * 2 + 3))
-            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
-            text_surface = font.render(str(blancas_sacadas - 4), True, BLACK)
-            screen.blit(text_surface, 
-                (zona_blancas.centerx - text_surface.get_width() // 2, 
-                 y - text_surface.get_height() // 2))
-        
-        # Contador total
-        total_text = font.render(f"{blancas_sacadas}/15", True, BLACK)
-        screen.blit(total_text, 
-            (zona_blancas.centerx - total_text.get_width() // 2, 
-             zona_blancas.bottom - 30))
-    
-    # ═══════════════════════════════════════
-    # ZONA NEGRAS (izquierda, arriba)
-    # ═══════════════════════════════════════
-    zona_negras = pygame.Rect(
-        margin, 
-        margin, 
-        55, 
-        HEIGHT // 2 - margin - 20
-    )
-    
-    # Fondo de la zona
-    pygame.draw.rect(screen, (200, 220, 200), zona_negras)
-    pygame.draw.rect(screen, BLACK, zona_negras, 2)
-    
-    # Título
-    titulo_n = font.render("OUT", True, BLACK)
-    screen.blit(titulo_n, (zona_negras.centerx - 15, zona_negras.y + 10))
-    
-    # Contador de fichas negras sacadas
-    if negras_sacadas > 0:
-        radius = 12
-        for i in range(min(negras_sacadas, 5)):
-            y = zona_negras.y + 50 + (i * (radius * 2 + 3))
-            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
-            pygame.draw.circle(screen, WHITE, (zona_negras.centerx, y), radius, 2)
-        
-        if negras_sacadas > 5:
-            y = zona_negras.y + 50 + (4 * (radius * 2 + 3))
-            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
-            text_surface = font.render(str(negras_sacadas - 4), True, WHITE)
-            screen.blit(text_surface, 
-                (zona_negras.centerx - text_surface.get_width() // 2, 
-                 y - text_surface.get_height() // 2))
-        
-        total_text = font.render(f"{negras_sacadas}/15", True, BLACK)
-        screen.blit(total_text, 
-            (zona_negras.centerx - total_text.get_width() // 2, 
-             zona_negras.bottom - 30))
-    
-    # Resaltar zona si puede sacar (turno actual en home board)
-    turno = game.obtener_turno()
-    if turno == "Blanco":
-        # Verificar si todas las blancas están en home board (18-23)
-        if puede_empezar_bear_off(game, "Blanco"):
-            pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3)
-    else:
-        # Verificar si todas las negras están en home board (0-5)
-        if puede_empezar_bear_off(game, "Negro"):
-            pygame.draw.rect(screen, (100, 255, 100), zona_negras, 3)
 
 def puede_empezar_bear_off(game, turno):
     """
-    Verifica si todas las fichas del turno están en home board.
-    Necesario para poder empezar a sacar fichas.
+    Verifica si todas las fichas están en home board.
     """
     contenedor = game.obtener_board().obtener_contenedor_fichas()
     
     if turno == "Blanco":
-        # Home board blancas: 18-23
         for pos in range(18):
             if len(contenedor[pos]) > 0:
                 if contenedor[pos][0].obtener_color() == "Blanco":
-                    return False  # Hay fichas fuera del home
+                    return False
         return True
     else:
-        # Home board negras: 0-5
         for pos in range(6, 24):
             if len(contenedor[pos]) > 0:
                 if contenedor[pos][0].obtener_color() == "Negro":
-                    return False  # Hay fichas fuera del home
+                    return False
         return True
-
-
 
 
 if __name__ == "__main__":
