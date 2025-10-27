@@ -1,5 +1,26 @@
 # ChangeLog
 
+## 2025-10-26 (23:18)
+
+### Changed
+
+- test test_verificar_movimientos_posibles en test_backgammongame.py
+- test test_verificar_movimientos_posibles_desde_inicio en test_backgammongame.py
+- test test_verificar_movimientos_posibles_desde_inicio_negro en test_backgammongame.py
+- test test_verificar_movimientos_posibles_negro en test_backgammongame.py
+
+### Deleted
+
+- test test_usar_dados_combinados en test_dice_manager.py
+- test test_verificar_movimientos_y_dados_blanco_doble 
+- test test_verificar_movimientos_y_dados_negro_doble
+
+### Changed
+
+- función verificar_movimientos_y_dados
+- función _hay_movimientos_desde_inicio en clase MoceCalculator
+- función _hay_movimientos_normales en clase MoceCalculator
+
 ## 2025-10-26 (20:20)
 
 ### Changed
