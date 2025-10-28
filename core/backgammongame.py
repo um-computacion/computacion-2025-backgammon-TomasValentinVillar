@@ -16,6 +16,8 @@ class MovimientoInvalido(Exception):
     """Excepción lanzada cuando el movimiento que se quiere realizar es inválido."""
 class Ganador(Exception):
     """Excepción lanzada cuando hay un ganador."""
+class NombreVacio(Exception):
+    """Excepción lanzada cuando el nombre ingresado está vacio"""
 
 class BackgammonGame:
     """
@@ -43,7 +45,8 @@ class BackgammonGame:
         '''Entradas: nombre de jugador, ficha correspondiente, estado inicial
         Funcionalidad: Crear una instacia de la clase jugador y agregarla en el diccionario
         '''
-
+        if nom == '':
+             raise NombreVacio('No se puede ingresar un nombre vacío')
         jugador = Player(nom,ficha,estado)
         self.__players__[ficha] = jugador
 

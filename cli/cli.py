@@ -3,7 +3,7 @@ Modulo encargado de la linea de comando
 contiene a la clase CLI
 '''
 
-from core.backgammongame import BackgammonGame, NoHayMovimientosPosibles,MovimientoInvalido, Ganador
+from core.backgammongame import BackgammonGame, NoHayMovimientosPosibles,MovimientoInvalido, Ganador, NombreVacio
 class CLI:
     '''
     Clase encargada de la linea de comando para ejectar el Proyecto
@@ -45,11 +45,14 @@ class CLI:
     def ejecutar(self):
         self.__juego__.inicializar_board()
         while True:
-            nombre1 = input('Ingrese el nombre del jugador para las fichas Blancas: ')
-            nombre2 = input('Ingrese el nombre del jugador para las fichas Negras: ')
-            self.__juego__.crear_jugador(nombre1,'Blanco','Jugando')
-            self.__juego__.crear_jugador(nombre2,'Negro','Juagando')
-            break
+            try:
+                nombre1 = input('Ingrese el nombre del jugador para las fichas Blancas: ')
+                nombre2 = input('Ingrese el nombre del jugador para las fichas Negras: ')
+                self.__juego__.crear_jugador(nombre1,'Blanco','Jugando')
+                self.__juego__.crear_jugador(nombre2,'Negro','Juagando')
+                break
+            except NombreVacio as e:
+                print(e)
 
         while True:
 

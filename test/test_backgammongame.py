@@ -1,5 +1,5 @@
 import unittest
-from core.backgammongame import BackgammonGame,NoHayMovimientosPosibles, MovimientoInvalido,Ganador
+from core.backgammongame import BackgammonGame,NoHayMovimientosPosibles, MovimientoInvalido,Ganador, NombreVacio
 from core.board import Board
 from core.models.checker import Checker
 from core.models.dice import Dice
@@ -612,5 +612,10 @@ class TestBackgammonGame(unittest.TestCase):
 
         self.assertEqual(len(juego.__board__.obtener_contenedor_negras_sacadas()),15)
         self.assertEqual(juego.__board__.obtener_contenedor_negras_sacadas()[0].obtener_color(),"Negro")
+
+    def test_crear_jugador_nombre_vacio(self):
+        juego = BackgammonGame()
+        with self.assertRaises(NombreVacio):
+            juego.crear_jugador('','Jugando','Blanco')
 if __name__ == '__main__':
     unittest.main()
