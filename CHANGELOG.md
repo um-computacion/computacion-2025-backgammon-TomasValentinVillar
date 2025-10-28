@@ -4,11 +4,24 @@
 
 ### Added
 
+- función combertir_enetero en clase BackgammonGame
+- test_combertir_entero en test_backgammongame 
+- test_combertir_entero_error en test_backgammongame 
+
+### Changed
+
+- función ejecutar en cli
+
+## 2025-10-28 (1:36)
+
+### Added
+
 - test_crear_jugador_nombre_vacio en test_backgammon_game
 
 ### Changed
 
 - función crear_jugador en clase BackgammonGame
+- función ejecutar en cli
 
 ## 2025-10-28
 

@@ -1,5 +1,5 @@
 import unittest
-from core.backgammongame import BackgammonGame,NoHayMovimientosPosibles, MovimientoInvalido,Ganador, NombreVacio
+from core.backgammongame import BackgammonGame,NoHayMovimientosPosibles, MovimientoInvalido,Ganador, NombreVacio,NoSeIngresoEnteroError
 from core.board import Board
 from core.models.checker import Checker
 from core.models.dice import Dice
@@ -617,5 +617,14 @@ class TestBackgammonGame(unittest.TestCase):
         juego = BackgammonGame()
         with self.assertRaises(NombreVacio):
             juego.crear_jugador('','Jugando','Blanco')
+    
+    def test_combertir_entero(self):
+        juego = BackgammonGame()
+        self.assertEqual(juego.combertir_entero('2'),2)
+    
+    def test_combertir_entero_error(self):
+        juego = BackgammonGame()
+        with self.assertRaises(NoSeIngresoEnteroError):
+            juego.combertir_entero('hola')
 if __name__ == '__main__':
     unittest.main()

@@ -18,6 +18,8 @@ class Ganador(Exception):
     """Excepción lanzada cuando hay un ganador."""
 class NombreVacio(Exception):
     """Excepción lanzada cuando el nombre ingresado está vacio"""
+class NoSeIngresoEnteroError(Exception):
+    """Excepción lanzada cuando el nombre ingresado está vacio"""
 
 class BackgammonGame:
     """
@@ -243,3 +245,15 @@ class BackgammonGame:
         Funcionalidad: Define el estado inicial del tablero segun las reglas del juego
         """
         self.__board__.inicializar_tablero()
+
+    def combertir_entero(self,pos):
+        '''
+        Entrada: posicion
+        Funcionalidad: verificar que la posicion ingresada por el usuario se un entero
+        Salida: int(pos),la posición de string a entero
+        '''
+        try:
+            pos = int(pos)
+            return pos
+        except ValueError:
+            raise NoSeIngresoEnteroError("Se debe ingresar un numero entero")

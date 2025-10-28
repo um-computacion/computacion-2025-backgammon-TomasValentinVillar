@@ -3,7 +3,7 @@ Modulo encargado de la linea de comando
 contiene a la clase CLI
 '''
 
-from core.backgammongame import BackgammonGame, NoHayMovimientosPosibles,MovimientoInvalido, Ganador, NombreVacio
+from core.backgammongame import BackgammonGame, NoHayMovimientosPosibles,MovimientoInvalido, Ganador, NombreVacio, NoSeIngresoEnteroError
 class CLI:
     '''
     Clase encargada de la linea de comando para ejectar el Proyecto
@@ -70,7 +70,8 @@ class CLI:
                         print(f"Sus dados disponibles son: {lista_dados}")
                         print(f"Tienes {self.__juego__.obtener_board().obtener_cantidad_de_fichas_comidas(self.__juego__.obtener_turno())} fichas que se han comido ")
                         self.__juego__.verifificar_movimientos_posibles()
-                        pos_fin = int(input("Ingrese la pocición final: "))
+                        pos_fin = input("Ingrese la pocición final: ")
+                        pos_fin = int(pos_fin)
                         self.__juego__.realizar_moviento_desde_inicio(pos_fin)
                         if len(self.__juego__.obtener_dados_disponibles()) == 0:
                             break
@@ -83,14 +84,19 @@ class CLI:
                             lista_dados += f'{str(i.obtener_numero())}, '
                         print(f"Sus dados disponibles son: {lista_dados}")
                         self.__juego__.verifificar_movimientos_posibles()
-                        pos_inic = int(input("Ingrese la pocición inicial: "))
-                        pos_fin = int(input("Ingrese la pocición final: "))
+                        pos = input("Ingrese la pocición inicial: ")
+                        pos_inic = self.__juego__.combertir_entero(pos)
+                        pos = input("Ingrese la pocición final: ")
+                        pos_fin = self.__juego__.combertir_entero(pos)
                         self.__juego__.realizar_movimiento(pos_inic,pos_fin)
                         if len(self.__juego__.obtener_dados_disponibles()) == 0:
                             break
                         print("-" * 50)
 
             except MovimientoInvalido as e:
+                print(e)
+            
+            except NoSeIngresoEnteroError as e:
                 print(e)
 
             except NoHayMovimientosPosibles as e:
