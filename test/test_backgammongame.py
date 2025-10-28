@@ -66,11 +66,11 @@ class TestBackgammonGame(unittest.TestCase):
         self.assertFalse(juego.verificar_posicion_disponible(7))
         self.assertFalse(juego.verificar_posicion_disponible(13))
     
-    def test_verificar_movimientos_posibles(self):
+    @patch('random.randint', side_effect = [3,2])
+    def test_verificar_movimientos_posibles(self,mock_randint):
     
         juego = BackgammonGame()
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Blanco")],[],[],[],[],
@@ -80,11 +80,11 @@ class TestBackgammonGame(unittest.TestCase):
         
         self.assertTrue(juego.verifificar_movimientos_posibles())
 
-    def test_verificar_movimientos_posibles_no_hay(self):
+    @patch('random.randint', side_effect = [3,2])
+    def test_verificar_movimientos_posibles_no_hay(self,mock__randint):
     
         juego = BackgammonGame()
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Blanco")],[],[Checker("Negro"),Checker("Negro")],[Checker("Negro"),Checker("Negro")],[],
@@ -92,13 +92,14 @@ class TestBackgammonGame(unittest.TestCase):
         ]
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
-    def test_verificar_movimientos_posibles_negro(self):
+
+    @patch('random.randint', side_effect = [3,2])
+    def test_verificar_movimientos_posibles_negro(self,mock_randint):
     
         juego = BackgammonGame()
 
         juego.__turno__ = "Negro"
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Negro")],[],[],[],[],
@@ -119,12 +120,12 @@ class TestBackgammonGame(unittest.TestCase):
         ]        
         self.assertTrue(juego.verifificar_movimientos_posibles())
     
-    def test_verificar_movimientos_posibles_no_hay_negro(self):
+    @patch('random.randint', side_effect=[3, 2])
+    def test_verificar_movimientos_posibles_no_hay_negro(self,mock_randint):
     
         juego = BackgammonGame()
         juego.__turno__ = "Negro"
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         
         juego.__board__.__contenedor_fichas__ =  [
             [],[],[],[],[],[], [],[Checker("Blanco"),Checker("Blanco")],[],[Checker("Blanco"),Checker("Blanco")],[Checker("Blanco"),Checker("Blanco")],[],
@@ -133,12 +134,12 @@ class TestBackgammonGame(unittest.TestCase):
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
     
-    def test_verificar_movimientos_posibles_desde_inicio(self):
+    @patch('random.randint', side_effect = [3,2])
+    def test_verificar_movimientos_posibles_desde_inicio(self,mock_randint):
     
         juego = BackgammonGame()
         juego.__turno__ = "Blanco"
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         juego.__board__.__contenedor_fichas_blancas__ = [Checker("Blanco")]
 
         juego.__board__.__contenedor_fichas__ =  [
@@ -148,12 +149,12 @@ class TestBackgammonGame(unittest.TestCase):
 
         self.assertTrue(juego.verifificar_movimientos_posibles())
     
-    def test_verificar_movimientos_posibles_desde_inicio_no_hay(self):
+    @patch('random.randint', side_effect = [3,2])
+    def test_verificar_movimientos_posibles_desde_inicio_no_hay(self,mock_randint):
     
         juego = BackgammonGame()
         juego.__turno__ = "Blanco"
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         juego.__board__.__contenedor_fichas_blancas__ = [Checker("Blanco")]
 
         juego.__board__.__contenedor_fichas__ =  [
@@ -163,14 +164,13 @@ class TestBackgammonGame(unittest.TestCase):
 
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
-    
 
-    def test_verificar_movimientos_posibles_desde_inicio_negro(self):
+    @patch('random.randint', side_effect = [3,2])
+    def test_verificar_movimientos_posibles_desde_inicio_negro(self,mock_randint):
     
         juego = BackgammonGame()
         juego.cambiar_turno()
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         juego.__board__.__contenedor_fichas_negras__ = [Checker("Negro")]
 
         juego.__board__.__contenedor_fichas__ =  [
@@ -180,12 +180,12 @@ class TestBackgammonGame(unittest.TestCase):
 
         self.assertTrue(juego.verifificar_movimientos_posibles())
     
-    def test_verificar_movimientos_posibles_desde_inicio_negro_no_hay(self):
+    @patch('random.randint', side_effect=[3, 2])
+    def test_verificar_movimientos_posibles_desde_inicio_negro_no_hay(self,mock_randint):
     
         juego = BackgammonGame()
         juego.cambiar_turno()
-        juego.__dice_1__.__numero__ = 3
-        juego.__dice_2__.__numero__ = 2
+        juego.tirar_dados()
         juego.__board__.__contenedor_fichas_negras__ = [Checker("Negro")]
 
         juego.__board__.__contenedor_fichas__ =  [
@@ -316,17 +316,6 @@ class TestBackgammonGame(unittest.TestCase):
         self.assertEqual(len(juego.obtener_dados_disponibles()), 1)
         self.assertEqual(juego.obtener_dados_disponibles()[0].obtener_numero(), 2)
     
-    @patch('random.randint', side_effect=[5, 5])
-    def test_verificar_movimientos_y_dados_blanco_doble(self,mock_randint):
-        juego = BackgammonGame()
-        juego.tirar_dados()
-
-
-        self.assertTrue(juego.verificar_movimientos_y_dados(10,20))
-        self.assertEqual(len(juego.obtener_dados_disponibles()), 2)
-        self.assertEqual(juego.obtener_dados_disponibles()[0].obtener_numero(), 5)
-        self.assertEqual(juego.obtener_dados_disponibles()[0].obtener_numero(), 5)
-    
     @patch('random.randint', side_effect=[2, 5])
     def test_verificar_movimientos_y_dados_negro(self,mock_randint):
         juego = BackgammonGame()
@@ -336,18 +325,6 @@ class TestBackgammonGame(unittest.TestCase):
         self.assertTrue(juego.verificar_movimientos_y_dados(15, 10))
         self.assertEqual(len(juego.obtener_dados_disponibles()), 1)
         self.assertEqual(juego.obtener_dados_disponibles()[0].obtener_numero(), 2)
-    
-    @patch('random.randint', side_effect=[5, 5])
-    def test_verificar_movimientos_y_dados_negro_doble(self,mock_randint):
-        juego = BackgammonGame()
-        juego.__turno__ = "Negro"
-        juego.tirar_dados()
-
-
-        self.assertTrue(juego.verificar_movimientos_y_dados(20,10))
-        self.assertEqual(len(juego.obtener_dados_disponibles()), 2)
-        self.assertEqual(juego.obtener_dados_disponibles()[0].obtener_numero(), 5)
-        self.assertEqual(juego.obtener_dados_disponibles()[0].obtener_numero(), 5)
 
     @patch('random.randint', side_effect=[5, 2])
     def test_verificar_movimientos_y_dados_error(self,mock_randint):

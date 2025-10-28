@@ -22,29 +22,9 @@ def main():
     # TU JUEGO SOLID
     game = BackgammonGame()
     game.inicializar_board()
-    # Limpiar tablero
-    '''contenedor = game.obtener_board().obtener_contenedor_fichas()
-    for i in range(24):
-        contenedor[i].clear()
-
-    # Poner blancas en home board (18-23)
-    from core.models.checker import Checker
-    for i in range(18, 24):
-        for _ in range(2):  # 2 fichas por posición
-            contenedor[i].append(Checker("Blanco"))
-    contenedor[23].append(Checker("Blanco"))
-    contenedor[23].append(Checker("Blanco"))
-    contenedor[23].append(Checker("Blanco"))
-    # Poner negras en home board (0-5)
-    for i in range(0, 6):
-        for _ in range(2):
-            contenedor[i].append(Checker("Negro"))
-    contenedor[0].append(Checker("Negro"))
-    contenedor[0].append(Checker("Negro"))
-    contenedor[0].append(Checker("Negro"))
     game.crear_jugador("Jugador 1", "Blanco", "Jugando")
     game.crear_jugador("Jugador 2", "Negro", "Jugando")
-    '''
+
     # Adaptador
     board_adapter = BoardAdapter(game)
     

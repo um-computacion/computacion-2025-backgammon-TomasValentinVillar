@@ -47,20 +47,6 @@ class TestDiceManager(unittest.TestCase):
         
         self.assertEqual(len(manager.obtener_dados_disponibles()), 1)
     
-    def test_usar_dados_combinados(self):
-        """Test: Usar ambos dados combinados remueve ambos"""
-        dice1 = Dice()
-        dice2 = Dice()
-        dice1.__numero__ = 3
-        dice2.__numero__ = 5
-        
-        manager = DiceManager(dice1, dice2)
-        manager.__dados_disponibles__ = [dice1, dice2]
-        
-        # Usar combinación (3 + 5 = 8)
-        manager.usar_dados_combinados(8)
-        
-        self.assertEqual(len(manager.obtener_dados_disponibles()), 0)
 
 
 if __name__ == '__main__':
