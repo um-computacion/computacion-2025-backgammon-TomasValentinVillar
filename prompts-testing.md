@@ -312,3 +312,133 @@ python -m unittest tests.test_dice_manager -v
 Estos tests son suficientes para demostrar que tu refactorización cumple con SOLID. ¿Quieres que ajuste algo más? 🎯
 
 . La respuesta fue usada con modificaciones, en donde para cambiar el atributo de una clase se utiliza el nombre la clase cuyo atributo se debe alterar, lo modifico para que no se use el nombre de la clase, también en dodne se utuliza la función tirar_dados la modifico para que  se use el patch para definir el resultado de numeros aleatorios
+
+## promt
+
+. Modelo: Claude Sonnet 4.5
+
+. bien gracias, ahroa te voy a pasar de rule validator cuya covertura es del 67%
+# tests/test_rule_validator.py
+import unittest
+from core.validators.rule_validator import RuleValidator
+from core.board import Board
+from core.models.dice import Dice
+from core.models.checker import Checker
+from unittest.mock import patch
+class TestRuleValidator(unittest.TestCase):
+def test_puede_sacar_ficha_blanca_en_home_board(self):
+"""Test: Blancas pueden sacar ficha si todas están en home board (18-23)"""
+validator = RuleValidator()
+board = Board()
+dice1 = Dice()
+dice2 = Dice()
+dados_disponibles = [dice1,dice2]
+# Colocar solo fichas blancas en home board
+board.poner_ficha(22, "Blanco")
+board.poner_ficha(20, "Blanco")
+# Dados que permiten sacar desde 22
+dice1.__numero__ = 2
+dice2.__numero__ = 3
+# Debe poder sacar desde posición 22 (distancia 2 al final)
+resultado = validator.puede_sacar_ficha(board, 22, "Blanco", dados_disponibles)
+self.assertTrue(resultado)
+def test_no_puede_sacar_si_hay_fichas_fuera_home_blancas(self):
+"""Test: Blancas NO pueden sacar si hay fichas fuera del home board"""
+validator = RuleValidator()
+board = Board()
+dice1 = Dice()
+dice2 = Dice()
+dados_disponibles = [dice1,dice2]
+# Colocar ficha blanca fuera del home board
+board.poner_ficha(10, "Blanco")
+board.poner_ficha(22, "Blanco")
+dice1.__numero__ = 2
+dice2.__numero__ = 3
+with self.assertRaises(ValueError):
+validator.puede_sacar_ficha(board, 22, "Blanco", dados_disponibles)
+def test_tiene_fichas_comidas(self):
+"""Test: Verificar si hay fichas comidas"""
+validator = RuleValidator()
+board = Board()
+# Agregar ficha blanca comida
+board.__contenedor_fichas_blancas__.append(Checker("Blanco"))
+resultado = validator.tiene_fichas_comidas(board, "Blanco")
+self.assertTrue(resultado)
+def test_todas_fichas_en_home_board_blancas(self):
+"""Test: Verificar que todas las fichas blancas están en home board"""
+validator = RuleValidator()
+board = Board()
+# Colocar fichas solo en home board (18-23)
+board.poner_ficha(18, "Blanco")
+board.poner_ficha(22, "Blanco")
+board.poner_ficha(20, "Blanco")
+resultado = validator.todas_fichas_en_home_board(board, "Blanco")
+self.assertTrue(resultado)
+def test_no_todas_fichas_en_home_board_blancas(self):
+"""Test: Verificar que NO todas las fichas blancas están en home board"""
+validator = RuleValidator()
+board = Board()
+# Colocar ficha fuera del home board
+board.poner_ficha(10, "Blanco")
+board.poner_ficha(22, "Blanco")
+resultado = validator.todas_fichas_en_home_board(board, "Blanco")
+self.assertFalse(resultado)
+if __name__ == '__main__':
+unittest.main()
+
+. 
+
+. ¡Tienes razón! 23 tests es demasiado. Vamos a mantener **solo los tests esenciales** que cubren los caminos críticos. Podemos llegar a **~90% de cobertura** con solo **12-13 tests**.
+
+---
+
+## ✅ Tests esenciales (versión reducida):---
+
+## 📊 Resumen de la versión reducida:
+
+### ✅ Total: **13 tests** (en lugar de 23)
+
+**Distribución:**
+- `puede_sacar_ficha()` blancas: **4 tests**
+  - Dado exacto ✅
+  - Dado mayor válido ✅
+  - Fichas fuera home (error) ✅
+  - Sin dado válido (error) ✅
+
+- `puede_sacar_ficha()` negras: **3 tests**
+  - Dado exacto ✅
+  - Dado mayor válido ✅
+  - Fichas fuera home (error) ✅
+
+- `tiene_fichas_comidas()`: **2 tests**
+  - True ✅
+  - False ✅
+
+- `todas_fichas_en_home_board()`: **4 tests**
+  - Blancas True ✅
+  - Blancas False ✅
+  - Negras True ✅
+  - Negras False ✅
+
+---
+
+## 🎯 Cobertura estimada:
+
+- **Antes:** 5 tests → 67%
+- **Ahora:** 13 tests → **~85-90%** 📈
+
+---
+
+## 💡 Tests eliminados (no críticos):
+
+❌ Dado mayor con fichas atrás (caso muy específico)
+❌ Tablero vacío (edge case poco probable)
+❌ Distancias máximas (ya cubierto por otros)
+❌ Lista de dados vacía (error de programación, no de lógica)
+❌ Tests redundantes de negras
+
+---
+
+Mucho mejor: **13 tests concisos** que cubren todos los caminos importantes sin ser excesivos. 🎲
+
+. la respuesta fue usada sin modificacioens

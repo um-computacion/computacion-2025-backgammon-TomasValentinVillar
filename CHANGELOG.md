@@ -1,5 +1,18 @@
 # ChangeLog
 
+## 2025-10-28
+
+### Added
+
+- test_puede_sacar_ficha_blanca_dado_mayor
+- test_no_puede_sacar_blanca_sin_dado_valido
+- test_puede_sacar_ficha_negra_dado_exacto
+- test_puede_sacar_ficha_negra_dado_mayor
+- test_no_puede_sacar_negra_fichas_fuera_home
+- test_tiene_fichas_comidas_false
+- test_todas_fichas_en_home_board_negras_true
+- test_todas_fichas_en_home_board_negras_false
+
 ## 2025-10-26 (23:18)
 
 ### Changed
