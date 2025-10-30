@@ -181,6 +181,7 @@ class BackgammonGame:
                 self.__dice_manager__
             )
         except ValueError as e:
+            self.cambiar_turno()
             raise NoHayMovimientosPosibles(str(e)) from e
 
     def verificar_movimientos_y_dados(self, pos_inic, pos_fin):

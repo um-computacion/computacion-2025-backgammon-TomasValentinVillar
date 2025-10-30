@@ -92,6 +92,7 @@ class TestBackgammonGame(unittest.TestCase):
         ]
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
+        self.assertEqual(juego.obtener_turno(),"Negro")
 
     @patch('random.randint', side_effect = [3,2])
     def test_verificar_movimientos_posibles_negro(self,mock_randint):
@@ -133,7 +134,7 @@ class TestBackgammonGame(unittest.TestCase):
         ]
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
-    
+        self.assertEqual(juego.obtener_turno(),"Blanco")
     @patch('random.randint', side_effect = [3,2])
     def test_verificar_movimientos_posibles_desde_inicio(self,mock_randint):
     

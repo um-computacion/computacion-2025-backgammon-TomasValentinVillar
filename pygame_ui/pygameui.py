@@ -68,7 +68,6 @@ def main():
                             mensaje = f"Dados lanzados: {dados_valores}"
                         except NoHayMovimientosPosibles:
                             mensaje = "No hay movimientos. Cambiando turno..."
-                            game.cambiar_turno()
                             game.tirar_dados()
                     else:
                         mensaje = "Ya hay dados disponibles"

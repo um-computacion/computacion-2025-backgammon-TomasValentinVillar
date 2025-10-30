@@ -100,7 +100,6 @@ class CLI:
                 print(e)
 
             except NoHayMovimientosPosibles as e:
-                self.__juego__.cambiar_turno()
                 print(e)
 
             except Ganador as e:

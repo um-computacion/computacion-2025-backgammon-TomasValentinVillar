@@ -1,5 +1,16 @@
 # ChangeLog
 
+## 2025-10-30 (01:06)
+
+### Changed
+
+- test_excepcion_no_hay_movimientos en test_cli
+- test_verificar_movimientos_posibles_no_hay_negro en test_backgammongame
+- test_verificar_movimientos_posibles_no_hay en test_backgammongame
+- función main en pyagem
+- función ejecutar en cli
+- función verificar_movimientos_posibles en clase BackgammonGame 
+
 ## 2025-10-30 (00:00)
 
 ### Added

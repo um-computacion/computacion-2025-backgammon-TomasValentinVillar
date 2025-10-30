@@ -201,7 +201,8 @@ class TestCLI(unittest.TestCase):
     @patch.object(CLI, 'mostrar_tablero')
     def test_excepcion_no_hay_movimientos(self, mock_tablero, mock_input, mock_print):
         """
-        CAMINO 5: Excepción NoHayMovimientosPosibles - Debe cambiar turno
+        CAMINO 5: Excepción NoHayMovimientosPosibles - BackgammonGame cambia turno automáticamente
+        El CLI solo captura la excepción e imprime el mensaje
         """
         cli = CLI()
         
@@ -214,7 +215,8 @@ class TestCLI(unittest.TestCase):
         cli.__juego__.obtener_players = MagicMock(return_value={
             'Blanco': MagicMock(obtener_nombre=MagicMock(return_value='Jugador1'))
         })
-        cli.__juego__.cambiar_turno = MagicMock()
+        
+
         cli.__juego__.verifificar_movimientos_posibles = MagicMock(
             side_effect=[
                 NoHayMovimientosPosibles("No hay movimientos"),
@@ -226,9 +228,15 @@ class TestCLI(unittest.TestCase):
         # Ejecutar
         cli.ejecutar()
         
-        # Verificar que se llamó cambiar_turno
-        cli.__juego__.cambiar_turno.assert_called_once()
-    
+        # Verificar que se capturó e imprimió el mensaje de error
+        error_printed = any(
+            "movimiento" in str(call).lower()
+            for call in mock_print.call_args_list
+        )
+        self.assertTrue(error_printed, "Debe imprimir el mensaje de NoHayMovimientosPosibles")
+        
+        # NO verificar cambiar_turno porque BackgammonGame ya lo hizo internamente
+
     # ═══════════════════════════════════════════════════════════════
     # CAMINO 6: Excepción Ganador
     # ═══════════════════════════════════════════════════════════════
