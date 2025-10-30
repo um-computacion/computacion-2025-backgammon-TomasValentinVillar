@@ -273,8 +273,8 @@ class TestBackgammonGame(unittest.TestCase):
         mock_randint.assert_any_call(1, 6)
         
         # Verificamos los valores de los dados
-        self.assertEqual(game.__dice_1__.obtener_numero(), 3)
-        self.assertEqual(game.__dice_2__.obtener_numero(), 5)
+        self.assertEqual(game.__dice_manager__.__dice1__.obtener_numero(), 3)
+        self.assertEqual(game.__dice_manager__.__dice2__.obtener_numero(), 5)
     
     @patch('random.randint', return_value=4)
     def test_tirar_dados_iguales(self, mock_randint):
@@ -282,8 +282,8 @@ class TestBackgammonGame(unittest.TestCase):
         game.tirar_dados()
         
         # Ambos dados deberían tener el mismo valor
-        self.assertEqual(game.__dice_1__.obtener_numero(), 4)
-        self.assertEqual(game.__dice_2__.obtener_numero(), 4)
+        self.assertEqual(game.__dice_manager__.__dice1__.obtener_numero(), 4)
+        self.assertEqual(game.__dice_manager__.__dice2__.obtener_numero(), 4)
         self.assertEqual(mock_randint.call_count, 2)
     
     @patch('random.randint', side_effect=[3, 5])

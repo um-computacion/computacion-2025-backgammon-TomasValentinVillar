@@ -1,5 +1,26 @@
 # ChangeLog
 
+## 2025-10-30 (00:00)
+
+### Added
+
+- archivo test_cli en test
+- tests de cli en test_cli
+
+### Changed
+
+- función __init__ de BackgammonGame
+- función __init__ de DiceManager
+- test_tirar_dados_diferentes en test_backgammongame
+- test_tirar_dados_iguales en test_backgammongame
+- test_tirar_dados_normales en test_dice_manager
+- test_tirar_dados_dobles en test_dice_manager
+- test_usar_dado en test_dice_manager
+- test_hay_movimientos_posibles_con_movimientos_normales en test_move_calculator
+- test_no_hay_movimientos_posibles en test_move_calculator
+- test_hay_movimientos_desde_inicio en test_move_calculator
+
+
 ## 2025-10-28 (1:36)
 
 ### Added

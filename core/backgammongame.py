@@ -32,11 +32,9 @@ class BackgammonGame:
 
         # Inyección de dependencias
         self.__board__ = board if board is not None else Board()
-        self.__dice_1__ = dice1 if dice1 is not None else Dice()
-        self.__dice_2__ = dice2 if dice2 is not None else Dice()
         self.__move_validator__ = move_validator if move_validator is not None else MoveValidator()
         self.__rule_validator__ = rule_validator if rule_validator is not None else RuleValidator()
-        self.__dice_manager__ = DiceManager(self.__dice_1__, self.__dice_2__)
+        self.__dice_manager__ = DiceManager()
         self.__move_calculator__ = MoveCalculator(
             self.__move_validator__,
             self.__rule_validator__

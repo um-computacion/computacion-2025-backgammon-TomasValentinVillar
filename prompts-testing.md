@@ -442,3 +442,73 @@ unittest.main()
 Mucho mejor: **13 tests concisos** que cubren todos los caminos importantes sin ser excesivos. 🎲
 
 . la respuesta fue usada sin modificacioens
+
+## promt
+
+. Modelo: Claude Sonnet 4.5
+. este el cli que hay que testear (con unittest), usando el @patch para manejar los inputs con un side_effect. el segundo codigo que te mando es un ejemplo que pasaron los profes para para testear un cli
+.
+. ¡Perfecto! Ahora veo claramente tu CLI. Vamos a identificar los **6 caminos** que mencionó tu profe:
+
+---
+
+## 🔍 Análisis de los 6 caminos en `ejecutar()`:
+
+Mirando el bloque principal `try-except`:
+
+```python
+try:
+    while True:
+        if self.__juego__.obtener_board().verificar_ficha_comida(...):
+            # CAMINO 1: IF - Tiene fichas comidas ✅
+            self.__juego__.realizar_moviento_desde_inicio(pos_fin)
+        else:
+            # CAMINO 2: ELSE - NO tiene fichas comidas ✅
+            self.__juego__.realizar_movimiento(pos_inic, pos_fin)
+
+except MovimientoInvalido as e:
+    # CAMINO 3: Excepción MovimientoInvalido ✅
+    
+except NoSeIngresoEnteroError as e:
+    # CAMINO 4: Excepción NoSeIngresoEnteroError ✅
+    
+except NoHayMovimientosPosibles as e:
+    # CAMINO 5: Excepción NoHayMovimientosPosibles ✅
+    
+except Ganador as e:
+    # CAMINO 6: Excepción Ganador ✅
+```
+
+---
+
+## ✅ Tests para los 6 caminos:---
+
+## 📋 Resumen de los 6 tests:
+
+| # | Camino | Test | Qué verifica |
+|---|--------|------|--------------|
+| 1 | **IF** | `test_camino_if_ficha_comida` | Llama `realizar_moviento_desde_inicio()` |
+| 2 | **ELSE** | `test_camino_else_sin_fichas_comidas` | Llama `realizar_movimiento()` |
+| 3 | **Excepción 1** | `test_excepcion_movimiento_invalido` | Captura `MovimientoInvalido` |
+| 4 | **Excepción 2** | `test_excepcion_no_se_ingreso_entero` | Captura `NoSeIngresoEnteroError` |
+| 5 | **Excepción 3** | `test_excepcion_no_hay_movimientos` | Captura `NoHayMovimientosPosibles` y cambia turno |
+| 6 | **Excepción 4** | `test_excepcion_ganador` | Captura `Ganador` y termina el juego |
+
+---
+
+## 🎯 Técnicas usadas (igual que el ejemplo):
+
+1. ✅ `@patch('builtins.input')` con `side_effect` para simular inputs
+2. ✅ `@patch('builtins.print')` para capturar los outputs
+3. ✅ `@patch.object()` para mockear métodos específicos
+4. ✅ `MagicMock()` para simular comportamientos
+5. ✅ `side_effect=[...]` para múltiples retornos o excepciones
+
+---
+
+## 🔧 Para ejecutar:
+
+```bash
+python -m pytest tests/test_cli.py -v
+```
+. la respuesta fue usada con modificacioens: despues de agregar los test también hice 2 adicionales, y corregí en las lineas que quería tilizar un atributo de cli para que los llame de forma correcta

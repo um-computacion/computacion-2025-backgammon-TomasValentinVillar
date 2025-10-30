@@ -10,4 +10,4 @@ omit =
     test/test_move_validator.py
     test/test_player.py
     test/test_rule_validator.py
-    
+    test/test_cli.py

@@ -11,19 +11,16 @@ from unittest.mock import patch
 
 class TestMoveCalculator(unittest.TestCase):
     
-    def test_hay_movimientos_posibles_con_movimientos_normales(self):
+    @patch('random.randint', side_effect=[3, 5])
+    def test_hay_movimientos_posibles_con_movimientos_normales(self,mock_randint):
         """Test: Hay movimientos posibles en tablero inicial"""
         move_validator = MoveValidator()
         rule_validator = RuleValidator()
         calculator = MoveCalculator(move_validator, rule_validator)
         board = Board()
-        dice1 = Dice()
-        dice2 = Dice()
-        dice_manager = DiceManager(dice1, dice2)
+        dice_manager = DiceManager()
         
         board.inicializar_tablero()
-        dice1.__numero__ = 3
-        dice2.__numero__ = 5
         dice_manager.tirar_dados()
         
         resultado = calculator.hay_movimientos_posibles(board, "Blanco", dice_manager)
@@ -36,9 +33,7 @@ class TestMoveCalculator(unittest.TestCase):
         rule_validator = RuleValidator()
         calculator = MoveCalculator(move_validator, rule_validator)
         board = Board()
-        dice1 = Dice()
-        dice2 = Dice()
-        dice_manager = DiceManager(dice1, dice2)
+        dice_manager = DiceManager()
         
         # Blancas bloqueadas
         board.poner_ficha(0, "Blanco")
@@ -84,9 +79,7 @@ class TestMoveCalculator(unittest.TestCase):
         rule_validator = RuleValidator()
         calculator = MoveCalculator(move_validator, rule_validator)
         board = Board()
-        dice1 = Dice()
-        dice2 = Dice()
-        dice_manager = DiceManager(dice1, dice2)
+        dice_manager = DiceManager()
         
         # Agregar ficha blanca comida
         board.__contenedor_fichas_blancas__.append(Checker("Blanco"))
