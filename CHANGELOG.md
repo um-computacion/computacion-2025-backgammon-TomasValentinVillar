@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2025-10-31 (15:50)
+
+### Added
+
+- función mostrar_menu_principal en pyagme
+- función solicitar_nombres en p
+
 ## 2025-10-31 (13:11)
 
 ### Added
