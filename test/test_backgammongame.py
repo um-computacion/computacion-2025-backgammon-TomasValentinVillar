@@ -627,5 +627,70 @@ class TestBackgammonGame(unittest.TestCase):
         juego = BackgammonGame()
         with self.assertRaises(NoSeIngresoEnteroError):
             juego.combertir_entero('hola')
+    
+def test_verificar_todas_fichas_en_home_blanco_true(self):
+    """Test: Todas las fichas blancas están en home board (18-23)"""
+    juego = BackgammonGame()
+    juego.__board__.__contenedor_fichas__ = [
+        [],[],[],[],[],[], [],[],[],[],[],[],
+        [],[],[],[],[],[], 
+        [Checker("Blanco"),Checker("Blanco")],
+        [Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],
+        [Checker("Blanco"),Checker("Blanco")],
+        [Checker("Blanco"),Checker("Blanco"),Checker("Blanco")],
+        [Checker("Blanco"),Checker("Blanco")],
+        [Checker("Blanco"),Checker("Blanco")]
+    ]
+    
+    resultado = juego.verificar_todas_fichas_en_home("Blanco")
+    self.assertTrue(resultado)
+
+def test_verificar_todas_fichas_en_home_blanco_false(self):
+    """Test: Fichas blancas NO están todas en home board (hay fichas en pos 10)"""
+    juego = BackgammonGame()
+    juego.__board__.__contenedor_fichas__ = [
+        [],[],[],[],[],[], [],[],[],[],
+        [Checker("Blanco"),Checker("Blanco")],  # Posición 10 (fuera de home)
+        [],
+        [],[],[],[],[],[], 
+        [Checker("Blanco"),Checker("Blanco")],
+        [Checker("Blanco"),Checker("Blanco")],
+        [],[],[],[]
+    ]
+    
+    resultado = juego.verificar_todas_fichas_en_home("Blanco")
+    self.assertFalse(resultado)
+
+def test_verificar_todas_fichas_en_home_negro_true(self):
+    """Test: Todas las fichas negras están en home board (0-5)"""
+    juego = BackgammonGame()
+    juego.__board__.__contenedor_fichas__ = [
+        [Checker("Negro"),Checker("Negro")],
+        [Checker("Negro"),Checker("Negro"),Checker("Negro")],
+        [Checker("Negro"),Checker("Negro")],
+        [Checker("Negro"),Checker("Negro"),Checker("Negro")],
+        [Checker("Negro"),Checker("Negro")],
+        [Checker("Negro"),Checker("Negro")],
+        [],[],[],[],[],[], [],[],[],[],[],[], [],[],[],[],[],[]
+    ]
+    
+    resultado = juego.verificar_todas_fichas_en_home("Negro")
+    self.assertTrue(resultado)
+
+def test_verificar_todas_fichas_en_home_negro_false(self):
+    """Test: Fichas negras NO están todas en home board (hay fichas en pos 15)"""
+    juego = BackgammonGame()
+    juego.__board__.__contenedor_fichas__ = [
+        [Checker("Negro"),Checker("Negro")],
+        [Checker("Negro"),Checker("Negro")],
+        [],[],[],[],
+        [],[],[],[],[],[], [],[],
+        [Checker("Negro"),Checker("Negro")],  # Posición 15 (fuera de home)
+        [],[],[], [],[],[],[],[],[]
+    ]
+    
+    resultado = juego.verificar_todas_fichas_en_home("Negro")
+    self.assertFalse(resultado)
+
 if __name__ == '__main__':
     unittest.main()

@@ -1281,3 +1281,12 @@ Después de que funcione básico, puedes agregar:
 
 . referencias: pygame_ui/board_adapter.py
                pygame_ui/pygameui.py
+
+
+## promt
+
+. Modelo: Claude Sonnet 4.5
+.
+. bien ahora mi pygame tiene que tener un menu para hacer funcionar la parte del nombre del jugador, porque el pygame le pone un nombre por defecto al jugadro, pero el CLI si le solicita el nombre, es decir que el cli si lo hace correctamen, entences puede haber un menú para jugar o salir y si se selecciona jugar, solicite los nombres
+. 
+.

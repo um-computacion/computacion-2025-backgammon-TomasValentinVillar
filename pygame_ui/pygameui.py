@@ -16,11 +16,161 @@ WHITE = (250, 250, 250)
 BLACK = (30, 30, 30)
 
 
+def mostrar_menu_principal(screen, font_big, font):
+    """
+    Muestra el menú principal con opciones para Jugar o Salir.
+    
+    Returns:
+        str: 'jugar' si se selecciona jugar, 'salir' si se selecciona salir
+    """
+    menu_activo = True
+    opcion_seleccionada = 0  # 0 = Jugar, 1 = Salir
+    
+    while menu_activo:
+        screen.fill(BACKGROUND)
+        
+        # Título
+        titulo = font_big.render("BACKGAMMON", True, BLACK)
+        titulo_rect = titulo.get_rect(center=(WIDTH // 2, 150))
+        screen.blit(titulo, titulo_rect)
+        
+        # Opciones
+        opciones = ["JUGAR", "SALIR"]
+        colores = [BLACK, BLACK]
+        
+        for i, opcion in enumerate(opciones):
+            if i == opcion_seleccionada:
+                color = (200, 0, 0)  # Rojo para seleccionada
+                texto = font_big.render(f"> {opcion} <", True, color)
+            else:
+                texto = font_big.render(opcion, True, BLACK)
+            
+            texto_rect = texto.get_rect(center=(WIDTH // 2, 300 + i * 80))
+            screen.blit(texto, texto_rect)
+        
+        # Instrucciones
+        instruccion = font.render("Usa ↑↓ para moverte, ENTER para seleccionar", True, BLACK)
+        instruccion_rect = instruccion.get_rect(center=(WIDTH // 2, 500))
+        screen.blit(instruccion, instruccion_rect)
+        
+        pygame.display.flip()
+        
+        # Eventos
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return 'salir'
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    opcion_seleccionada = (opcion_seleccionada - 1) % 2
+                elif event.key == pygame.K_DOWN:
+                    opcion_seleccionada = (opcion_seleccionada + 1) % 2
+                elif event.key == pygame.K_RETURN:
+                    if opcion_seleccionada == 0:
+                        return 'jugar'
+                    else:
+                        return 'salir'
+                elif event.key == pygame.K_ESCAPE:
+                    return 'salir'
+    
+    return 'salir'
+
+
+def solicitar_nombres(screen, font_big, font):
+    """
+    Solicita los nombres de los dos jugadores.
+    
+    Returns:
+        tuple: (nombre_jugador1, nombre_jugador2) o None si se cancela
+    """
+    nombres = ["", ""]
+    jugador_actual = 0  # 0 = Jugador 1, 1 = Jugador 2
+    
+    while True:
+        screen.fill(BACKGROUND)
+        
+        # Título
+        if jugador_actual == 0:
+            titulo = font_big.render("Nombre del Jugador 1 (Blanco)", True, BLACK)
+        else:
+            titulo = font_big.render("Nombre del Jugador 2 (Negro)", True, BLACK)
+        
+        titulo_rect = titulo.get_rect(center=(WIDTH // 2, 150))
+        screen.blit(titulo, titulo_rect)
+        
+        # Cuadro de texto
+        texto_input = font_big.render(nombres[jugador_actual] + "|", True, BLACK)
+        texto_rect = texto_input.get_rect(center=(WIDTH // 2, 300))
+        
+        # Fondo del cuadro
+        padding = 20
+        cuadro = pygame.Rect(
+            texto_rect.x - padding,
+            texto_rect.y - padding,
+            texto_rect.width + padding * 2,
+            texto_rect.height + padding * 2
+        )
+        pygame.draw.rect(screen, WHITE, cuadro)
+        pygame.draw.rect(screen, BLACK, cuadro, 2)
+        
+        screen.blit(texto_input, texto_rect)
+        
+        # Mostrar nombre ya ingresado (si estamos en jugador 2)
+        if jugador_actual == 1:
+            info = font.render(f"Jugador 1: {nombres[0]}", True, (100, 100, 100))
+            info_rect = info.get_rect(center=(WIDTH // 2, 400))
+            screen.blit(info, info_rect)
+        
+        # Instrucciones
+        instruccion1 = font.render("Escribe el nombre y presiona ENTER", True, BLACK)
+        instruccion1_rect = instruccion1.get_rect(center=(WIDTH // 2, 480))
+        screen.blit(instruccion1, instruccion1_rect)
+        
+        instruccion2 = font.render("ESC para volver al menú", True, BLACK)
+        instruccion2_rect = instruccion2.get_rect(center=(WIDTH // 2, 510))
+        screen.blit(instruccion2, instruccion2_rect)
+        
+        pygame.display.flip()
+        
+        # Eventos
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return None
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return None
+                
+                elif event.key == pygame.K_RETURN:
+                    # Validar que el nombre no esté vacío
+                    if nombres[jugador_actual].strip() == "":
+                        # Mostrar mensaje de error temporalmente
+                        continue
+                    
+                    if jugador_actual == 0:
+                        jugador_actual = 1  # Pasar al jugador 2
+                    else:
+                        # Ambos nombres ingresados
+                        return (nombres[0].strip(), nombres[1].strip())
+                
+                elif event.key == pygame.K_BACKSPACE:
+                    nombres[jugador_actual] = nombres[jugador_actual][:-1]
+                
+                else:
+                    # Limitar longitud del nombre
+                    if len(nombres[jugador_actual]) < 15:
+                        # Solo permitir letras, números y espacios
+                        if event.unicode.isprintable():
+                            nombres[jugador_actual] += event.unicode
+
+
 def main():
     """
     Función principal que ejecuta el juego de Backgammon con interfaz Pygame.
     
     Funcionalidad:
+        - Muestra menú principal
+        - Solicita nombres de jugadores
         - Inicializa pygame y configura la ventana del juego
         - Crea y configura el juego de Backgammon
         - Maneja el bucle principal del juego
@@ -43,234 +193,257 @@ def main():
         - CLICK IZQUIERDO: Selecciona/mueve fichas
     """
     pygame.init()
-    pygame.display.set_caption("Backgammon - Mi Juego")
+    pygame.display.set_caption("Backgammon")
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
     font = pygame.font.SysFont(None, 20)
     font_big = pygame.font.SysFont(None, 36)
 
-    # TU JUEGO SOLID
-    game = BackgammonGame()
-    game.inicializar_board()
-    game.crear_jugador("Jugador 1", "Blanco", "Jugando")
-    game.crear_jugador("Jugador 2", "Negro", "Jugando")
+    # ═══════════════════════════════════════════════════════════
+    # MENÚ PRINCIPAL
+    # ═══════════════════════════════════════════════════════════
+    while True:
+        opcion = mostrar_menu_principal(screen, font_big, font)
+        
+        if opcion == 'salir':
+            pygame.quit()
+            sys.exit()
+        
+        # ═══════════════════════════════════════════════════════════
+        # SOLICITAR NOMBRES
+        # ═══════════════════════════════════════════════════════════
+        nombres = solicitar_nombres(screen, font_big, font)
+        
+        if nombres is None:
+            continue  # Volver al menú principal
+        
+        nombre_jugador1, nombre_jugador2 = nombres
+        
+        # ═══════════════════════════════════════════════════════════
+        # INICIALIZAR JUEGO
+        # ═══════════════════════════════════════════════════════════
+        game = BackgammonGame()
+        game.inicializar_board()
+        game.crear_jugador(nombre_jugador1, "Blanco", "Jugando")
+        game.crear_jugador(nombre_jugador2, "Negro", "Jugando")
 
-    # Adaptador
-    board_adapter = BoardAdapter(game)
+        # Adaptador
+        board_adapter = BoardAdapter(game)
 
-    # Estado UI
-    posicion_seleccionada = None
-    mensaje = "Presiona ESPACIO para tirar dados"
-    hitmap = {}
-    estado = "JUGANDO"  # Puede ser: "JUGANDO" o "GANADOR"
-    ganador = None
+        # Estado UI
+        posicion_seleccionada = None
+        mensaje = "Presiona ESPACIO para tirar dados"
+        hitmap = {}
+        estado = "JUGANDO"  # Puede ser: "JUGANDO" o "GANADOR"
+        ganador = None
 
-    running = True
-    while running:
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
-                running = False
+        # ═══════════════════════════════════════════════════════════
+        # BUCLE PRINCIPAL DEL JUEGO
+        # ═══════════════════════════════════════════════════════════
+        running = True
+        while running:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-            elif e.type == pygame.KEYDOWN:
-                if e.key in (pygame.K_ESCAPE, pygame.K_q):
-                    running = False
+                elif e.type == pygame.KEYDOWN:
+                    if e.key in (pygame.K_ESCAPE, pygame.K_q):
+                        running = False  # Volver al menú
 
-                elif e.key == pygame.K_r and estado == "GANADOR":
-                    # ✅ Reiniciar juego
-                    game = BackgammonGame()
-                    game.inicializar_board()
-                    game.crear_jugador("Jugador 1", "Blanco", "Jugando")
-                    game.crear_jugador("Jugador 2", "Negro", "Jugando")
-                    board_adapter = BoardAdapter(game)
-                    estado = "JUGANDO"
-                    posicion_seleccionada = None
-                    mensaje = "Presiona ESPACIO para tirar dados"
+                    elif e.key == pygame.K_r and estado == "GANADOR":
+                        # ✅ Reiniciar juego (volver al menú)
+                        running = False
 
-                elif e.key == pygame.K_SPACE:
-                    # ✅ Solo permitir tirar dados si NO hay ganador
-                    if estado == "GANADOR":
-                        mensaje = "¡Juego terminado! Presiona R para reiniciar o ESC para salir"
-                    elif not game.obtener_dados_disponibles():
-                        game.tirar_dados()
-                        try:
-                            game.verifificar_movimientos_posibles()
-                            dados_valores = [d.obtener_numero() for d in game.obtener_dados_disponibles()]
-                            mensaje = f"Dados lanzados: {dados_valores}"
-                        except NoHayMovimientosPosibles:
-                            mensaje = "No hay movimientos. Cambiando turno..."
-                    else:
-                        mensaje = "Ya hay dados disponibles"
-
-            elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
-                # ✅ Solo permitir clicks si NO hay ganador
-                if estado == "GANADOR":
-                    continue  # Ignorar clicks
-
-                # NUEVO: Verificar bear off primero
-                bear_off_pos = hit_test_bear_off(e.pos, game)
-
-                if bear_off_pos is not None:
-                    # ═══════════════════════════════════════
-                    # CASO: Click en zona de SACAR fichas
-                    # ═══════════════════════════════════════
-                    if posicion_seleccionada is not None and posicion_seleccionada != 'bar':
-                        # Intentar sacar ficha
-                        try:
-                            game.realizar_movimiento(posicion_seleccionada, bear_off_pos)
-                            mensaje = f"✓ Ficha sacada desde {posicion_seleccionada}"
-                            posicion_seleccionada = None
-                            board_adapter.actualizar()
-                        except MovimientoInvalido as ex:
-                            mensaje = f"✗ No puedes sacar: {str(ex)[:40]}"
-                            posicion_seleccionada = None
-                        except Ganador:
-                            # ✅ AGREGADO: Manejar victoria al sacar ficha
-                            estado = "GANADOR"
-                            ganador = game.obtener_turno()
-                            mensaje = f"🏆 ¡{ganador} GANÓ LA PARTIDA!"
-                            posicion_seleccionada = None
-                            board_adapter.actualizar()
-                    else:
-                        mensaje = "Selecciona primero una ficha para sacar"
-
-                else:
-                    # Verificar barra (fichas comidas)
-                    bar_click = hit_test_captured(e.pos, game)
-
-                    if bar_click:
-                        # Seleccionó ficha comida
-                        if posicion_seleccionada is None:
-                            posicion_seleccionada = 'bar'
-                            mensaje = f"Ficha comida seleccionada. Click en destino"
+                    elif e.key == pygame.K_SPACE:
+                        # ✅ Solo permitir tirar dados si NO hay ganador
+                        if estado == "GANADOR":
+                            mensaje = "¡Juego terminado! Presiona R/ESC para volver al menú"
+                        elif not game.obtener_dados_disponibles():
+                            game.tirar_dados()
+                            try:
+                                game.verifificar_movimientos_posibles()
+                                dados_valores = [d.obtener_numero() for d in game.obtener_dados_disponibles()]
+                                mensaje = f"Dados lanzados: {dados_valores}"
+                            except NoHayMovimientosPosibles:
+                                mensaje = "No hay movimientos. Cambiando turno..."
                         else:
-                            mensaje = "Ya hay una posición seleccionada"
+                            mensaje = "Ya hay dados disponibles"
+
+                elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
+                    # ✅ Solo permitir clicks si NO hay ganador
+                    if estado == "GANADOR":
+                        continue  # Ignorar clicks
+
+                    # NUEVO: Verificar bear off primero
+                    bear_off_pos = hit_test_bear_off(e.pos, game)
+
+                    if bear_off_pos is not None:
+                        # ═══════════════════════════════════════
+                        # CASO: Click en zona de SACAR fichas
+                        # ═══════════════════════════════════════
+                        if posicion_seleccionada is not None and posicion_seleccionada != 'bar':
+                            # Intentar sacar ficha
+                            try:
+                                game.realizar_movimiento(posicion_seleccionada, bear_off_pos)
+                                mensaje = f"✓ Ficha sacada desde {posicion_seleccionada}"
+                                posicion_seleccionada = None
+                                board_adapter.actualizar()
+                            except MovimientoInvalido as ex:
+                                mensaje = f"✗ No puedes sacar: {str(ex)[:40]}"
+                                posicion_seleccionada = None
+                            except Ganador:
+                                # ✅ AGREGADO: Manejar victoria al sacar ficha
+                                estado = "GANADOR"
+                                ganador = game.obtener_players()[game.obtener_turno()].obtener_nombre()
+                                mensaje = f"🏆 ¡{ganador} GANÓ LA PARTIDA!"
+                                posicion_seleccionada = None
+                                board_adapter.actualizar()
+                        else:
+                            mensaje = "Selecciona primero una ficha para sacar"
 
                     else:
-                        # Verificar tablero normal
-                        idx = hit_test(hitmap, e.pos)
+                        # Verificar barra (fichas comidas)
+                        bar_click = hit_test_captured(e.pos, game)
 
-                        if idx is not None:
+                        if bar_click:
+                            # Seleccionó ficha comida
                             if posicion_seleccionada is None:
-                                # Verificar si tiene fichas comidas (NO puede mover otras)
-                                if game.obtener_board().verificar_ficha_comida(game.obtener_turno()):
-                                    mensaje = "¡Debes meter primero las fichas comidas!"
-                                else:
-                                    # Seleccionar ficha normal
-                                    contenedor = game.obtener_board().obtener_contenedor_fichas()
-                                    if len(contenedor[idx]) > 0:
-                                        if contenedor[idx][0].obtener_color()==game.obtener_turno():
-                                            posicion_seleccionada = idx
-                                            mensaje = f"Seleccionada pos {idx}. Click en destino"
-                                        else:
-                                            mensaje = f"Pos {idx} no es tu ficha"
-                                    else:
-                                        mensaje = f"Pos {idx} está vacía"
-
-                            elif posicion_seleccionada == 'bar':
-                                # Mover desde barra (ficha comida)
-                                try:
-                                    game.realizar_moviento_desde_inicio(idx)
-                                    mensaje = f"✓ Ficha comida movida a {idx}"
-                                    posicion_seleccionada = None
-                                    board_adapter.actualizar()
-                                except MovimientoInvalido as ex:
-                                    mensaje = f"✗ Error: {str(ex)[:50]}"
-                                    posicion_seleccionada = None
-
+                                posicion_seleccionada = 'bar'
+                                mensaje = f"Ficha comida seleccionada. Click en destino"
                             else:
-                                # Mover ficha normal
-                                try:
-                                    game.realizar_movimiento(posicion_seleccionada, idx)
-                                    mensaje = f"✓ Movido: {posicion_seleccionada} → {idx}"
-                                    posicion_seleccionada = None
-                                    board_adapter.actualizar()
-                                except MovimientoInvalido as ex:
-                                    mensaje = f"✗ Error: {str(ex)[:50]}"
-                                    posicion_seleccionada = None
-                                except Ganador:
-                                    estado = "GANADOR"
-                                    ganador = game.obtener_turno()
-                                    mensaje = f"🏆 ¡{ganador} GANÓ LA PARTIDA!"
-                                    posicion_seleccionada = None
-                                    board_adapter.actualizar()
+                                mensaje = "Ya hay una posición seleccionada"
 
-        # Renderizar
-        board_adapter.actualizar()
-        hitmap = render_board(screen, board_adapter, font)
-        render_captured_pieces(screen, game, font)
-        render_bear_off_zones(screen, game, font)
+                        else:
+                            # Verificar tablero normal
+                            idx = hit_test(hitmap, e.pos)
 
-        # UI INFO (siempre visible)
-        turno_text = font_big.render(f"Turno: {game.obtener_turno()}", True, BLACK)
-        screen.blit(turno_text, (10, 10))
+                            if idx is not None:
+                                if posicion_seleccionada is None:
+                                    # Verificar si tiene fichas comidas (NO puede mover otras)
+                                    if game.obtener_board().verificar_ficha_comida(game.obtener_turno()):
+                                        mensaje = "¡Debes meter primero las fichas comidas!"
+                                    else:
+                                        # Seleccionar ficha normal
+                                        contenedor = game.obtener_board().obtener_contenedor_fichas()
+                                        if len(contenedor[idx]) > 0:
+                                            if contenedor[idx][0].obtener_color()==game.obtener_turno():
+                                                posicion_seleccionada = idx
+                                                mensaje = f"Seleccionada pos {idx}. Click en destino"
+                                            else:
+                                                mensaje = f"Pos {idx} no es tu ficha"
+                                        else:
+                                            mensaje = f"Pos {idx} está vacía"
 
-        # DADOS (siempre visible)
-        dados = game.obtener_dados_disponibles()
-        if dados:
-            dados_valores = [d.obtener_numero() for d in dados]
-            dados_text = font_big.render(f"Dados: {dados_valores}", True, (0, 100, 0))
-        else:
-            dados_text = font_big.render("Dados: [] (ESPACIO)", True, (200, 0, 0))
-        screen.blit(dados_text, (10, 50))
+                                elif posicion_seleccionada == 'bar':
+                                    # Mover desde barra (ficha comida)
+                                    try:
+                                        game.realizar_moviento_desde_inicio(idx)
+                                        mensaje = f"✓ Ficha comida movida a {idx}"
+                                        posicion_seleccionada = None
+                                        board_adapter.actualizar()
+                                    except MovimientoInvalido as ex:
+                                        mensaje = f"✗ Error: {str(ex)[:50]}"
+                                        posicion_seleccionada = None
 
-        # MENSAJE
-        msg_text = font.render(mensaje, True, BLACK)
-        screen.blit(msg_text, (10, HEIGHT - 30))
+                                else:
+                                    # Mover ficha normal
+                                    try:
+                                        game.realizar_movimiento(posicion_seleccionada, idx)
+                                        mensaje = f"✓ Movido: {posicion_seleccionada} → {idx}"
+                                        posicion_seleccionada = None
+                                        board_adapter.actualizar()
+                                    except MovimientoInvalido as ex:
+                                        mensaje = f"✗ Error: {str(ex)[:50]}"
+                                        posicion_seleccionada = None
+                                    except Ganador:
+                                        estado = "GANADOR"
+                                        ganador = game.obtener_players()[game.obtener_turno()].obtener_nombre()
+                                        mensaje = f"🏆 ¡{ganador} GANÓ LA PARTIDA!"
+                                        posicion_seleccionada = None
+                                        board_adapter.actualizar()
 
-        # Resaltar selección en tablero
-        if posicion_seleccionada is not None and posicion_seleccionada != 'bar':
-            if posicion_seleccionada in hitmap:
-                rect = hitmap[posicion_seleccionada]
+            # Renderizar
+            board_adapter.actualizar()
+            hitmap = render_board(screen, board_adapter, font)
+            render_captured_pieces(screen, game, font)
+            render_bear_off_zones(screen, game, font)
+
+            # UI INFO (siempre visible)
+            jugador_actual = game.obtener_players()[game.obtener_turno()]
+            turno_text = font_big.render(
+                f"Turno: {jugador_actual.obtener_nombre()} ({game.obtener_turno()})",
+                True, BLACK
+            )
+            screen.blit(turno_text, (10, 10))
+
+            # DADOS (siempre visible)
+            dados = game.obtener_dados_disponibles()
+            if dados:
+                dados_valores = [d.obtener_numero() for d in dados]
+                dados_text = font_big.render(f"Dados: {dados_valores}", True, (0, 100, 0))
+            else:
+                dados_text = font_big.render("Dados: [] (ESPACIO)", True, (200, 0, 0))
+            screen.blit(dados_text, (10, 50))
+
+            # MENSAJE
+            msg_text = font.render(mensaje, True, BLACK)
+            screen.blit(msg_text, (10, HEIGHT - 30))
+
+            # Resaltar selección en tablero
+            if posicion_seleccionada is not None and posicion_seleccionada != 'bar':
+                if posicion_seleccionada in hitmap:
+                    rect = hitmap[posicion_seleccionada]
+                    pygame.draw.rect(screen, (255, 215, 0), rect, 3)
+
+            # Resaltar BARRA si está seleccionada
+            if posicion_seleccionada == 'bar':
+                margin = 40
+                barra_x = WIDTH - margin + 10
+                turno = game.obtener_turno()
+
+                if turno == "Blanco":
+                    rect = pygame.Rect(barra_x - 25, 120, 50, 180)
+                else:
+                    rect = pygame.Rect(barra_x - 25, HEIGHT - 300, 50, 180)
+
                 pygame.draw.rect(screen, (255, 215, 0), rect, 3)
 
-        # Resaltar BARRA si está seleccionada
-        if posicion_seleccionada == 'bar':
-            margin = 40
-            barra_x = WIDTH - margin + 10
-            turno = game.obtener_turno()
+            # ═══════════════════════════════════════════════════════════
+            # ✅ PANTALLA DE VICTORIA (OVERLAY)
+            # ═══════════════════════════════════════════════════════════
+            if estado == "GANADOR":
+                # Overlay oscuro
+                overlay = pygame.Surface((WIDTH, HEIGHT))
+                overlay.set_alpha(180)
+                overlay.fill((0, 0, 0))
+                screen.blit(overlay, (0, 0))
 
-            if turno == "Blanco":
-                rect = pygame.Rect(barra_x - 25, 120, 50, 180)
-            else:
-                rect = pygame.Rect(barra_x - 25, HEIGHT - 300, 50, 180)
+                # Mensaje principal
+                victoria_text = pygame.font.SysFont(None, 72).render(
+                    f"🏆 {ganador} GANÓ! 🏆",
+                    True,
+                    (255, 215, 0)
+                )
+                text_rect = victoria_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
+                screen.blit(victoria_text, text_rect)
 
-            pygame.draw.rect(screen, (255, 215, 0), rect, 3)
+                # Submensaje
+                sub_text = font_big.render(
+                    "Presiona ESC o R para volver al menú",
+                    True,
+                    WHITE
+                )
+                sub_rect = sub_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
+                screen.blit(sub_text, sub_rect)
 
-        # ═══════════════════════════════════════════════════════════
-        # ✅ PANTALLA DE VICTORIA (OVERLAY)
-        # ═══════════════════════════════════════════════════════════
-        if estado == "GANADOR":
-            # Overlay oscuro
-            overlay = pygame.Surface((WIDTH, HEIGHT))
-            overlay.set_alpha(180)
-            overlay.fill((0, 0, 0))
-            screen.blit(overlay, (0, 0))
-
-            # Mensaje principal
-            victoria_text = pygame.font.SysFont(None, 72).render(
-                f"🏆 {ganador} GANÓ! 🏆",
-                True,
-                (255, 215, 0)
-            )
-            text_rect = victoria_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
-            screen.blit(victoria_text, text_rect)
-
-            # Submensaje
-            sub_text = font_big.render(
-                "Presiona ESC para salir o R para reiniciar",
-                True,
-                WHITE
-            )
-            sub_rect = sub_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
-            screen.blit(sub_text, sub_rect)
-
-        pygame.display.flip()
-        clock.tick(60)
-
-    pygame.quit()
-    sys.exit()
+            pygame.display.flip()
+            clock.tick(60)
 
 
+# ═══════════════════════════════════════════════════════════
+# FUNCIONES DE RENDERIZADO (mantener todas las existentes)
+# ═══════════════════════════════════════════════════════════
 
 def render_board(screen, board_adapter, font):
     """
@@ -624,11 +797,12 @@ def render_bear_off_zones(screen, game, font):
 
     # Resaltar si puede sacar
     turno = game.obtener_turno()
+
     if turno == "Blanco":
-        if puede_empezar_bear_off(game, "Blanco"):
+        if game.verificar_todas_fichas_en_home("Blanco"):
             pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3)
     else:
-        if puede_empezar_bear_off(game, "Negro"):
+        if game.verificar_todas_fichas_en_home("Negro"):
             pygame.draw.rect(screen, (100, 255, 100), zona_negras, 3)
 
 
@@ -683,39 +857,6 @@ def hit_test_bear_off(pos, game):
                 return -1
 
     return None
-
-
-def puede_empezar_bear_off(game, turno):
-    """
-    Verifica si un jugador puede comenzar a sacar fichas del tablero.
-    
-    Funcionalidad:
-        - Para jugador Blanco: verifica que NO tenga fichas en posiciones 0-17
-        - Para jugador Negro: verifica que NO tenga fichas en posiciones 6-23
-        - Esta condición indica que todas las fichas están en el home board
-    
-    Entradas:
-        game (BackgammonGame): Instancia del juego con el estado actual del tablero
-        turno (str): Color del jugador a verificar ("Blanco" o "Negro")
-    
-    Salidas:
-        bool: True si el jugador puede comenzar a sacar fichas (todas están en home),
-              False si aún tiene fichas fuera del home board
-    """
-    contenedor = game.obtener_board().obtener_contenedor_fichas()
-
-    if turno == "Blanco":
-        for pos in range(18):
-            if len(contenedor[pos]) > 0:
-                if contenedor[pos][0].obtener_color() == "Blanco":
-                    return False
-        return True
-    else:
-        for pos in range(6, 24):
-            if len(contenedor[pos]) > 0:
-                if contenedor[pos][0].obtener_color() == "Negro":
-                    return False
-        return True
 
 
 if __name__ == "__main__":

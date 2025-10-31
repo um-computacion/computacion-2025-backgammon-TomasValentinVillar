@@ -1,5 +1,30 @@
 # ChangeLog
 
+## 2025-10-31 (15:50)
+
+### Added
+
+- función mostrar_menu_principal en pyagme
+- función solicitar_nombres en p
+
+## 2025-10-31 (13:11)
+
+### Added
+
+- función verificar_todas_fichas_en_home en clase BackgammonGame
+- test_verificar_todas_fichas_en_home_blanco_true en test_backgammon_game
+- test_verificar_todas_fichas_en_home_blanco_false en test_backgammon_game
+- test_verificar_todas_fichas_en_home_negro_true en test_backgammon_game
+- test_verificar_todas_fichas_en_home_negro_false en test_backgammon_game
+
+### Changed
+
+- render_bear_off_zones en pygame
+
+### Deletd
+
+- puede_empezar_bear_off() en pygame
+
 ## 2025-10-31 (12:33)
 
 ### Changed
