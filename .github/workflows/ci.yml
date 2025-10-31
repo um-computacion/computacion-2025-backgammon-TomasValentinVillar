@@ -33,7 +33,7 @@ jobs:
           coverage report -m > coverage_report.txt
       - name: Run Pylint and generate report
         run: |
-          PYTHONPATH=. pylint --rcfile=.pylintrc core cli > pylint_report.txt || true
+          PYTHONPATH=. pylint --rcfile=.pylintrc core cli pygame_ui > pylint_report.txt || true
       - name: Generate reports file
         run: |
           cat << 'EOF' > generate_reports.py

@@ -50,12 +50,12 @@ class DiceManager:
             ValueError si no hay dado disponible para esos pasos
         """
         # Intentar usar dado 1
-        if self.__dice1__.obtener_numero() == pasos and self.__dice1__ in self.__dados_disponibles__:
+        if self.__dice1__.obtener_numero()== pasos and self.__dice1__ in self.__dados_disponibles__:
             self.__dados_disponibles__.remove(self.__dice1__)
             return True
 
         # Intentar usar dado 2
-        if self.__dice2__.obtener_numero() == pasos and self.__dice2__ in self.__dados_disponibles__:
+        if self.__dice2__.obtener_numero()== pasos and self.__dice2__ in self.__dados_disponibles__:
             self.__dados_disponibles__.remove(self.__dice2__)
             return True
 
