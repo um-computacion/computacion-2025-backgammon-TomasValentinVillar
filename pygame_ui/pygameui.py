@@ -68,7 +68,6 @@ def main():
                             mensaje = f"Dados lanzados: {dados_valores}"
                         except NoHayMovimientosPosibles:
                             mensaje = "No hay movimientos. Cambiando turno..."
-                            game.tirar_dados()
                     else:
                         mensaje = "Ya hay dados disponibles"
             
@@ -274,7 +273,7 @@ def render_board(screen, board_adapter, font):
 
     # Crear hitmap para TODAS las posiciones
     for col in range(24):
-        data = board.pos.get(col)
+        data = board.__pos__.get(col)
         
         # Calcular coordenadas base (SIEMPRE)
         if col < 12:

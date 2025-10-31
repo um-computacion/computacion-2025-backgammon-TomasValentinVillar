@@ -1,5 +1,16 @@
 # ChangeLog
 
+## 2025-10-31 (03:52)
+
+### Added
+
+- test_board_adapter en directorio test
+
+### Changed
+
+- funcion actualizar en clase BoardAdapter
+- función __init__ en clase BoardAdapter
+
 ## 2025-10-31 (01:06)
 
 ### Added

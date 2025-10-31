@@ -11,3 +11,4 @@ omit =
     test/test_player.py
     test/test_rule_validator.py
     test/test_cli.py
+    test/test_board_adapter.py
