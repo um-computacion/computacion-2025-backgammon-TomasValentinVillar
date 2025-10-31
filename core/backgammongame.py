@@ -255,3 +255,14 @@ class BackgammonGame:
             return pos
         except ValueError as exc:
             raise NoSeIngresoEnteroError("Se debe ingresar un numero entero") from exc
+    
+    def verificar_todas_fichas_en_home(self, turno):
+        """
+        Verifica si todas las fichas están en el home board.
+        Entrada: turno (str) - "Blanco" o "Negro"
+        Salida: bool - True si todas están en home board
+        """
+        return self.__rule_validator__.todas_fichas_en_home_board(
+            self.__board__, 
+            turno
+        )

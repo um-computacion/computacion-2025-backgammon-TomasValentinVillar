@@ -624,11 +624,12 @@ def render_bear_off_zones(screen, game, font):
 
     # Resaltar si puede sacar
     turno = game.obtener_turno()
+
     if turno == "Blanco":
-        if puede_empezar_bear_off(game, "Blanco"):
+        if game.verificar_todas_fichas_en_home("Blanco"):
             pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3)
     else:
-        if puede_empezar_bear_off(game, "Negro"):
+        if game.verificar_todas_fichas_en_home("Negro"):
             pygame.draw.rect(screen, (100, 255, 100), zona_negras, 3)
 
 
@@ -683,40 +684,6 @@ def hit_test_bear_off(pos, game):
                 return -1
 
     return None
-
-
-def puede_empezar_bear_off(game, turno):
-    """
-    Verifica si un jugador puede comenzar a sacar fichas del tablero.
-    
-    Funcionalidad:
-        - Para jugador Blanco: verifica que NO tenga fichas en posiciones 0-17
-        - Para jugador Negro: verifica que NO tenga fichas en posiciones 6-23
-        - Esta condición indica que todas las fichas están en el home board
-    
-    Entradas:
-        game (BackgammonGame): Instancia del juego con el estado actual del tablero
-        turno (str): Color del jugador a verificar ("Blanco" o "Negro")
-    
-    Salidas:
-        bool: True si el jugador puede comenzar a sacar fichas (todas están en home),
-              False si aún tiene fichas fuera del home board
-    """
-    contenedor = game.obtener_board().obtener_contenedor_fichas()
-
-    if turno == "Blanco":
-        for pos in range(18):
-            if len(contenedor[pos]) > 0:
-                if contenedor[pos][0].obtener_color() == "Blanco":
-                    return False
-        return True
-    else:
-        for pos in range(6, 24):
-            if len(contenedor[pos]) > 0:
-                if contenedor[pos][0].obtener_color() == "Negro":
-                    return False
-        return True
-
 
 if __name__ == "__main__":
     main()
