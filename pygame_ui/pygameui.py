@@ -19,47 +19,47 @@ BLACK = (30, 30, 30)
 def mostrar_menu_principal(screen, font_big, font):
     """
     Muestra el menú principal con opciones para Jugar o Salir.
-    
+
     Returns:
         str: 'jugar' si se selecciona jugar, 'salir' si se selecciona salir
     """
     menu_activo = True
     opcion_seleccionada = 0  # 0 = Jugar, 1 = Salir
-    
+
     while menu_activo:
         screen.fill(BACKGROUND)
-        
+
         # Título
         titulo = font_big.render("BACKGAMMON", True, BLACK)
         titulo_rect = titulo.get_rect(center=(WIDTH // 2, 150))
         screen.blit(titulo, titulo_rect)
-        
+
         # Opciones
         opciones = ["JUGAR", "SALIR"]
         colores = [BLACK, BLACK]
-        
+
         for i, opcion in enumerate(opciones):
             if i == opcion_seleccionada:
                 color = (200, 0, 0)  # Rojo para seleccionada
                 texto = font_big.render(f"> {opcion} <", True, color)
             else:
                 texto = font_big.render(opcion, True, BLACK)
-            
+
             texto_rect = texto.get_rect(center=(WIDTH // 2, 300 + i * 80))
             screen.blit(texto, texto_rect)
-        
+
         # Instrucciones
         instruccion = font.render("Usa ↑↓ para moverte, ENTER para seleccionar", True, BLACK)
         instruccion_rect = instruccion.get_rect(center=(WIDTH // 2, 500))
         screen.blit(instruccion, instruccion_rect)
-        
+
         pygame.display.flip()
-        
+
         # Eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return 'salir'
-            
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     opcion_seleccionada = (opcion_seleccionada - 1) % 2
@@ -68,40 +68,39 @@ def mostrar_menu_principal(screen, font_big, font):
                 elif event.key == pygame.K_RETURN:
                     if opcion_seleccionada == 0:
                         return 'jugar'
-                    else:
-                        return 'salir'
+                    return 'salir'
                 elif event.key == pygame.K_ESCAPE:
                     return 'salir'
-    
+
     return 'salir'
 
 
 def solicitar_nombres(screen, font_big, font):
     """
     Solicita los nombres de los dos jugadores.
-    
+
     Returns:
         tuple: (nombre_jugador1, nombre_jugador2) o None si se cancela
     """
     nombres = ["", ""]
     jugador_actual = 0  # 0 = Jugador 1, 1 = Jugador 2
-    
+
     while True:
         screen.fill(BACKGROUND)
-        
+
         # Título
         if jugador_actual == 0:
             titulo = font_big.render("Nombre del Jugador 1 (Blanco)", True, BLACK)
         else:
             titulo = font_big.render("Nombre del Jugador 2 (Negro)", True, BLACK)
-        
+
         titulo_rect = titulo.get_rect(center=(WIDTH // 2, 150))
         screen.blit(titulo, titulo_rect)
-        
+
         # Cuadro de texto
         texto_input = font_big.render(nombres[jugador_actual] + "|", True, BLACK)
         texto_rect = texto_input.get_rect(center=(WIDTH // 2, 300))
-        
+
         # Fondo del cuadro
         padding = 20
         cuadro = pygame.Rect(
@@ -112,50 +111,50 @@ def solicitar_nombres(screen, font_big, font):
         )
         pygame.draw.rect(screen, WHITE, cuadro)
         pygame.draw.rect(screen, BLACK, cuadro, 2)
-        
+
         screen.blit(texto_input, texto_rect)
-        
+
         # Mostrar nombre ya ingresado (si estamos en jugador 2)
         if jugador_actual == 1:
             info = font.render(f"Jugador 1: {nombres[0]}", True, (100, 100, 100))
             info_rect = info.get_rect(center=(WIDTH // 2, 400))
             screen.blit(info, info_rect)
-        
+
         # Instrucciones
         instruccion1 = font.render("Escribe el nombre y presiona ENTER", True, BLACK)
         instruccion1_rect = instruccion1.get_rect(center=(WIDTH // 2, 480))
         screen.blit(instruccion1, instruccion1_rect)
-        
+
         instruccion2 = font.render("ESC para volver al menú", True, BLACK)
         instruccion2_rect = instruccion2.get_rect(center=(WIDTH // 2, 510))
         screen.blit(instruccion2, instruccion2_rect)
-        
+
         pygame.display.flip()
-        
+
         # Eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return None
-            
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return None
-                
-                elif event.key == pygame.K_RETURN:
+
+                if event.key == pygame.K_RETURN:
                     # Validar que el nombre no esté vacío
                     if nombres[jugador_actual].strip() == "":
                         # Mostrar mensaje de error temporalmente
                         continue
-                    
+
                     if jugador_actual == 0:
                         jugador_actual = 1  # Pasar al jugador 2
                     else:
                         # Ambos nombres ingresados
                         return (nombres[0].strip(), nombres[1].strip())
-                
+
                 elif event.key == pygame.K_BACKSPACE:
                     nombres[jugador_actual] = nombres[jugador_actual][:-1]
-                
+
                 else:
                     # Limitar longitud del nombre
                     if len(nombres[jugador_actual]) < 15:
@@ -204,21 +203,21 @@ def main():
     # ═══════════════════════════════════════════════════════════
     while True:
         opcion = mostrar_menu_principal(screen, font_big, font)
-        
+
         if opcion == 'salir':
             pygame.quit()
             sys.exit()
-        
+
         # ═══════════════════════════════════════════════════════════
         # SOLICITAR NOMBRES
         # ═══════════════════════════════════════════════════════════
         nombres = solicitar_nombres(screen, font_big, font)
-        
+
         if nombres is None:
             continue  # Volver al menú principal
-        
+
         nombre_jugador1, nombre_jugador2 = nombres
-        
+
         # ═══════════════════════════════════════════════════════════
         # INICIALIZAR JUEGO
         # ═══════════════════════════════════════════════════════════
@@ -329,7 +328,7 @@ def main():
                                         if len(contenedor[idx]) > 0:
                                             if contenedor[idx][0].obtener_color()==game.obtener_turno():
                                                 posicion_seleccionada = idx
-                                                mensaje = f"Seleccionada pos {idx}. Click en destino"
+                                                mensaje =f"Seleccionada pos {idx}. Click en destino"
                                             else:
                                                 mensaje = f"Pos {idx} no es tu ficha"
                                         else:
