@@ -1,5 +1,8 @@
 # Backgammon - Proyecto Final
 
+Nombre: Tomas Villar
+Legajo: 64135
+
 ## 🐳 Despliegue con Docker
 
 Este proyecto incluye configuración de Docker para facilitar la ejecución tanto del juego como de los tests.
