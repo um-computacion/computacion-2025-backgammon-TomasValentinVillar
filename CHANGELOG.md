@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2025-10-31 (12:33)
+
+### Changed
+
+- corrijo el codigo del proyecto para mejorar la nota de pylint
+
 ## 2025-10-31 (03:52)
 
 ### Added

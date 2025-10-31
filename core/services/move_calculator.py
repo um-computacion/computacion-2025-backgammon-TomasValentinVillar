@@ -53,20 +53,20 @@ class MoveCalculator:
 
         # Obtener TODOS los dados disponibles
         dados_disponibles = dice_manager.obtener_dados_disponibles()
-        
+
         if not dados_disponibles:
             return False
 
         # Verificar cada dado disponible individualmente
         valores_vistos = set()
-        
+
         for dado in dados_disponibles:
             valor = dado.obtener_numero()
-            
+
             if valor in valores_vistos:
                 continue
             valores_vistos.add(valor)
-            
+
             pos_destino = self.__move_validator__.calcular_destino(pos_inicio, valor, turno)
 
             if self.__move_validator__.es_posicion_valida(pos_destino):
@@ -81,7 +81,7 @@ class MoveCalculator:
         """
         contenedor = board.obtener_contenedor_fichas()
         dados_disponibles = dice_manager.obtener_dados_disponibles()
-        
+
         if not dados_disponibles:
             return False
 
@@ -108,15 +108,15 @@ class MoveCalculator:
         Verifica si un movimiento específico es válido
         """
         pos_destino = self.__move_validator__.calcular_destino(pos_origen, pasos, turno)
-        
+
         if not self.__move_validator__.es_posicion_valida(pos_destino):
             # Verificar si puede sacar ficha
             try:
                 dados_disponibles = dice_manager.obtener_dados_disponibles()
                 self.__rule_validator__.puede_sacar_ficha(
-                    board, 
-                    pos_origen, 
-                    turno, 
+                    board,
+                    pos_origen,
+                    turno,
                     dados_disponibles
                 )
                 return True
@@ -129,12 +129,12 @@ class MoveCalculator:
                 try:
                     dados_disponibles = dice_manager.obtener_dados_disponibles()
                     self.__rule_validator__.puede_sacar_ficha(
-                        board, 
-                        pos_origen, 
-                        turno, 
+                        board,
+                        pos_origen,
+                        turno,
                         dados_disponibles
                     )
-                    return True  # ✅ Puede sacar desde pos 23/0
+                    return True  # Puede sacar desde pos 23/0
                 except ValueError:
                     pass  # No puede sacar, intentar movimiento normal
 

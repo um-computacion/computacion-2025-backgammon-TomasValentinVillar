@@ -3,7 +3,6 @@ Módulo principal del juego Backgammon.
 Contiene la clase BackgammonGame que orquesta la lógica del juego.
 """
 from core.board import Board
-from core.models.dice import Dice
 from core.models.player import Player
 from core.services.dice_manager import DiceManager
 from core.services.move_calculator import MoveCalculator
@@ -26,7 +25,7 @@ class BackgammonGame:
     Clase principal que orquesta el juego de Backgammon.
     Cumple con principios SOLID delegando responsabilidades.
     """
-    def __init__(self, board=None, dice1=None, dice2=None,
+    def __init__(self, board=None,
                  move_validator=None, rule_validator=None):
         self.__turno__ = "Blanco"
 
@@ -46,7 +45,7 @@ class BackgammonGame:
         Funcionalidad: Crear una instacia de la clase jugador y agregarla en el diccionario
         '''
         if nom == '':
-             raise NombreVacio('No se puede ingresar un nombre vacío')
+            raise NombreVacio('No se puede ingresar un nombre vacío')
         jugador = Player(nom,ficha,estado)
         self.__players__[ficha] = jugador
 
@@ -156,14 +155,14 @@ class BackgammonGame:
         Excepción: MovimientoInvalido si se intenta sacar ficha y no es posible
         """
         try:
-            
+
             dados_disponibles = self.__dice_manager__.obtener_dados_disponibles()
-            
+
             dado_usado = self.__rule_validator__.puede_sacar_ficha(
                 board,
                 posicion,
                 self.__turno__,
-                dados_disponibles 
+                dados_disponibles
             )
             return dado_usado
         except ValueError as e:
@@ -210,7 +209,7 @@ class BackgammonGame:
         Salida: si siguen quedando dados disponibles se mantendrá el turno, 
                 si no quedan retornará True
         '''
-        if self.__dice_manager__.obtener_dados_disponibles() == []:
+        if not self.__dice_manager__.obtener_dados_disponibles():
             self.cambiar_turno()
             return None
         return True
@@ -254,5 +253,5 @@ class BackgammonGame:
         try:
             pos = int(pos)
             return pos
-        except ValueError:
-            raise NoSeIngresoEnteroError("Se debe ingresar un numero entero")
+        except ValueError as exc:
+            raise NoSeIngresoEnteroError("Se debe ingresar un numero entero") from exc
