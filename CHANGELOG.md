@@ -1,5 +1,15 @@
 # ChangeLog
 
+## 2025-10-31 (01:06)
+
+### Added
+
+- archivo docker-compose.yml
+- archivo Dockerfile
+### Changed
+
+- README.md
+
 ## 2025-10-30 (01:06)
 
 ### Changed
