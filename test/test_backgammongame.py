@@ -1,5 +1,5 @@
 import unittest
-from core.backgammongame import BackgammonGame,NoHayMovimientosPosibles, MovimientoInvalido,Ganador
+from core.backgammongame import BackgammonGame,NoHayMovimientosPosibles, MovimientoInvalido,Ganador, NombreVacio,NoSeIngresoEnteroError
 from core.board import Board
 from core.models.checker import Checker
 from core.models.dice import Dice
@@ -92,6 +92,7 @@ class TestBackgammonGame(unittest.TestCase):
         ]
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
+        self.assertEqual(juego.obtener_turno(),"Negro")
 
     @patch('random.randint', side_effect = [3,2])
     def test_verificar_movimientos_posibles_negro(self,mock_randint):
@@ -133,7 +134,7 @@ class TestBackgammonGame(unittest.TestCase):
         ]
         with self.assertRaises(NoHayMovimientosPosibles):
             juego.verifificar_movimientos_posibles()
-    
+        self.assertEqual(juego.obtener_turno(),"Blanco")
     @patch('random.randint', side_effect = [3,2])
     def test_verificar_movimientos_posibles_desde_inicio(self,mock_randint):
     
@@ -273,8 +274,8 @@ class TestBackgammonGame(unittest.TestCase):
         mock_randint.assert_any_call(1, 6)
         
         # Verificamos los valores de los dados
-        self.assertEqual(game.__dice_1__.obtener_numero(), 3)
-        self.assertEqual(game.__dice_2__.obtener_numero(), 5)
+        self.assertEqual(game.__dice_manager__.__dice1__.obtener_numero(), 3)
+        self.assertEqual(game.__dice_manager__.__dice2__.obtener_numero(), 5)
     
     @patch('random.randint', return_value=4)
     def test_tirar_dados_iguales(self, mock_randint):
@@ -282,8 +283,8 @@ class TestBackgammonGame(unittest.TestCase):
         game.tirar_dados()
         
         # Ambos dados deberían tener el mismo valor
-        self.assertEqual(game.__dice_1__.obtener_numero(), 4)
-        self.assertEqual(game.__dice_2__.obtener_numero(), 4)
+        self.assertEqual(game.__dice_manager__.__dice1__.obtener_numero(), 4)
+        self.assertEqual(game.__dice_manager__.__dice2__.obtener_numero(), 4)
         self.assertEqual(mock_randint.call_count, 2)
     
     @patch('random.randint', side_effect=[3, 5])
@@ -612,5 +613,19 @@ class TestBackgammonGame(unittest.TestCase):
 
         self.assertEqual(len(juego.__board__.obtener_contenedor_negras_sacadas()),15)
         self.assertEqual(juego.__board__.obtener_contenedor_negras_sacadas()[0].obtener_color(),"Negro")
+
+    def test_crear_jugador_nombre_vacio(self):
+        juego = BackgammonGame()
+        with self.assertRaises(NombreVacio):
+            juego.crear_jugador('','Jugando','Blanco')
+    
+    def test_combertir_entero(self):
+        juego = BackgammonGame()
+        self.assertEqual(juego.combertir_entero('2'),2)
+    
+    def test_combertir_entero_error(self):
+        juego = BackgammonGame()
+        with self.assertRaises(NoSeIngresoEnteroError):
+            juego.combertir_entero('hola')
 if __name__ == '__main__':
     unittest.main()

@@ -3,19 +3,21 @@ Modulo encargado de gestionar los dados y movimientos disponibles
 contiene a la clase DiceManager
 """
 
+from core.models.dice import Dice
+
 class DiceManager:
     """
     Responsabilidad: Gestionar los dados y movimientos disponibles
     Cumple con SRP: Solo maneja la lógica de dados
     """
 
-    def __init__(self, dice1, dice2):
+    def __init__(self):
         """
         Args:
             dice1, dice2: Instancias de Dice
         """
-        self.__dice1__ = dice1
-        self.__dice2__ = dice2
+        self.__dice1__ = Dice()
+        self.__dice2__ = Dice()
         self.__dados_disponibles__ = []
 
     def tirar_dados(self):

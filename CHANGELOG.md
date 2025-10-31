@@ -1,5 +1,73 @@
 # ChangeLog
 
+## 2025-10-30 (01:06)
+
+### Changed
+
+- test_excepcion_no_hay_movimientos en test_cli
+- test_verificar_movimientos_posibles_no_hay_negro en test_backgammongame
+- test_verificar_movimientos_posibles_no_hay en test_backgammongame
+- función main en pyagem
+- función ejecutar en cli
+- función verificar_movimientos_posibles en clase BackgammonGame 
+
+## 2025-10-30 (00:00)
+
+### Added
+
+- archivo test_cli en test
+- tests de cli en test_cli
+
+### Changed
+
+- función __init__ de BackgammonGame
+- función __init__ de DiceManager
+- test_tirar_dados_diferentes en test_backgammongame
+- test_tirar_dados_iguales en test_backgammongame
+- test_tirar_dados_normales en test_dice_manager
+- test_tirar_dados_dobles en test_dice_manager
+- test_usar_dado en test_dice_manager
+- test_hay_movimientos_posibles_con_movimientos_normales en test_move_calculator
+- test_no_hay_movimientos_posibles en test_move_calculator
+- test_hay_movimientos_desde_inicio en test_move_calculator
+
+
+## 2025-10-28 (1:36)
+
+### Added
+
+- función combertir_enetero en clase BackgammonGame
+- test_combertir_entero en test_backgammongame 
+- test_combertir_entero_error en test_backgammongame 
+
+### Changed
+
+- función ejecutar en cli
+
+## 2025-10-28 (1:36)
+
+### Added
+
+- test_crear_jugador_nombre_vacio en test_backgammon_game
+
+### Changed
+
+- función crear_jugador en clase BackgammonGame
+- función ejecutar en cli
+
+## 2025-10-28
+
+### Added
+
+- test_puede_sacar_ficha_blanca_dado_mayor en clase RuleValidator
+- test_no_puede_sacar_blanca_sin_dado_valido en clase RuleValidator
+- test_puede_sacar_ficha_negra_dado_exacto en clase RuleValidator
+- test_puede_sacar_ficha_negra_dado_mayor en clase RuleValidator
+- test_no_puede_sacar_negra_fichas_fuera_home en clase RuleValidator
+- test_tiene_fichas_comidas_false en clase RuleValidator
+- test_todas_fichas_en_home_board_negras_true en clase RuleValidator
+- test_todas_fichas_en_home_board_negras_false en clase RuleValidator
+
 ## 2025-10-26 (23:18)
 
 ### Changed

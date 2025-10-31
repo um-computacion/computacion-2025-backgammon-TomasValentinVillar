@@ -16,6 +16,10 @@ class MovimientoInvalido(Exception):
     """Excepción lanzada cuando el movimiento que se quiere realizar es inválido."""
 class Ganador(Exception):
     """Excepción lanzada cuando hay un ganador."""
+class NombreVacio(Exception):
+    """Excepción lanzada cuando el nombre ingresado está vacio"""
+class NoSeIngresoEnteroError(Exception):
+    """Excepción lanzada cuando el nombre ingresado está vacio"""
 
 class BackgammonGame:
     """
@@ -28,11 +32,9 @@ class BackgammonGame:
 
         # Inyección de dependencias
         self.__board__ = board if board is not None else Board()
-        self.__dice_1__ = dice1 if dice1 is not None else Dice()
-        self.__dice_2__ = dice2 if dice2 is not None else Dice()
         self.__move_validator__ = move_validator if move_validator is not None else MoveValidator()
         self.__rule_validator__ = rule_validator if rule_validator is not None else RuleValidator()
-        self.__dice_manager__ = DiceManager(self.__dice_1__, self.__dice_2__)
+        self.__dice_manager__ = DiceManager()
         self.__move_calculator__ = MoveCalculator(
             self.__move_validator__,
             self.__rule_validator__
@@ -43,7 +45,8 @@ class BackgammonGame:
         '''Entradas: nombre de jugador, ficha correspondiente, estado inicial
         Funcionalidad: Crear una instacia de la clase jugador y agregarla en el diccionario
         '''
-
+        if nom == '':
+             raise NombreVacio('No se puede ingresar un nombre vacío')
         jugador = Player(nom,ficha,estado)
         self.__players__[ficha] = jugador
 
@@ -178,6 +181,7 @@ class BackgammonGame:
                 self.__dice_manager__
             )
         except ValueError as e:
+            self.cambiar_turno()
             raise NoHayMovimientosPosibles(str(e)) from e
 
     def verificar_movimientos_y_dados(self, pos_inic, pos_fin):
@@ -240,3 +244,15 @@ class BackgammonGame:
         Funcionalidad: Define el estado inicial del tablero segun las reglas del juego
         """
         self.__board__.inicializar_tablero()
+
+    def combertir_entero(self,pos):
+        '''
+        Entrada: posicion
+        Funcionalidad: verificar que la posicion ingresada por el usuario se un entero
+        Salida: int(pos),la posición de string a entero
+        '''
+        try:
+            pos = int(pos)
+            return pos
+        except ValueError:
+            raise NoSeIngresoEnteroError("Se debe ingresar un numero entero")
