@@ -99,7 +99,7 @@ class CLI:
 
             except MovimientoInvalido as e:
                 print(e)
-            
+
             except NoSeIngresoEnteroError as e:
                 print(e)
 

@@ -11,19 +11,14 @@ from core.validators.rule_validator import RuleValidator
 
 class NoHayMovimientosPosibles(Exception):
     """Excepción lanzada cuando no hay movimientos posibles."""
-    pass
 class MovimientoInvalido(Exception):
     """Excepción lanzada cuando el movimiento que se quiere realizar es inválido."""
-    pass
 class Ganador(Exception):
     """Excepción lanzada cuando hay un ganador."""
-    pass
 class NombreVacio(Exception):
     """Excepción lanzada cuando el nombre ingresado está vacio"""
-    pass
 class NoSeIngresoEnteroError(Exception):
     """Excepción lanzada cuando el nombre ingresado está vacio"""
-    pass
 class BackgammonGame:
     """
     Clase principal que orquesta el juego de Backgammon.
