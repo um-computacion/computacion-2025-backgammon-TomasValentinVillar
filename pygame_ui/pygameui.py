@@ -19,47 +19,47 @@ BLACK = (30, 30, 30)
 def mostrar_menu_principal(screen, font_big, font):
     """
     Muestra el menú principal con opciones para Jugar o Salir.
-    
+
     Returns:
         str: 'jugar' si se selecciona jugar, 'salir' si se selecciona salir
     """
     menu_activo = True
     opcion_seleccionada = 0  # 0 = Jugar, 1 = Salir
-    
+
     while menu_activo:
         screen.fill(BACKGROUND)
-        
+
         # Título
         titulo = font_big.render("BACKGAMMON", True, BLACK)
         titulo_rect = titulo.get_rect(center=(WIDTH // 2, 150))
         screen.blit(titulo, titulo_rect)
-        
+
         # Opciones
         opciones = ["JUGAR", "SALIR"]
         colores = [BLACK, BLACK]
-        
+
         for i, opcion in enumerate(opciones):
             if i == opcion_seleccionada:
                 color = (200, 0, 0)  # Rojo para seleccionada
                 texto = font_big.render(f"> {opcion} <", True, color)
             else:
                 texto = font_big.render(opcion, True, BLACK)
-            
+
             texto_rect = texto.get_rect(center=(WIDTH // 2, 300 + i * 80))
             screen.blit(texto, texto_rect)
-        
+
         # Instrucciones
         instruccion = font.render("Usa ↑↓ para moverte, ENTER para seleccionar", True, BLACK)
         instruccion_rect = instruccion.get_rect(center=(WIDTH // 2, 500))
         screen.blit(instruccion, instruccion_rect)
-        
+
         pygame.display.flip()
-        
+
         # Eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return 'salir'
-            
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     opcion_seleccionada = (opcion_seleccionada - 1) % 2
@@ -68,40 +68,39 @@ def mostrar_menu_principal(screen, font_big, font):
                 elif event.key == pygame.K_RETURN:
                     if opcion_seleccionada == 0:
                         return 'jugar'
-                    else:
-                        return 'salir'
+                    return 'salir'
                 elif event.key == pygame.K_ESCAPE:
                     return 'salir'
-    
+
     return 'salir'
 
 
 def solicitar_nombres(screen, font_big, font):
     """
     Solicita los nombres de los dos jugadores.
-    
+
     Returns:
         tuple: (nombre_jugador1, nombre_jugador2) o None si se cancela
     """
     nombres = ["", ""]
     jugador_actual = 0  # 0 = Jugador 1, 1 = Jugador 2
-    
+
     while True:
         screen.fill(BACKGROUND)
-        
+
         # Título
         if jugador_actual == 0:
             titulo = font_big.render("Nombre del Jugador 1 (Blanco)", True, BLACK)
         else:
             titulo = font_big.render("Nombre del Jugador 2 (Negro)", True, BLACK)
-        
+
         titulo_rect = titulo.get_rect(center=(WIDTH // 2, 150))
         screen.blit(titulo, titulo_rect)
-        
+
         # Cuadro de texto
         texto_input = font_big.render(nombres[jugador_actual] + "|", True, BLACK)
         texto_rect = texto_input.get_rect(center=(WIDTH // 2, 300))
-        
+
         # Fondo del cuadro
         padding = 20
         cuadro = pygame.Rect(
@@ -112,50 +111,50 @@ def solicitar_nombres(screen, font_big, font):
         )
         pygame.draw.rect(screen, WHITE, cuadro)
         pygame.draw.rect(screen, BLACK, cuadro, 2)
-        
+
         screen.blit(texto_input, texto_rect)
-        
+
         # Mostrar nombre ya ingresado (si estamos en jugador 2)
         if jugador_actual == 1:
             info = font.render(f"Jugador 1: {nombres[0]}", True, (100, 100, 100))
             info_rect = info.get_rect(center=(WIDTH // 2, 400))
             screen.blit(info, info_rect)
-        
+
         # Instrucciones
         instruccion1 = font.render("Escribe el nombre y presiona ENTER", True, BLACK)
         instruccion1_rect = instruccion1.get_rect(center=(WIDTH // 2, 480))
         screen.blit(instruccion1, instruccion1_rect)
-        
+
         instruccion2 = font.render("ESC para volver al menú", True, BLACK)
         instruccion2_rect = instruccion2.get_rect(center=(WIDTH // 2, 510))
         screen.blit(instruccion2, instruccion2_rect)
-        
+
         pygame.display.flip()
-        
+
         # Eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return None
-            
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return None
-                
-                elif event.key == pygame.K_RETURN:
+
+                if event.key == pygame.K_RETURN:
                     # Validar que el nombre no esté vacío
                     if nombres[jugador_actual].strip() == "":
                         # Mostrar mensaje de error temporalmente
                         continue
-                    
+
                     if jugador_actual == 0:
                         jugador_actual = 1  # Pasar al jugador 2
                     else:
                         # Ambos nombres ingresados
                         return (nombres[0].strip(), nombres[1].strip())
-                
+
                 elif event.key == pygame.K_BACKSPACE:
                     nombres[jugador_actual] = nombres[jugador_actual][:-1]
-                
+
                 else:
                     # Limitar longitud del nombre
                     if len(nombres[jugador_actual]) < 15:
@@ -204,21 +203,21 @@ def main():
     # ═══════════════════════════════════════════════════════════
     while True:
         opcion = mostrar_menu_principal(screen, font_big, font)
-        
+
         if opcion == 'salir':
             pygame.quit()
             sys.exit()
-        
+
         # ═══════════════════════════════════════════════════════════
         # SOLICITAR NOMBRES
         # ═══════════════════════════════════════════════════════════
         nombres = solicitar_nombres(screen, font_big, font)
-        
+
         if nombres is None:
             continue  # Volver al menú principal
-        
+
         nombre_jugador1, nombre_jugador2 = nombres
-        
+
         # ═══════════════════════════════════════════════════════════
         # INICIALIZAR JUEGO
         # ═══════════════════════════════════════════════════════════
@@ -329,7 +328,7 @@ def main():
                                         if len(contenedor[idx]) > 0:
                                             if contenedor[idx][0].obtener_color()==game.obtener_turno():
                                                 posicion_seleccionada = idx
-                                                mensaje = f"Seleccionada pos {idx}. Click en destino"
+                                                mensaje =f"Seleccionada pos {idx}. Click en destino"
                                             else:
                                                 mensaje = f"Pos {idx} no es tu ficha"
                                         else:
@@ -370,23 +369,26 @@ def main():
             render_bear_off_zones(screen, game, font)
 
             # UI INFO (siempre visible)
+            info_x = WIDTH - 180  # Posición X fija para todo el panel de info
+
+            # TURNO (arriba a la derecha)
             jugador_actual = game.obtener_players()[game.obtener_turno()]
-            turno_text = font_big.render(
+            turno_text = font.render(
                 f"Turno: {jugador_actual.obtener_nombre()} ({game.obtener_turno()})",
                 True, BLACK
             )
-            screen.blit(turno_text, (10, 10))
+            screen.blit(turno_text, (info_x, 10))
 
-            # DADOS (siempre visible)
+            # DADOS (debajo del turno)
             dados = game.obtener_dados_disponibles()
             if dados:
                 dados_valores = [d.obtener_numero() for d in dados]
-                dados_text = font_big.render(f"Dados: {dados_valores}", True, (0, 100, 0))
+                dados_text = font.render(f"Dados: {dados_valores}", True, (0, 100, 0))
             else:
-                dados_text = font_big.render("Dados: [] (ESPACIO)", True, (200, 0, 0))
-            screen.blit(dados_text, (10, 50))
+                dados_text = font.render("Dados: [] (ESPACIO)", True, (200, 0, 0))
+            screen.blit(dados_text, (info_x, 30))
 
-            # MENSAJE
+            # MENSAJE (abajo a la izquierda)
             msg_text = font.render(mensaje, True, BLACK)
             screen.blit(msg_text, (10, HEIGHT - 30))
 
@@ -606,7 +608,8 @@ def render_captured_pieces(screen, game, font):
         None (dibuja directamente en screen)
     """
     margin = 40
-    radius = 15
+    radius = 12  # ✅ Radio un poco más pequeño
+    font_small = pygame.font.SysFont(None, 16)
 
     board = game.obtener_board()
     blancas_comidas = len(board.obtener_contenedor_blancas())
@@ -614,37 +617,38 @@ def render_captured_pieces(screen, game, font):
 
     barra_x = WIDTH - margin + 10
 
-    titulo = font.render("Comidas", True, BLACK)
-    screen.blit(titulo, (barra_x - 20, 100))
+    # Título en el centro vertical
+    titulo = font_small.render("Capturadas", True, BLACK)
+    screen.blit(titulo, (barra_x - titulo.get_width() // 2, HEIGHT // 2 - 80))
 
-    # Fichas BLANCAS comidas (arriba)
+    # Fichas BLANCAS comidas (centro-arriba)
     if blancas_comidas > 0:
-        y_start = 140
-        for i in range(min(blancas_comidas, 5)):
-            y = y_start + (i * (radius * 2 + 4))
+        y_start = HEIGHT // 2 - 50
+        for i in range(min(blancas_comidas, 4)):  # ✅ Máximo 4 visibles
+            y = y_start + (i * (radius * 2 + 3))
             pygame.draw.circle(screen, WHITE, (barra_x, y), radius)
             pygame.draw.circle(screen, BLACK, (barra_x, y), radius, 2)
 
-        if blancas_comidas > 5:
-            y = y_start + (4 * (radius * 2 + 4))
+        if blancas_comidas > 4:
+            y = y_start + (3 * (radius * 2 + 3))
             pygame.draw.circle(screen, WHITE, (barra_x, y), radius)
-            text_surface = font.render(str(blancas_comidas - 4), True, BLACK)
+            text_surface = font_small.render(str(blancas_comidas - 3), True, BLACK)
             screen.blit(text_surface,
                 (barra_x - text_surface.get_width() // 2,
                  y - text_surface.get_height() // 2))
 
-    # Fichas NEGRAS comidas (abajo)
+    # Fichas NEGRAS comidas (centro-abajo)
     if negras_comidas > 0:
-        y_start = HEIGHT - 140
-        for i in range(min(negras_comidas, 5)):
-            y = y_start - (i * (radius * 2 + 4))
+        y_start = HEIGHT // 2 + 30
+        for i in range(min(negras_comidas, 4)):  # ✅ Máximo 4 visibles
+            y = y_start + (i * (radius * 2 + 3))
             pygame.draw.circle(screen, BLACK, (barra_x, y), radius)
             pygame.draw.circle(screen, WHITE, (barra_x, y), radius, 2)
 
-        if negras_comidas > 5:
-            y = y_start - (4 * (radius * 2 + 4))
+        if negras_comidas > 4:
+            y = y_start + (3 * (radius * 2 + 3))
             pygame.draw.circle(screen, BLACK, (barra_x, y), radius)
-            text_surface = font.render(str(negras_comidas - 4), True, WHITE)
+            text_surface = font_small.render(str(negras_comidas - 3), True, WHITE)
             screen.blit(text_surface,
                 (barra_x - text_surface.get_width() // 2,
                  y - text_surface.get_height() // 2))
@@ -653,38 +657,25 @@ def render_captured_pieces(screen, game, font):
 def hit_test_captured(pos, game):
     """
     Detecta si el usuario clickeó en la zona de fichas comidas.
-    
-    Funcionalidad:
-        - Verifica si el click está en el área horizontal de la barra lateral
-        - Determina si el jugador actual tiene fichas comidas
-        - Valida que el click esté en la zona vertical correspondiente al turno
-    
-    Entradas:
-        pos (tuple): Tupla (x, y) con las coordenadas del click del mouse
-        game (BackgammonGame): Instancia del juego para verificar turno y fichas comidas
-    
-    Salidas:
-        str o None: 'bar_white' si clickeó fichas blancas comidas,
-                    'bar_black' si clickeó fichas negras comidas,
-                    None si no clickeó en ninguna zona de fichas comidas
     """
     margin = 40
     barra_x = WIDTH - margin + 10
-
     x, y = pos
 
-    if not barra_x - 30 <= x <= barra_x + 30:
+    if not barra_x - 25 <= x <= barra_x + 25:
         return None
 
     turno = game.obtener_turno()
     board = game.obtener_board()
 
+    # Zona BLANCAS (centro-arriba)
     if turno == "Blanco" and len(board.obtener_contenedor_blancas()) > 0:
-        if 120 <= y <= 300:
+        if HEIGHT // 2 - 60 <= y <= HEIGHT // 2 - 10:
             return 'bar_white'
 
+    # Zona NEGRAS (centro-abajo)
     if turno == "Negro" and len(board.obtener_contenedor_negras()) > 0:
-        if HEIGHT - 300 <= y <= HEIGHT - 120:
+        if HEIGHT // 2 + 20 <= y <= HEIGHT // 2 + 120:
             return 'bar_black'
 
     return None
@@ -692,11 +683,11 @@ def hit_test_captured(pos, game):
 
 def render_bear_off_zones(screen, game, font):
     """
-    Renderiza las zonas de "bear off" (sacar fichas) en los extremos del tablero.
+    Renderiza las zonas de "bear off" (sacar fichas) en el extremo derecho del tablero.
     
     Funcionalidad:
-        - Dibuja zona de salida para fichas blancas (extremo derecho)
-        - Dibuja zona de salida para fichas negras (extremo izquierdo)
+        - Dibuja zona de salida para fichas blancas (extremo derecho abajo)
+        - Dibuja zona de salida para fichas negras (extremo derecho arriba)
         - Muestra contadores de fichas sacadas (X/15)
         - Resalta en verde la zona correspondiente si el jugador puede empezar a sacar
         - Visualiza hasta 3 fichas individuales, luego muestra contador
@@ -717,75 +708,37 @@ def render_bear_off_zones(screen, game, font):
     negras_sacadas = len(board.obtener_contenedor_negras_sacadas())
 
     # ═══════════════════════════════════════
-    # ZONA BLANCAS (extremo derecho absoluto)
+    # ZONA NEGRAS (extremo derecho - ARRIBA)  <-- CORREGIDO
     # ═══════════════════════════════════════
-    zona_blancas = pygame.Rect(
-        WIDTH - 30,              # ✅ Pegado al borde derecho
-        HEIGHT // 2 + 60,
-        25,                      # ✅ MUY estrecha
-        HEIGHT // 2 - margin - 80
-    )
-
-    pygame.draw.rect(screen, (200, 220, 200), zona_blancas)
-    pygame.draw.rect(screen, BLACK, zona_blancas, 2)
-
-    # Título vertical
-    titulo_b = font_small.render("OUT", True, BLACK)
-    titulo_rotado = pygame.transform.rotate(titulo_b, 90)
-    screen.blit(titulo_rotado, (zona_blancas.centerx - 8, zona_blancas.y + 10))
-
-    if blancas_sacadas > 0:
-        radius = 7
-        y_start = zona_blancas.y + 50
-
-        for i in range(min(blancas_sacadas, 3)):
-            y = y_start + (i * (radius * 2 + 2))
-            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
-            pygame.draw.circle(screen, BLACK, (zona_blancas.centerx, y), radius, 1)
-
-        if blancas_sacadas > 3:
-            y = y_start + (2 * (radius * 2 + 2))
-            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
-            text_surface = font_small.render(str(blancas_sacadas - 2), True, BLACK)
-            screen.blit(text_surface,
-                (zona_blancas.centerx - text_surface.get_width() // 2,
-                 y - text_surface.get_height() // 2))
-
-        total_text = font_small.render(f"{blancas_sacadas}/15", True, BLACK)
-        screen.blit(total_text,
-            (zona_blancas.centerx - total_text.get_width() // 2,
-             zona_blancas.bottom - 15))
-
-    # ═══════════════════════════════════════
-    # ZONA NEGRAS (extremo izquierdo absoluto)
-    # ═══════════════════════════════════════
-    zona_negras = pygame.Rect(
-        5,                       # ✅ Pegado al borde izquierdo
-        margin + 40,
-        25,                      # ✅ MUY estrecha
-        HEIGHT // 2 - margin - 80
+    zona_negras = pygame.Rect(  # <-- Se usa zona_negras para la parte de ARRIBA
+        WIDTH - 30,
+        70,                      # ✅ Coordenada Y (Arriba)
+        25,
+        150
     )
 
     pygame.draw.rect(screen, (200, 220, 200), zona_negras)
     pygame.draw.rect(screen, BLACK, zona_negras, 2)
 
-    titulo_n = font_small.render("OUT", True, BLACK)
-    titulo_rotado_n = pygame.transform.rotate(titulo_n, 90)
+    # Título vertical
+    titulo_n = font_small.render("OUT", True, BLACK) # <-- Renombrado (era titulo_b)
+    titulo_rotado_n = pygame.transform.rotate(titulo_n, 90) # <-- Renombrado (era titulo_rotado)
     screen.blit(titulo_rotado_n, (zona_negras.centerx - 8, zona_negras.y + 10))
 
+    # --- Lógica de NEGRAS SACADAS --- (Movida aquí)
     if negras_sacadas > 0:
         radius = 7
-        y_start = zona_negras.y + 50
+        y_start = zona_negras.y + 95
 
-        for i in range(min(negras_sacadas, 3)):
-            y = y_start + (i * (radius * 2 + 2))
-            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
+        for i in range(min(negras_sacadas, 2)):
+            y = y_start + (i * (radius * 2 + 3))
+            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius) # Color NEGRO
             pygame.draw.circle(screen, WHITE, (zona_negras.centerx, y), radius, 1)
 
-        if negras_sacadas > 3:
-            y = y_start + (2 * (radius * 2 + 2))
-            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
-            text_surface = font_small.render(str(negras_sacadas - 2), True, WHITE)
+        if negras_sacadas > 2:
+            y = y_start + (1 * (radius * 2 + 3))
+            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius) # Color NEGRO
+            text_surface = font_small.render(str(negras_sacadas - 1), True, WHITE) # Color texto BLANCO
             screen.blit(text_surface,
                 (zona_negras.centerx - text_surface.get_width() // 2,
                  y - text_surface.get_height() // 2))
@@ -793,71 +746,87 @@ def render_bear_off_zones(screen, game, font):
         total_text = font_small.render(f"{negras_sacadas}/15", True, BLACK)
         screen.blit(total_text,
             (zona_negras.centerx - total_text.get_width() // 2,
-             zona_negras.bottom - 15))
+             zona_negras.bottom - 10))
 
-    # Resaltar si puede sacar
+    # ═══════════════════════════════════════
+    # ZONA BLANCAS (extremo derecho - ABAJO) <-- CORREGIDO
+    # ═══════════════════════════════════════
+    zona_blancas = pygame.Rect( # <-- Se usa zona_blancas para la parte de ABAJO
+        WIDTH - 30,
+        HEIGHT - 220,            # ✅ Coordenada Y (Abajo)
+        25,
+        150
+    )
+
+    pygame.draw.rect(screen, (200, 220, 200), zona_blancas)
+    pygame.draw.rect(screen, BLACK, zona_blancas, 2)
+
+    titulo_b = font_small.render("OUT", True, BLACK) # <-- Renombrado (era titulo_n)
+    titulo_rotado = pygame.transform.rotate(titulo_b, 90) # <-- Renombrado (era titulo_rotado_n)
+    screen.blit(titulo_rotado, (zona_blancas.centerx - 8, zona_blancas.y + 10))
+
+    # --- Lógica de BLANCAS SACADAS --- (Movida aquí)
+    if blancas_sacadas > 0:
+        radius = 7
+        y_start = zona_blancas.y + 95
+
+        for i in range(min(blancas_sacadas, 2)):
+            y = y_start + (i * (radius * 2 + 3))
+            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius) # Color BLANCO
+            pygame.draw.circle(screen, BLACK, (zona_blancas.centerx, y), radius, 1)
+
+        if blancas_sacadas > 2:
+            y = y_start + (1 * (radius * 2 + 3))
+            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius) # Color BLANCO
+            text_surface = font_small.render(str(blancas_sacadas - 1), True, BLACK) # Color texto NEGRO
+            screen.blit(text_surface,
+                (zona_blancas.centerx - text_surface.get_width() // 2,
+                 y - text_surface.get_height() // 2))
+
+        total_text = font_small.render(f"{blancas_sacadas}/15", True, BLACK)
+        screen.blit(total_text,
+            (zona_blancas.centerx - total_text.get_width() // 2,
+             zona_blancas.bottom - 10))
+
+    # ═══════════════════════════════════════
+    # Resaltar si puede sacar (CORREGIDO)
+    # ═══════════════════════════════════════
     turno = game.obtener_turno()
 
     if turno == "Blanco":
         if game.verificar_todas_fichas_en_home("Blanco"):
-            pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3)
+            # Resalta la zona de ABAJO (zona_blancas) para las Blancas
+            pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3) 
     else:
         if game.verificar_todas_fichas_en_home("Negro"):
+            # Resalta la zona de ARRIBA (zona_negras) para las Negras
             pygame.draw.rect(screen, (100, 255, 100), zona_negras, 3)
 
 
 def hit_test_bear_off(pos, game):
     """
     Detecta si el usuario clickeó en una zona de bear off (sacar fichas).
-    
-    Funcionalidad:
-        - Verifica si el click está en la zona de bear off del jugador actual
-        - Valida que no se hayan sacado ya las 15 fichas
-        - Para blancas: detecta click en extremo derecho, retorna 24
-        - Para negras: detecta click en extremo izquierdo, retorna -1
-    
-    Entradas:
-        pos (tuple): Tupla (x, y) con las coordenadas del click del mouse
-        game (BackgammonGame): Instancia del juego para verificar turno y fichas sacadas
-    
-    Salidas:
-        int o None: 24 si clickeó zona de bear off blancas,
-                    -1 si clickeó zona de bear off negras,
-                    None si no clickeó ninguna zona válida o ya tiene 15 fichas fuera
     """
     x, y = pos
-    margin = 40
-
     turno = game.obtener_turno()
 
-    # Zona BLANCAS (extremo derecho)
+    # Zona BLANCAS (extremo derecho - ABAJO)
     if turno == "Blanco":
-        zona_x_start = WIDTH - 30
-        zona_x_end = WIDTH - 5
-        zona_y_start = HEIGHT // 2 + 60
-        zona_y_end = HEIGHT - margin - 20
-
-        if zona_x_start <= x <= zona_x_end:
-            if zona_y_start <= y <= zona_y_end:
+        if WIDTH - 30 <= x <= WIDTH - 5:
+            if HEIGHT - 220 <= y <= HEIGHT - 70:  # Zona ABAJO
                 if game.obtener_board().verficar_fichas_sacadas_15(turno):
                     return None
                 return 24
 
-    # Zona NEGRAS (extremo izquierdo)
+    # Zona NEGRAS (extremo derecho - ARRIBA)
     if turno == "Negro":
-        zona_x_start = 5
-        zona_x_end = 30
-        zona_y_start = margin + 40
-        zona_y_end = HEIGHT // 2 - 40
-
-        if zona_x_start <= x <= zona_x_end:
-            if zona_y_start <= y <= zona_y_end:
+        if WIDTH - 30 <= x <= WIDTH - 5:
+            if 70 <= y <= 220:  # Zona ARRIBA
                 if game.obtener_board().verficar_fichas_sacadas_15(turno):
                     return None
                 return -1
 
     return None
-
 
 if __name__ == "__main__":
     main()

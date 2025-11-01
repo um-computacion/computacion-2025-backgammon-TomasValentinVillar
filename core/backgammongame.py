@@ -19,7 +19,6 @@ class NombreVacio(Exception):
     """Excepción lanzada cuando el nombre ingresado está vacio"""
 class NoSeIngresoEnteroError(Exception):
     """Excepción lanzada cuando el nombre ingresado está vacio"""
-
 class BackgammonGame:
     """
     Clase principal que orquesta el juego de Backgammon.

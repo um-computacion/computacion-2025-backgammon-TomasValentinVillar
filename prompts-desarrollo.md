@@ -1289,4 +1289,43 @@ Después de que funcione básico, puedes agregar:
 .
 . bien ahora mi pygame tiene que tener un menu para hacer funcionar la parte del nombre del jugador, porque el pygame le pone un nombre por defecto al jugadro, pero el CLI si le solicita el nombre, es decir que el cli si lo hace correctamen, entences puede haber un menú para jugar o salir y si se selecciona jugar, solicite los nombres
 . 
-.
+. ¡Perfecto! Voy a crear un menú completo para tu Pygame con entrada de nombres. Te daré el código actualizado:
+
+*me pasó todo el codigo de pygame*
+
+🎮 Características del menú:
+Menú Principal:
+
+✅ Opciones "JUGAR" y "SALIR"
+✅ Navegación con flechas ↑↓
+✅ Selección con ENTER
+✅ ESC para salir
+
+Entrada de Nombres:
+
+✅ Solicita nombre del Jugador 1 (Blanco)
+✅ Solicita nombre del Jugador 2 (Negro)
+✅ Validación de nombre no vacío
+✅ Límite de 15 caracteres
+✅ Solo caracteres imprimibles
+✅ Muestra nombre del J1 mientras ingresa J2
+✅ ESC para volver al menú
+✅ BACKSPACE para borrar
+
+Durante el juego:
+
+✅ Muestra el nombre del jugador actual (no solo "Blanco"/"Negro")
+✅ Al ganar, muestra el nombre del ganador (no solo el color)
+✅ ESC o R después de ganar vuelve al menú principal
+✅ Puede iniciar una nueva partida con nombres diferentes
+
+📋 Cambios principales:
+
+Estructura de bucles: Ahora hay un bucle externo para el menú y uno interno para el juego
+Nombres de jugadores: Se obtienen antes de inicializar el juego
+Victoria: Muestra el nombre del ganador (obtenido con .obtener_nombre())
+Navegación: ESC siempre vuelve al menú principal
+
+¿Quieres que agregue algo más al menú? ¿Por ejemplo, instrucciones de cómo jugar? 🎯
+
+. la respuesta fue usada sin modificadiones

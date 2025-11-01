@@ -1,5 +1,29 @@
 # ChangeLog
 
+## 2025-11-1 (20:00)
+
+### Changed
+
+- función ejecutar en cli
+- función hit_test_bear_off en pygame
+- función render_bear_off_zones en pygame
+
+## 2025-11-1 (17:41)
+
+### Added
+
+- Justificación del proyecto
+
+### Changed
+
+- README.md
+
+### Deleted
+
+- Dockerflie
+- docker-compose.yml
+- get-docker.sh
+
 ## 2025-10-31 (15:50)
 
 ### Added
