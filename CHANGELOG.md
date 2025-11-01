@@ -1,5 +1,21 @@
 # ChangeLog
 
+## 2025-11-1 (17:41)
+
+### Added
+
+- Justificación del proyecto
+
+### Changed
+
+- README.md
+
+### Deleted
+
+- Dockerflie
+- docker-compose.yml
+- get-docker.sh
+
 ## 2025-10-31 (15:50)
 
 ### Added

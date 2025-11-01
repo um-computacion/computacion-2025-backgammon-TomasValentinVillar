@@ -22,18 +22,6 @@ Es la clase utilizada para cada jugador, sus atributos son nombre, estado y fich
 
 Esta clase define el tablero del juego. Es la que mantiene información de la posición de cada una de las fichas en el tablero, también tiene información de las fichas capturadas y de las fichas ya sacadas del tablero, esta clase es la que quita la fichas de una posición especioca y pone la ficha en otra posición especifica, valida si un jugador ganó, sabiendo si se quitaron las 15 fichas del tablero.
 
-Los atributos de board son:
-
-- conetenedor_fichas: es una lista de 24 listas, que cada una de estas 24 listas representa una posición en el tablero, es el atributo encargado de almacenar las fichas que están en el tablero
-
-- conetenedor_fichas_blancas_sacadas: es la lista que contiene las fichas blancas que ya han sido sacadas del tablero, si la cantidad de fichas en esta lista es de 15 gana el jugador de ficahs blancas
-
-- conetenedor_fichas_negras_sacadas: es la lista que contiene las fichas negras que ya han sido sacadas del tablero, si la cantidad de fichas en esta lista es de 15 gana el jugador de ficahs negras
-
-- conetenedor_fichas_blancas: es la lista que contiene las fichas blancas capturadas, es decir las fichas que se han capturado en el turno del oponente, si hay alguna ficha en esta lista, entonces la posisción inicial es el inicio
-
-- conetenedor_fichas_blancas: es la lista que contiene las fichas negras capturadas, es decir las fichas que se han capturado en el turno del oponente, si hay alguna ficha en esta lista, entonces la posisción inicial es el inicio
-
 La reponsabilidad de Board es el estado de las fichas en juego 
 
 ## MoveValidator
@@ -48,38 +36,25 @@ Es la clase encargada verificar las reglas especiales como sacar fichas del tabl
 
 Es la clase cuya reponsabilidad es gestionar los dados del juego, por lo tanto es la clase que sabe sobre los dados disponibles, puede utilizar dado para consumir un dado dsiponible, puede tirrar los dados para definir su valor y saber si se duplixan o nó, retorna información sobre los dados dsiponiles.
 
-Sus atribtos son:
-- dice_1: es una instacia de la clase Dice, es uno de los dados que gestionará DiceManager
-- dice_2: es la otra instacia de la clase Dice, es el otro dado que gestionará DiceManager
-- dados_dispnibles: es una lista que almacena los dados disponibles del juego, a medida que se realizan movimientos, se van consumiendo los dados de esta lista y una vez esté vacia se cambiará de turno para que cuando se vuelvan a tirar los dados, se vuelvan a ingresar los dados a esta lista
+## CLI
+
+Es la interfaz por linea de comando para jugar. Separar la interfaz de usuario de la lógica del juego. La funcionalidad del CLI es solicitar los nombres de jugadores, mostrar el tablero, capturar input del usuario, manejar excepciones y muestrar mensajes de error y controlar el flujo del juego
 
 ## MoveCalcualtor
 
 Es la clase cuya responsabilidad es de calcular los movientos posibles, calcula si hay movimientos posibles desde inicio (ficha capturada) o si hay moviemitos normales posibles, tabién calcula distancioa entre dos posiciones, retorna True si hay al menos un movimiento posible.
 
-Sus atributos son:
+- `move_validator`: utiliza la clase MoveValidator para verificar en cada una 
+  de las posiciones ocupadas por fichas correspondientes al turno si se puede 
+  realizar algún movimiento con los dados disponibles
 
-- move_validator: utiliza la clase MoveValidator para verifciar en cada una de las posicioens ocupadas por fichas correspoendientes al turno si se puede realizar algún movimiento con los dados disponibles
-
-- rule_validator: utilzia la clase RuleValidator para verificar alguno de los movimientos posibles es quitar una ficha del tablero
+- `rule_validator`: utiliza la clase RuleValidator para verificar si alguno 
+  de los movimientos posibles es quitar una ficha del tablero (bear off)
 
 ## Clase BackgammonGame
 
-Es la clase encargada de orquetrar el juego Backgammon, utilizando a todas las clases anteriores. Se encarga de realizar los moviemtos del juego pasando por las validaciones necesarias, utiliza la información de los dados y del tablero para relizar los moviemitos y gestionar en turno de cada jugador, contiene las validacioens de para ganar o perder.
+Es la clase encargada de orquestar el juego Backgammon, utilizando a todas las clases anteriores. Se encarga de realizar los moviemtos del juego pasando por las validaciones necesarias, utiliza la información de los dados y del tablero para relizar los moviemitos y gestionar en turno de cada jugador, contiene las validacioens de para ganar o perder.
 
-Sus atributos son:
-
-- turno: string que representa el turno actual del juego, cambiará cuando no hallan movimientos posibles o no hallan dados disponibles
-
-- board: utiliza la clase board para obtener la información del estado de las fichas en juego y realizar los movimientos
-
-- move_validator: utiliza esta clase paar la función verificar_posición_disponible
-
-- dice_managar: backgammongame utiliza esta clase para las operaciones que involucran los dados, como consumir un dado para mover una ficha, verificar si se puede sacar una ficha, verificar si se el movimiento que se quiere realizar coincide con algún dado o cambiar de turno
-
-- move_calculator: esta clase es utilizada en la función verificar_movimientos_posibles que es la función que cambiará de turno si noy hay movientos posibles
-
-- players: es un diccicionario que almacena a las instancias de jugador y sus indices son su color de ficha correspondiete (idea que saqué del ta te ti)
 
 ## Clase BoardAdapter
 
@@ -87,13 +62,165 @@ Es una clase que utilizo en pyagme para traducir el formato de la información d
 
 Convierte: [Checker, Checker, ...] → ('white'/'black', cantidad)
 
-Sus atributos son:
 
-- backgammongame: para obtener la información de las fichas en juego para conocer la información de las posicones de las fichas en tablero del juego
+# Justificación de Atributos
 
-- pos: es un diccionerio donde los indices es el numero que indetifica a una posición en tablero se guardan las tuplas en formato ('white'/'black', cantidad)
+##  Atributos de `BackgammonGame`
 
-- actualizar: la función que se encarga de traducir los distintos formatos 
+### `__turno__: str`
+**Justificación:** 
+- Almacena qué jugador debe mover ("Blanco" o "Negro")
+- Fundamental para validar movimientos (solo se pueden mover fichas del turno actual)
+- Se alterna cuando se agotan los dados o no hay movimientos posibles
+
+### `__board__: Board`
+**Justificación:**
+- Referencia al tablero del juego
+- Permite acceder al estado de las fichas
+- Se usa en prácticamente todos los movimientos
+
+### `__move_validator__: MoveValidator`
+**Justificación:**
+- Servicio para validar movimientos básicos
+- Inyección de dependencias (cumple DIP)
+- Permite reemplazar con mock en tests
+
+### `__rule_validator__: RuleValidator`
+**Justificación:**
+- Servicio para validar reglas especiales
+- Inyección de dependencias
+- Separación de responsabilidades
+
+### `__dice_manager__: DiceManager`
+**Justificación:**
+- Gestiona toda la lógica de dados
+- Centraliza el control de movimientos disponibles
+- Facilita saber cuándo cambiar de turno
+
+### `__move_calculator__: MoveCalculator`
+**Justificación:**
+- Calcula si hay movimientos posibles
+- Evita duplicar lógica de verificación
+- Permite cambiar turno automáticamente
+
+### `__players__: dict`
+**Justificación:**
+- Diccionario con clave = color de ficha ("Blanco"/"Negro")
+- Valor = instancia de `Player`
+- Permite acceso rápido: `players[turno]`
+- Idea tomada del proyecto Ta-Te-Ti
+
+## Atributos de `Board`
+
+### `__contenedor_fichas__: list[list[Checker]]`
+**Justificación:**
+- Lista de 24 listas (las 24 posiciones del tablero)
+- Cada sublista contiene objetos `Checker`
+- Permite apilar fichas en una posición: `contenedor_fichas[5] = [Checker("Blanco"), Checker("Blanco")]`
+- **Ventaja:** Fácil de iterar y manipular
+
+### `__contenedor_fichas_blancas_sacadas__: list[Checker]`
+**Justificación:**
+- Almacena fichas blancas que han completado el recorrido
+- Condición de victoria: `len() == 15`
+- Permite revertir movimiento si fuera necesario
+
+### `__contenedor_fichas_negras_sacadas__: list[Checker]`
+**Justificación:**
+- Igual que el anterior pero para fichas negras
+- Separación por color facilita verificación de victoria
+
+### `__contenedor_fichas_blancas__: list[Checker]`
+**Justificación:**
+- Almacena fichas blancas capturadas por el oponente
+- Si `len() > 0`, el jugador blanco DEBE meter fichas antes de mover otras
+- Implementa la regla de Backgammon correctamente
+
+### `__contenedor_fichas_negras__: list[Checker]`
+**Justificación:**
+- Igual que el anterior pero para fichas negras
+- Separación por color simplifica la lógica
+
+## Atributos de `DiceManager`
+
+### `__dice1__: Dice`
+**Justificación:**
+- Primer dado del juego
+- Instancia de la clase `Dice`
+- Permite tirar y obtener valor
+
+### `__dice2__: Dice`
+**Justificación:**
+- Segundo dado del juego
+- Independiente del primero
+- Backgammon siempre usa exactamente 2 dados
+
+### `__dados_disponibles__: list[Dice]`
+**Justificación:**
+- Lista dinámica de dados que aún no se han usado en el turno
+- Si dados son iguales: 4 elementos (dobles)
+- Si dados son diferentes: 2 elementos
+- Se vacía a medida que se hacen movimientos
+- Cuando queda vacía → cambio de turno
+
+## Atributos de `MoveCalculator`
+
+### `__move_validator__: MoveValidator`
+**Justificación:**
+- Necesita validar si posiciones son disponibles
+- Composición: `MoveCalculator` usa `MoveValidator`
+- Evita duplicar código de validación
+
+### `__rule_validator__: RuleValidator`
+**Justificación:**
+- Necesita verificar reglas especiales (ej: bear off)
+- Composición: `MoveCalculator` usa `RuleValidator`
+- Separación de responsabilidades
+
+## Atributos de `BoardAdapter`
+
+### `__backgammon_game__: BackgammonGame`
+**Justificación:**
+- Referencia al juego para obtener el estado del tablero
+- Permite llamar a `backgammon_game.obtener_board()`
+- Acceso al estado completo del juego
+
+### `__pos__: dict`
+**Justificación:**
+- Diccionario con formato adaptado para Pygame
+- Clave: índice de posición (0-23)
+- Valor: tupla `(color, cantidad)` o `None`
+- Formato que espera el renderizador de Pygame
+
+## Atributos de Modelos
+
+### `Checker.__color__: str`
+**Justificación:**
+- Único atributo necesario
+- Identifica al dueño de la ficha
+- Valores posibles: "Blanco" o "Negro"
+
+### `Dice.__numero__: int`
+**Justificación:**
+- Valor del dado (1-6)
+- Se actualiza al llamar `tirar_dado()`
+- Se consulta con `obtener_numero()`
+
+### `Player.__nombre__: str`
+**Justificación:**
+- Identificación del jugador
+- Se muestra en mensajes y UI
+
+### `Player.__ficha__: str`
+**Justificación:**
+- Color de ficha asignado ("Blanco" o "Negro")
+- Determina qué fichas controla el jugador
+
+### `Player.__estado__: str`
+**Justificación:**
+- Estado actual: "Jugando", "Ganador", "Perdedor"
+- Permite determinar resultado al final del juego
+- Idea tomada de Ta-Te-Ti
 
 # Decisiones de Diseño generales
 
@@ -107,23 +234,183 @@ Para el puntaje del pylint, incluí a los directorios core, cli y pygame_ui. En 
 
 Se han incluido los archivos de test en .coveragerc para coverage los ignore
 
+También se ha decidido Usar `list[list[Checker]]` en lugar de diccionario o matriz, porque las posiciones son secuenciales (0-23), las listas permiten apilar fichas fácilmente, operaciones O(1) para acceso por índice y fácil de iterar con `for pos in range(24)`
+
+Se han utilizado excepciones personalizadas para situaciones especiales del juego. Sirven para evitar retornar códigos de error, las excepciones se propagan automáticamente y el nombre de excepción explica qué pasó (`NoHayMovimientosPosibles`)
+
 # Excepcioenes y manejo de errores
 
-En la clase backgamongame, se han definido las siguientes excepciones:
+### Excepciones Personalizadas Definidas
 
-- NoHayMovimientosPosibles: Excepción lanzada cuando no hay movimientos posibles.
+#### `NoHayMovimientosPosibles`
 
-- MovimientoInvalido: Excepción lanzada cuando el movimiento que se quiere realizar es inválido.
+**Cuándo se lanza:**
+- Cuando `verifificar_movimientos_posibles()` determina que el jugador no puede hacer ningún movimiento válido con los dados actuales.
 
-- Ganador: Excepción lanzada cuando hay un ganador(idea sacada de ta te ti). 
+**Por qué es necesaria:**
+- Situación normal en Backgammon (jugador bloqueado)
+- No es un error del programa, es parte del juego
+- Dispara cambio de turno automático
 
-- NombreVacio: Excepción lanzada cuando el nombre ingresado está vacio.
+**Manejo:**
+```python
+try:
+    juego.verifificar_movimientos_posibles()
+except NoHayMovimientosPosibles as e:
+    print(e)
+    # El turno ya se cambió automáticamente en la función
+```
 
-- NoSeIngresoEnteroError: Excepción lanzada cuando el nombre ingresado está vacio (idea sacada de ta te ti).
+**Ejemplo de situación:**
+- Jugador tiene dados [3, 5]
+- Todas las posiciones a 3 y 5 pasos están bloqueadas por el oponente
+- No puede mover ninguna ficha
+
+#### `MovimientoInvalido`
+
+**Cuándo se lanza:**
+- Cuando se intenta un movimiento que viola las reglas
+- Posición inicial no tiene fichas del turno actual
+- Posición destino está bloqueada (2+ fichas enemigas)
+- El movimiento no coincide con ningún dado disponible
+- Se intenta sacar ficha sin cumplir condiciones
+
+**Por qué es necesaria:**
+- Valida las reglas del juego
+- Protege la integridad del estado del tablero
+- Proporciona feedback claro al usuario
+
+**Ejemplos de situaciones:**
+```python
+# Caso 1: Posición inicial inválida
+board[pos_inic] = []  # Posición vacía
+→ MovimientoInvalido("No se puede realizar ese movimiento")
+
+# Caso 2: Posición bloqueada
+board[pos_fin] = [Checker("Negro"), Checker("Negro")]  # 2+ fichas enemigas
+→ MovimientoInvalido("No se puede realizar ese movimiento")
+
+# Caso 3: Dado no coincide
+dados_disponibles = [3, 5]
+movimiento_de_7_pasos()
+→ MovimientoInvalido("No hay dado disponible para 7 pasos")
+
+# Caso 4: Bear off inválido
+tiene_fichas_fuera_del_home_board = True
+→ MovimientoInvalido("No se puede sacar ficha: hay fichas fuera del home board")
+```
+
+#### `Ganador`
+
+**Cuándo se lanza:**
+- Cuando un jugador saca su ficha #15 del tablero
+- Se verifica en `verificar_ganador_y_perdedor()`
+- Se lanza en `realizar_movimiento()` después de sacar ficha
+
+**Por qué es necesaria:**
+- Termina el juego inmediatamente
+- Forma elegante de salir de loops anidados
+- Idea tomada del proyecto Ta-Te-Ti
+
+**Flujo de uso:**
+```python
+try:
+    while True:  # Loop principal del juego
+        juego.realizar_movimiento(pos_inic, pos_fin)
+except Ganador as e:
+    print(e)  # "¡Ganaste!"
+    mostrar_pantalla_victoria()
+    # Sale del loop automáticamente
+```
+
+**Ventajas sobre usar un flag:**
+- No necesita verificar condición en cada iteración
+- Sale de múltiples niveles de loops
+- Código más limpio
+
+
+#### `NombreVacio`
+
+**Cuándo se lanza:**
+- Al intentar crear un jugador con nombre vacío
+- En `crear_jugador()` si `nom == ''`
+
+**Por qué es necesaria:**
+- Valida input del usuario
+- Evita jugadores sin identificación
+- Proporciona mensaje de error claro
+
+**Manejo en CLI:**
+```python
+while True:
+    try:
+        nombre1 = input('Ingrese el nombre del jugador para las fichas Blancas: ')
+        nombre2 = input('Ingrese el nombre del jugador para las fichas Negras: ')
+        juego.crear_jugador(nombre1, 'Blanco', 'Jugando')
+        juego.crear_jugador(nombre2, 'Negro', 'Jugando')
+        break  # Sale del loop si no hay error
+    except NombreVacio as e:
+        print(e)  # "No se puede ingresar un nombre vacío"
+        # Vuelve a pedir nombres
+```
+
+#### `NoSeIngresoEnteroError`
+
+**Cuándo se lanza:**
+- Al intentar convertir input de posición a entero
+- En `combertir_entero()` si `int(pos)` falla
+
+**Por qué es necesaria:**
+- Valida que el usuario ingrese números
+- Evita crashes por input inválido
+- Idea tomada del proyecto Ta-Te-Ti
+
+**Uso:**
+```python
+try:
+    pos = input("Ingrese la posición inicial: ")
+    pos_inic = juego.combertir_entero(pos)  # Puede lanzar excepción
+except NoSeIngresoEnteroError as e:
+    print(e)  # "Se debe ingresar un numero entero"
+    # Vuelve a pedir input
+```
+
+**Ejemplo de input inválido:**
+```
+Usuario ingresa: "abc" → NoSeIngresoEnteroError
+Usuario ingresa: "12.5" → NoSeIngresoEnteroError
+Usuario ingresa: "12" → ✓ Válido
+```
+
+### Estrategia de Manejo de Errores
+
+#### En BackgammonGame
+
+- **Lanza excepciones personalizadas** cuando detecta situaciones especiales
+- **No captura sus propias excepciones** (responsabilidad de la UI)
+- **Propaga información clara** con mensajes descriptivos
+
+#### En CLI
+
+**Captura todas las excepciones relevantes:**
+```python
+try:
+    # Operaciones del juego
+    juego.realizar_movimiento(pos_inic, pos_fin)
+except MovimientoInvalido as e:
+    print(e)  # Mostrar error y continuar
+except NoSeIngresoEnteroError as e:
+    print(e)  # Mostrar error y continuar
+except NoHayMovimientosPosibles as e:
+    print(e)  # Informar y continuar (turno ya cambió)
+except Ganador as e:
+    print(e)  # Mostrar victoria y salir
+    break
+```
 
 # Estrategias de testing y covertura
 
-Hay un archivo de test para cada clase del proyecto, donde se testean las funciones de dicha clase y que resultados generará segun el escenario especifico del test, para funciones donde se necesiten valores espeficos del dados se ha usado mock_randint para que el valor random obtenido al tirar los dados sea un especifico necesario para correcto funcionamiento del test. Para los test del CLI se ha usado mock_input para manejar los inputs del CLI, mock_print para verificar ciertos prints y evitar que la consola se llene de prints y @patch.object(CLI, 'mostrar_tablero') para Evitar renderizar gráficos durante tests (más rápido), Verificar que se llamó al método y Aislar la lógica de negocio de la interfaz.
+Hay un archivo de test para cada clase del proyecto, donde se testean las funciones de dicha clase y que resultados generará segun el escenario especifico del test, para funciones donde se necesiten valores espeficos de los dados se ha usado mock_randint para que el valor random obtenido al tirar los dados sea un especifico necesario para correcto funcionamiento del test. Para los test del CLI se ha usado mock_input para manejar los inputs del CLI, mock_print para verificar ciertos prints y evitar que la consola se llene de prints y @patch.object(CLI, 'mostrar_tablero') para Evitar renderizar gráficos durante tests (más rápido), Verificar que se llamó al método y Aislar la lógica de negocio de la interfaz.
 Se ha buscado que la covertura de los test supere el 90%
 
 # Referencias a requisitos SOLID y como se cumplen
@@ -137,7 +424,7 @@ Se ha buscado que la covertura de los test supere el 90%
  - Player: Solo representa jugadores
  - Checker: Solo representa fichas
  - Dice: Solo representa un dado
- - BackGammongame: Orquestrar el juego Backgammon
+ - BackGammongame: Orquestar el juego Backgammon
 
  ## Open/Closed Principle
  - Se puede extender funcionalidad sin modificar clases existentes
