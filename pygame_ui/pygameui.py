@@ -686,8 +686,8 @@ def render_bear_off_zones(screen, game, font):
     Renderiza las zonas de "bear off" (sacar fichas) en el extremo derecho del tablero.
     
     Funcionalidad:
-        - Dibuja zona de salida para fichas blancas (extremo derecho arriba)
-        - Dibuja zona de salida para fichas negras (extremo derecho abajo)
+        - Dibuja zona de salida para fichas blancas (extremo derecho abajo)
+        - Dibuja zona de salida para fichas negras (extremo derecho arriba)
         - Muestra contadores de fichas sacadas (X/15)
         - Resalta en verde la zona correspondiente si el jugador puede empezar a sacar
         - Visualiza hasta 3 fichas individuales, luego muestra contador
@@ -708,36 +708,77 @@ def render_bear_off_zones(screen, game, font):
     negras_sacadas = len(board.obtener_contenedor_negras_sacadas())
 
     # ═══════════════════════════════════════
-    # ZONA BLANCAS (extremo derecho - ARRIBA)
+    # ZONA NEGRAS (extremo derecho - ARRIBA)  <-- CORREGIDO
     # ═══════════════════════════════════════
-    zona_blancas = pygame.Rect(
+    zona_negras = pygame.Rect(  # <-- Se usa zona_negras para la parte de ARRIBA
         WIDTH - 30,
-        70,                      # ✅ Debajo del HUD
+        70,                      # ✅ Coordenada Y (Arriba)
         25,
-        150                      # ✅ Altura ajustada
+        150
+    )
+
+    pygame.draw.rect(screen, (200, 220, 200), zona_negras)
+    pygame.draw.rect(screen, BLACK, zona_negras, 2)
+
+    # Título vertical
+    titulo_n = font_small.render("OUT", True, BLACK) # <-- Renombrado (era titulo_b)
+    titulo_rotado_n = pygame.transform.rotate(titulo_n, 90) # <-- Renombrado (era titulo_rotado)
+    screen.blit(titulo_rotado_n, (zona_negras.centerx - 8, zona_negras.y + 10))
+
+    # --- Lógica de NEGRAS SACADAS --- (Movida aquí)
+    if negras_sacadas > 0:
+        radius = 7
+        y_start = zona_negras.y + 95
+
+        for i in range(min(negras_sacadas, 2)):
+            y = y_start + (i * (radius * 2 + 3))
+            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius) # Color NEGRO
+            pygame.draw.circle(screen, WHITE, (zona_negras.centerx, y), radius, 1)
+
+        if negras_sacadas > 2:
+            y = y_start + (1 * (radius * 2 + 3))
+            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius) # Color NEGRO
+            text_surface = font_small.render(str(negras_sacadas - 1), True, WHITE) # Color texto BLANCO
+            screen.blit(text_surface,
+                (zona_negras.centerx - text_surface.get_width() // 2,
+                 y - text_surface.get_height() // 2))
+
+        total_text = font_small.render(f"{negras_sacadas}/15", True, BLACK)
+        screen.blit(total_text,
+            (zona_negras.centerx - total_text.get_width() // 2,
+             zona_negras.bottom - 10))
+
+    # ═══════════════════════════════════════
+    # ZONA BLANCAS (extremo derecho - ABAJO) <-- CORREGIDO
+    # ═══════════════════════════════════════
+    zona_blancas = pygame.Rect( # <-- Se usa zona_blancas para la parte de ABAJO
+        WIDTH - 30,
+        HEIGHT - 220,            # ✅ Coordenada Y (Abajo)
+        25,
+        150
     )
 
     pygame.draw.rect(screen, (200, 220, 200), zona_blancas)
     pygame.draw.rect(screen, BLACK, zona_blancas, 2)
 
-    # Título vertical
-    titulo_b = font_small.render("OUT", True, BLACK)
-    titulo_rotado = pygame.transform.rotate(titulo_b, 90)
+    titulo_b = font_small.render("OUT", True, BLACK) # <-- Renombrado (era titulo_n)
+    titulo_rotado = pygame.transform.rotate(titulo_b, 90) # <-- Renombrado (era titulo_rotado_n)
     screen.blit(titulo_rotado, (zona_blancas.centerx - 8, zona_blancas.y + 10))
 
+    # --- Lógica de BLANCAS SACADAS --- (Movida aquí)
     if blancas_sacadas > 0:
         radius = 7
         y_start = zona_blancas.y + 95
 
         for i in range(min(blancas_sacadas, 2)):
             y = y_start + (i * (radius * 2 + 3))
-            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
+            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius) # Color BLANCO
             pygame.draw.circle(screen, BLACK, (zona_blancas.centerx, y), radius, 1)
 
         if blancas_sacadas > 2:
             y = y_start + (1 * (radius * 2 + 3))
-            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius)
-            text_surface = font_small.render(str(blancas_sacadas - 1), True, BLACK)
+            pygame.draw.circle(screen, WHITE, (zona_blancas.centerx, y), radius) # Color BLANCO
+            text_surface = font_small.render(str(blancas_sacadas - 1), True, BLACK) # Color texto NEGRO
             screen.blit(text_surface,
                 (zona_blancas.centerx - text_surface.get_width() // 2,
                  y - text_surface.get_height() // 2))
@@ -748,53 +789,17 @@ def render_bear_off_zones(screen, game, font):
              zona_blancas.bottom - 10))
 
     # ═══════════════════════════════════════
-    # ZONA NEGRAS (extremo derecho - ABAJO)
+    # Resaltar si puede sacar (CORREGIDO)
     # ═══════════════════════════════════════
-    zona_negras = pygame.Rect(
-        WIDTH - 30,
-        HEIGHT - 220,            # ✅ Arriba del borde inferior
-        25,
-        150                      # ✅ Altura ajustada
-    )
-
-    pygame.draw.rect(screen, (200, 220, 200), zona_negras)
-    pygame.draw.rect(screen, BLACK, zona_negras, 2)
-
-    titulo_n = font_small.render("OUT", True, BLACK)
-    titulo_rotado_n = pygame.transform.rotate(titulo_n, 90)
-    screen.blit(titulo_rotado_n, (zona_negras.centerx - 8, zona_negras.y + 10))
-
-
-    if negras_sacadas > 0:
-        radius = 7
-        y_start = zona_negras.y + 95
-
-        for i in range(min(negras_sacadas, 2)):
-            y = y_start + (i * (radius * 2 + 3))
-            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
-            pygame.draw.circle(screen, WHITE, (zona_negras.centerx, y), radius, 1)
-
-        if negras_sacadas > 2:
-            y = y_start + (1 * (radius * 2 + 3))
-            pygame.draw.circle(screen, BLACK, (zona_negras.centerx, y), radius)
-            text_surface = font_small.render(str(negras_sacadas - 1), True, WHITE)
-            screen.blit(text_surface,
-                (zona_negras.centerx - text_surface.get_width() // 2,
-                 y - text_surface.get_height() // 2))
-
-        total_text = font_small.render(f"{negras_sacadas}/15", True, BLACK)
-        screen.blit(total_text,
-            (zona_negras.centerx - total_text.get_width() // 2,
-             zona_negras.bottom - 10))
-
-    # Resaltar si puede sacar
     turno = game.obtener_turno()
 
     if turno == "Blanco":
         if game.verificar_todas_fichas_en_home("Blanco"):
-            pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3)
+            # Resalta la zona de ABAJO (zona_blancas) para las Blancas
+            pygame.draw.rect(screen, (100, 255, 100), zona_blancas, 3) 
     else:
         if game.verificar_todas_fichas_en_home("Negro"):
+            # Resalta la zona de ARRIBA (zona_negras) para las Negras
             pygame.draw.rect(screen, (100, 255, 100), zona_negras, 3)
 
 
@@ -805,24 +810,23 @@ def hit_test_bear_off(pos, game):
     x, y = pos
     turno = game.obtener_turno()
 
-    # Zona BLANCAS (extremo derecho - ARRIBA)
+    # Zona BLANCAS (extremo derecho - ABAJO)
     if turno == "Blanco":
         if WIDTH - 30 <= x <= WIDTH - 5:
-            if 70 <= y <= 220:
+            if HEIGHT - 220 <= y <= HEIGHT - 70:  # Zona ABAJO
                 if game.obtener_board().verficar_fichas_sacadas_15(turno):
                     return None
                 return 24
 
-    # Zona NEGRAS (extremo derecho - ABAJO)
+    # Zona NEGRAS (extremo derecho - ARRIBA)
     if turno == "Negro":
         if WIDTH - 30 <= x <= WIDTH - 5:
-            if HEIGHT - 220 <= y <= HEIGHT - 70:
+            if 70 <= y <= 220:  # Zona ARRIBA
                 if game.obtener_board().verficar_fichas_sacadas_15(turno):
                     return None
                 return -1
 
     return None
-
 
 if __name__ == "__main__":
     main()

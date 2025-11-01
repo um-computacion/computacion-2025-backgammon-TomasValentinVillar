@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 2025-11-1 (20:00)
+
+### Changed
+
+- función ejecutar en cli
+- función hit_test_bear_off en pygame
+- función render_bear_off_zones en pygame
+
 ## 2025-11-1 (17:41)
 
 ### Added

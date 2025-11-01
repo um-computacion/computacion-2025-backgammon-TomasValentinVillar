@@ -71,6 +71,7 @@ class CLI:
                         lista_dados = ''
                         for i in self.__juego__.obtener_dados_disponibles():
                             lista_dados += f'{str(i.obtener_numero())}, '
+                        print("Para quitar ficha de tablero las zonas son -1 (Turno Negro) y 24 (Turno Blanco)")
                         print(f"Sus dados disponibles son: {lista_dados}")
                         print(f"Tienes {self.__juego__.obtener_board().obtener_cantidad_de_fichas_comidas(self.__juego__.obtener_turno())} fichas que se han comido ")
                         self.__juego__.verifificar_movimientos_posibles()
@@ -86,6 +87,7 @@ class CLI:
                         lista_dados = ''
                         for i in self.__juego__.obtener_dados_disponibles():
                             lista_dados += f'{str(i.obtener_numero())}, '
+                        print("Para quitar ficha de tablero las zonas son -1 (Turno Negro) y 24 (Turno Blanco)")
                         print(f"Sus dados disponibles son: {lista_dados}")
                         self.__juego__.verifificar_movimientos_posibles()
                         pos = input("Ingrese la pocición inicial: ")
